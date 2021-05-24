@@ -1,5 +1,6 @@
 package server;
 
+import collectionmanager.databasetools.DatabaseException;
 import console.CommandHandler;
 import console.exсeptions.*;
 import musicband.InputValueException;
@@ -35,7 +36,7 @@ public class RequestHandler implements Runnable {
                             logger.info("Got the request");
                             commandHandler.execute(request);
                         } catch (NoArgumentFoundException | InputValueException | IndexOutOfBoundsException | NoSuchIdException |
-                                NotEnoughArgumentsException e) {
+                                NotEnoughArgumentsException | DatabaseException e) {
                             writer.write(e.getMessage());
                             logger.warn(e.getMessage());
                         }

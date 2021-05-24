@@ -1,7 +1,11 @@
 package console.commands;
 
-import collectionManager.ArrayListManager;
+import collectionmanager.ArrayListManager;
+import collectionmanager.CollectionManager;
+import collectionmanager.databasetools.DatabaseException;
 import musicband.MusicBand;
+
+import java.sql.SQLException;
 
 /**
  * Класс команды remove_last, удаляющей последний элемент
@@ -9,13 +13,15 @@ import musicband.MusicBand;
 public class RemoveLastCommand extends AbstractCommand {
 
     private ArrayListManager listManager;
+    private CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции
      */
-    public RemoveLastCommand(ArrayListManager listManager) {
+    public RemoveLastCommand(ArrayListManager listManager, CollectionManager databaseManager) {
         super("remove_last", "remove the last item from the collection");
         this.listManager = listManager;
+        this.databaseManager = databaseManager;
     }
 
     /**
@@ -25,7 +31,14 @@ public class RemoveLastCommand extends AbstractCommand {
      */
     @Override
     public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
-        listManager.removeLast();
+        try {
+            int rows = databaseManager.removeLast();
+            if (rows > 0) {
+                listManager.removeLast();
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Problem with deleting element");
+        }
         return CommandCode.DEFAULT;
     }
 }

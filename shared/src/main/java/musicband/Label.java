@@ -8,6 +8,13 @@ import java.io.Serializable;
 public class Label implements Serializable {
     private String name;
 
+    public Label(String name) {
+        this.name = name;
+    }
+
+    public Label() {
+    }
+
     /**
      * @return Название лейбла
      */

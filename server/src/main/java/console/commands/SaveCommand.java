@@ -1,6 +1,6 @@
 package console.commands;
 
-import collectionManager.ArrayListManager;
+import collectionmanager.ArrayListManager;
 import musicband.MusicBand;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;

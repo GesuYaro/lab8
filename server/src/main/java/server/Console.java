@@ -1,6 +1,8 @@
 package server;
 
-import collectionManager.ArrayListManager;
+import collectionmanager.ArrayListManager;
+import collectionmanager.databasetools.DatabaseConnector;
+import collectionmanager.databasetools.DatabaseManager;
 import console.CommandHandler;
 import console.commands.*;
 import musicband.MusicBandFieldsChecker;
@@ -9,6 +11,8 @@ import org.slf4j.Logger;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class Console {
@@ -36,6 +40,14 @@ public class Console {
             }
             ServerWriter writer = new ServerWriter(socketChannel);
 
+            DatabaseManager databaseManager = null;
+            DatabaseConnector databaseConnector = new DatabaseConnector("pg", 5432, "studs", "s312764", "pni300");
+            try {
+                Connection databaseConnection = databaseConnector.getConnection();
+                databaseManager = new DatabaseManager(databaseConnection, "admin");
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             CommandHandler.HistoryStorage historyStorage = new CommandHandler.HistoryStorage();
@@ -43,14 +55,14 @@ public class Console {
             HashMap<String, Command> commands = new HashMap<>();
             commands.put("info", new InfoCommand(writer, arrayListManager));
             commands.put("show", new ShowCommand(writer, arrayListManager));
-            commands.put("add", new AddCommand(arrayListManager, musicBandFieldsChecker));
-            commands.put("update", new UpdateCommand(arrayListManager, musicBandFieldsChecker));
-            commands.put("remove_by_id", new RemoveByIdCommand(arrayListManager));
-            commands.put("clear", new ClearCommand(arrayListManager));
+            commands.put("add", new AddCommand(arrayListManager, musicBandFieldsChecker, databaseManager));
+            commands.put("update", new UpdateCommand(arrayListManager, musicBandFieldsChecker, databaseManager));
+            commands.put("remove_by_id", new RemoveByIdCommand(arrayListManager, databaseManager));
+            commands.put("clear", new ClearCommand(arrayListManager, databaseManager));
             //commands.put("save", new SaveCommand(arrayListManager, savingFile, writer));
             commands.put("exit", new ExitCommand());
-            commands.put("insert_at", new InsertAtCommand(arrayListManager, musicBandFieldsChecker));
-            commands.put("remove_last", new RemoveLastCommand(arrayListManager));
+            commands.put("insert_at", new InsertAtCommand(arrayListManager, musicBandFieldsChecker, databaseManager));
+            commands.put("remove_last", new RemoveLastCommand(arrayListManager, databaseManager));
             commands.put("history", new HistoryCommand(writer, historyStorage));
             commands.put("count_greater_than_genre", new CountGreaterThanGenreCommand(writer, arrayListManager));
             commands.put("filter_less_than_singles_count", new FilterLessThanSinglesCountCommand(writer, arrayListManager));

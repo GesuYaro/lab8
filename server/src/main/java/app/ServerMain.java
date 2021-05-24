@@ -1,9 +1,8 @@
 package app;
 
-import collectionManager.ArrayListInitializer;
-import collectionManager.ArrayListManager;
-import collectionManager.Parser;
-import console.*;
+import collectionmanager.ArrayListInitializer;
+import collectionmanager.ArrayListManager;
+import collectionmanager.Parser;
 import console.commands.Command;
 import console.commands.SaveCommand;
 import musicband.MusicBand;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.*;
 import server.Console;
+import java.sql.*;
 
 import java.io.*;
 import java.time.LocalDate;

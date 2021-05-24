@@ -1,4 +1,4 @@
-package collectionManager;
+package collectionmanager;
 
 import musicband.InputValueException;
 import musicband.*;

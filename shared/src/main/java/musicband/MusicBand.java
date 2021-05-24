@@ -1,7 +1,7 @@
 package musicband;
 
 
-import collectionManager.CSVConvertible;
+import collectionmanager.CSVConvertible;
 
 import java.io.Serializable;
 import java.time.LocalDate;

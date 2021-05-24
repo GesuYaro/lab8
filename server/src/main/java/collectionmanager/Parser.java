@@ -1,4 +1,4 @@
-package collectionManager;
+package collectionmanager;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;

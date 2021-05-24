@@ -1,6 +1,6 @@
 package console.commands;
 
-import collectionManager.ArrayListManager;
+import collectionmanager.ArrayListManager;
 import musicband.MusicBand;
 import server.ServerWriter;
 

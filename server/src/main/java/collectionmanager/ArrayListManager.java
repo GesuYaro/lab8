@@ -1,4 +1,4 @@
-package collectionManager;
+package collectionmanager;
 
 import console.exсeptions.NoSuchIdException;
 import musicband.MusicBand;
@@ -121,7 +121,10 @@ public class ArrayListManager {
      */
     public MusicBand getById(long id) {
         MusicBand musicBand = null;
-        musicBand = arrayList.stream().filter(a -> a.getId() == id).findFirst().get();
+        Optional<MusicBand> optional = arrayList.stream().filter(a -> a.getId() == id).findFirst();
+        if (optional.isPresent()) {
+            musicBand = optional.get();
+        }
         if (musicBand == null) {
             throw new NoSuchIdException();
         }
@@ -248,5 +251,9 @@ public class ArrayListManager {
             ids.add(mb.getId());
         }
         return isRepeating;
+    }
+
+    public void setArrayList(ArrayList<MusicBand> arrayList) {
+        this.arrayList = arrayList;
     }
 }

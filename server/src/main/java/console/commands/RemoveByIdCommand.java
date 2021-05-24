@@ -1,8 +1,12 @@
 package console.commands;
 
-import collectionManager.ArrayListManager;
+import collectionmanager.ArrayListManager;
+import collectionmanager.CollectionManager;
+import collectionmanager.databasetools.DatabaseException;
 import console.exсeptions.NoArgumentFoundException;
 import musicband.MusicBand;
+
+import java.sql.SQLException;
 
 /**
  * Класс команды remove_by_id, удаляющей объект по его id
@@ -10,13 +14,15 @@ import musicband.MusicBand;
 public class RemoveByIdCommand extends AbstractCommand {
 
     private ArrayListManager listManager;
+    private CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции
      */
-    public RemoveByIdCommand(ArrayListManager listManager) {
+    public RemoveByIdCommand(ArrayListManager listManager, CollectionManager databaseManager) {
         super("remove_by_id id", "remove an item from the collection by its id");
         this.listManager = listManager;
+        this.databaseManager = databaseManager;
     }
 
     /**
@@ -28,9 +34,14 @@ public class RemoveByIdCommand extends AbstractCommand {
     public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
         try {
             long id = Long.parseLong(firstArgument.trim().split(" ")[0]);
-            listManager.removeById(id);
+            int rows = databaseManager.removeById(id);
+            if (rows > 0) {
+                listManager.removeById(id);
+            }
         } catch (NumberFormatException e) {
             throw new NoArgumentFoundException();
+        } catch (SQLException e) {
+            throw new DatabaseException("Problem with deleting element");
         }
         return CommandCode.DEFAULT;
     }

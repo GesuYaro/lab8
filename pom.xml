@@ -7,6 +7,7 @@
     <groupId>shagiev</groupId>
     <artifactId>lab6</artifactId>
     <version>3.0</version>
+
     <packaging>pom</packaging>
 
     <modules>
