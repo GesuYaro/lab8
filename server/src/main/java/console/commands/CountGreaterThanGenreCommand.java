@@ -5,6 +5,7 @@ import console.Writer;
 import console.exсeptions.NoArgumentFoundException;
 import musicband.MusicBand;
 import musicband.MusicGenre;
+import network.CurrentUser;
 
 /**
  * Класс для команды count_greater_than_genre, считающей количество элементов, значение поля genre которых больше заданного
@@ -30,7 +31,7 @@ public class CountGreaterThanGenreCommand extends AbstractCommand{
      * @throws NoArgumentFoundException
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException {
         try {
             firstArgument = firstArgument.trim().split(" ")[0].toUpperCase();
             MusicGenre genre = MusicGenre.valueOf(firstArgument);

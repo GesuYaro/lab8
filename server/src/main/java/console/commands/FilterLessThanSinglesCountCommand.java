@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import musicband.MusicBand;
+import network.CurrentUser;
 import server.ServerWriter;
 import console.exсeptions.NoArgumentFoundException;
 
@@ -29,7 +30,7 @@ public class FilterLessThanSinglesCountCommand extends AbstractCommand {
      * @throws NoArgumentFoundException
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException {
         try {
             Integer singlesCount = Integer.parseInt(firstArgument.trim().split(" ")[0].trim());
             writer.write(listManager.filterLessThanSinglesCount(singlesCount));

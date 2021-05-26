@@ -2,8 +2,8 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
+import network.CurrentUser;
 import collectionmanager.databasetools.DatabaseException;
-import collectionmanager.databasetools.DatabaseManager;
 import console.exсeptions.NoArgumentFoundException;
 import console.exсeptions.NoSuchIdException;
 import musicband.*;
@@ -29,7 +29,7 @@ public class UpdateCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException, NoSuchIdException{
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException, NoSuchIdException{
         try {
             if (firstArgument == null) {
                 firstArgument = "";
@@ -41,7 +41,7 @@ public class UpdateCommand extends AbstractCommand {
             requestedMusicBand.setCreationDate(creationDate);
             requestedMusicBand.setId(id);
             try {
-                int rows = databaseManager.replace(id, requestedMusicBand);
+                int rows = databaseManager.replace(id, requestedMusicBand, currentUser);
                 if (rows > 0) {
                     listManager.replace(id, requestedMusicBand);
                 }

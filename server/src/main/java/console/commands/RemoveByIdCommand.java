@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
+import network.CurrentUser;
 import collectionmanager.databasetools.DatabaseException;
 import console.exсeptions.NoArgumentFoundException;
 import musicband.MusicBand;
@@ -31,10 +32,10 @@ public class RemoveByIdCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
             long id = Long.parseLong(firstArgument.trim().split(" ")[0]);
-            int rows = databaseManager.removeById(id);
+            int rows = databaseManager.removeById(id, currentUser);
             if (rows > 0) {
                 listManager.removeById(id);
             }

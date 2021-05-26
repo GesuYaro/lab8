@@ -3,6 +3,7 @@ package console.commands;
 import console.CommandHandler;
 import console.Writer;
 import musicband.MusicBand;
+import network.CurrentUser;
 
 
 /**
@@ -28,7 +29,7 @@ public class HistoryCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         String[] history = historyStorage.getCommandHistory();
         String historyInLine = "";
         for (String h : history) {

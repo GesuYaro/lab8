@@ -1,6 +1,7 @@
 package console.commands;
 
 import musicband.MusicBand;
+import network.CurrentUser;
 
 /**
  * Класс команды exit, осуществяющей выход из программы
@@ -17,7 +18,7 @@ public class ExitCommand extends AbstractCommand {
      * @return CommandCode.EXIT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         return CommandCode.EXIT;
     }
 }

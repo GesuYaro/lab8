@@ -5,6 +5,7 @@ import console.ConsoleWriter;
 import console.FieldsReader;
 import client.ClientExecuteScriptCommand;
 import musicband.MusicBandFieldsChecker;
+import network.CurrentUser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,9 +25,15 @@ public class ClientMain {
         commandsWithExtendedRequest.add("update"); //
         ConsoleWriter consoleWriter = new ConsoleWriter(); //
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in)); //
+        PasswordCipher passwordCipher = new PasswordCipher();
+        Authenticator authenticator = new Authenticator(bufferedReader, consoleWriter, passwordCipher);
+        String login = authenticator.readLogin();
+        byte[] password = authenticator.readPassword();
+        CurrentUser currentUser = new CurrentUser(login, password);
+        consoleWriter.write("============================");
         FieldsReader fieldsReader = new FieldsReader(new MusicBandFieldsChecker(bufferedReader), consoleWriter); //
-        RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, fieldsReader); //
-        ClientExecuteScriptCommand executeScriptCommand = new ClientExecuteScriptCommand(consoleWriter, commandsWithExtendedRequest, PORT, hostAddress); //
+        RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, fieldsReader, currentUser); //
+        ClientExecuteScriptCommand executeScriptCommand = new ClientExecuteScriptCommand(consoleWriter, commandsWithExtendedRequest, PORT, hostAddress, currentUser); //
         Console console = new Console(requestFabric, bufferedReader, executeScriptCommand, PORT, hostAddress); //
         console.run();
     }

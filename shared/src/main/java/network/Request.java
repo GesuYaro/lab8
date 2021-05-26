@@ -9,11 +9,13 @@ public class Request implements Serializable {
     private String command;
     private String firstArg;
     private MusicBand musicBand;
+    private CurrentUser currentUser;
 
-    public Request(String command, String firstArg, MusicBand musicBand) {
+    public Request(String command, String firstArg, MusicBand musicBand, CurrentUser currentUser) {
         this.command = command;
         this.firstArg = firstArg;
         this.musicBand = musicBand;
+        this.currentUser = currentUser;
     }
 
     public String getCommand() {
@@ -26,5 +28,9 @@ public class Request implements Serializable {
 
     public MusicBand getMusicBand() {
         return musicBand;
+    }
+
+    public CurrentUser getUser() {
+        return currentUser;
     }
 }

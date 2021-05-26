@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import musicband.MusicBand;
+import network.CurrentUser;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class SaveCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
             writer = new OutputStreamWriter(new FileOutputStream(file));
             try {

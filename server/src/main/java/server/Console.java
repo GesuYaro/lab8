@@ -1,6 +1,7 @@
 package server;
 
 import collectionmanager.ArrayListManager;
+import collectionmanager.CollectionManager;
 import collectionmanager.databasetools.DatabaseConnector;
 import collectionmanager.databasetools.DatabaseManager;
 import console.CommandHandler;
@@ -20,11 +21,13 @@ public class Console {
     private ArrayListManager arrayListManager;
     private Connector connector;
     private Logger logger;
+    private CollectionManager databaseManager;
 
-    public Console(ArrayListManager arrayListManager, Connector connector, Logger logger) {
+    public Console(ArrayListManager arrayListManager, Connector connector, Logger logger, CollectionManager databaseManager) {
         this.arrayListManager = arrayListManager;
         this.connector = connector;
         this.logger = logger;
+        this.databaseManager = databaseManager;
     }
 
     public void run(boolean singleIterationMode) {
@@ -40,14 +43,6 @@ public class Console {
             }
             ServerWriter writer = new ServerWriter(socketChannel);
 
-            DatabaseManager databaseManager = null;
-            DatabaseConnector databaseConnector = new DatabaseConnector("pg", 5432, "studs", "s312764", "pni300");
-            try {
-                Connection databaseConnection = databaseConnector.getConnection();
-                databaseManager = new DatabaseManager(databaseConnection, "admin");
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             CommandHandler.HistoryStorage historyStorage = new CommandHandler.HistoryStorage();

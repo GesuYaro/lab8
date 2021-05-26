@@ -6,6 +6,7 @@ import console.exсeptions.IncorrectScriptException;
 import console.exсeptions.NoArgumentFoundException;
 import musicband.MusicBand;
 import musicband.MusicBandFieldsChecker;
+import network.CurrentUser;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,17 +22,19 @@ public class ClientExecuteScriptCommand {
     private Collection<String> commandsWithExtendedRequest;
     private int port;
     private String hostAddress;
+    private CurrentUser currentUser;
 
-    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress) {
+    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, CurrentUser currentUser) {
         this.writer = writer;
         this.commandsWithExtendedRequest = commandsWithExtendedRequest;
         this.isInnerScript = false;
         this.scripts = new HashSet<>();
         this.port = port;
         this.hostAddress = hostAddress;
+        this.currentUser = currentUser;
     }
 
-    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, HashSet<File> scripts) {
+    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, CurrentUser currentUser, HashSet<File> scripts) {
         this.writer = writer;
         this.commandsWithExtendedRequest = commandsWithExtendedRequest;
         this.isInnerScript = true;
@@ -53,8 +56,8 @@ public class ClientExecuteScriptCommand {
                             BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
                             MusicBandFieldsChecker fieldsReader = new MusicBandFieldsChecker(fileReader);
                             FieldsReader scriptModeReader = new FieldsReader(fieldsReader, writer, false);
-                            RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, scriptModeReader);
-                            ClientExecuteScriptCommand innerExecuteScriptCommand = new ClientExecuteScriptCommand(writer, commandsWithExtendedRequest, port, hostAddress, scripts);
+                            RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, scriptModeReader, currentUser);
+                            ClientExecuteScriptCommand innerExecuteScriptCommand = new ClientExecuteScriptCommand(writer, commandsWithExtendedRequest, port, hostAddress, currentUser, scripts);
                             client.Console console = new Console(requestFabric, fileReader, innerExecuteScriptCommand, port, hostAddress);
                             try {
                                 console.run();

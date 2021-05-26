@@ -82,6 +82,7 @@ public class Console {
                 }
             } catch (IOException e) {
                 System.out.println("Connection refused");
+                e.printStackTrace();
             }
         }
     }

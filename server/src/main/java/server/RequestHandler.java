@@ -1,5 +1,6 @@
 package server;
 
+import collectionmanager.databasetools.AuthenticationException;
 import collectionmanager.databasetools.DatabaseException;
 import console.CommandHandler;
 import console.exсeptions.*;
@@ -36,7 +37,7 @@ public class RequestHandler implements Runnable {
                             logger.info("Got the request");
                             commandHandler.execute(request);
                         } catch (NoArgumentFoundException | InputValueException | IndexOutOfBoundsException | NoSuchIdException |
-                                NotEnoughArgumentsException | DatabaseException e) {
+                                NotEnoughArgumentsException | DatabaseException | AuthenticationException e) {
                             writer.write(e.getMessage());
                             logger.warn(e.getMessage());
                         }

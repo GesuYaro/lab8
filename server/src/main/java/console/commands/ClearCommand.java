@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
+import network.CurrentUser;
 import collectionmanager.databasetools.DatabaseException;
 import musicband.MusicBand;
 
@@ -29,9 +30,9 @@ public class ClearCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
-            int rows = databaseManager.clear();
+            int rows = databaseManager.clear(currentUser);
             if (rows > 0) {
                 listManager.clear();
                 listManager.setArrayList(databaseManager.getArrayList());

@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
+import network.CurrentUser;
 import collectionmanager.databasetools.DatabaseException;
 import musicband.MusicBand;
 
@@ -30,9 +31,9 @@ public class RemoveLastCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT;
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
-            int rows = databaseManager.removeLast();
+            int rows = databaseManager.removeLast(currentUser);
             if (rows > 0) {
                 listManager.removeLast();
             }

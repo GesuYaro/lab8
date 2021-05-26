@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import musicband.MusicBand;
+import network.CurrentUser;
 import server.ServerWriter;
 
 
@@ -29,7 +30,7 @@ public class ShowCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         writer.write(listManager.getArrayList());
         return CommandCode.DEFAULT;
     }

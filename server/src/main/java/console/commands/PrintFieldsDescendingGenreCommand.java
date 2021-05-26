@@ -4,6 +4,7 @@ import collectionmanager.ArrayListManager;
 import console.Writer;
 import musicband.MusicBand;
 import musicband.MusicGenre;
+import network.CurrentUser;
 
 import java.util.Iterator;
 
@@ -30,7 +31,7 @@ public class PrintFieldsDescendingGenreCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         String str = "";
         if (listManager.getArrayList().size() < 1) {
             str = "Collection is empty";

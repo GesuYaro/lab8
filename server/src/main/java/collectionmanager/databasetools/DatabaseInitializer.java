@@ -29,6 +29,7 @@ public class DatabaseInitializer implements CollectionInitializer {
     private static final String CREATE_ID_SEQUENCE = "CREATE SEQUENCE MUSICBAND_IDS";
     private static final String CREATE_INIT_DATE_TABLE = "CREATE TABLE MUSICBANDS_INITIALIZATION_DATE (initialization_Date DATE NOT NULL)";
     private static final String SET_INIT_DATE = "INSERT INTO MUSICBANDS_INITIALIZATION_DATE VALUES(?)";
+    private static final String CREATE_USERS_TABLE = "CREATE TABLE musicband_users (login VARCHAR NOT NULL, password BYTEA NOT NULL)";
 
     public DatabaseInitializer(DatabaseChecker checker, Connection connection) {
         this.checker = checker;
@@ -36,17 +37,34 @@ public class DatabaseInitializer implements CollectionInitializer {
     }
 
     @Override
-    public void init() throws SQLException {
-        if (!checker.checkMainTable()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_MAIN_TABLE);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement(CREATE_ID_SEQUENCE);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement(CREATE_INIT_DATE_TABLE);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement(SET_INIT_DATE);
-            preparedStatement.setDate(1, Date.valueOf(LocalDate.now()));
-            preparedStatement.executeUpdate();
+    public void init() throws DatabaseException {
+        try {
+            if (!checker.checkMainTable()) {
+                PreparedStatement preparedStatement = connection.prepareStatement(CREATE_MAIN_TABLE);
+                if (preparedStatement.executeUpdate() <= 0) {
+                    throw new DatabaseException("Problem with creating table musicbands");
+                }
+                ;
+                preparedStatement = connection.prepareStatement(CREATE_ID_SEQUENCE);
+                if (preparedStatement.executeUpdate() <= 0) {
+                    throw new DatabaseException("Problem with creating sequence musicband_ids");
+                }
+                preparedStatement = connection.prepareStatement(CREATE_INIT_DATE_TABLE);
+                if (preparedStatement.executeUpdate() <= 0) {
+                    throw new DatabaseException("Problem with creating table musicbands_initialization_date");
+                }
+                preparedStatement = connection.prepareStatement(SET_INIT_DATE);
+                preparedStatement.setDate(1, Date.valueOf(LocalDate.now()));
+                if (preparedStatement.executeUpdate() <= 0) {
+                    throw new DatabaseException("Problem with setting initial date");
+                }
+                preparedStatement = connection.prepareStatement(CREATE_USERS_TABLE);
+                if (preparedStatement.executeUpdate() <= 0) {
+                    throw new DatabaseException("Problem with creating table musicband_users");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException();
         }
     }
 

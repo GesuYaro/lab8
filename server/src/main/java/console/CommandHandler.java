@@ -47,7 +47,7 @@ public class CommandHandler {
         if(commands.containsKey(request.getCommand())) {
             historyStorage.addToCommandHistory(request.getCommand());
             return commands.get(request.getCommand())
-                    .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand());
+                    .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser());
         }
         else {
             throw new NoSuchCommandException(request.getCommand());

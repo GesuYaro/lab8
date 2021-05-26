@@ -2,6 +2,7 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
+import network.CurrentUser;
 import collectionmanager.databasetools.DatabaseException;
 import musicband.InputValueException;
 import console.exсeptions.NoArgumentFoundException;
@@ -36,7 +37,7 @@ public class InsertAtCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) throws InputValueException, IndexOutOfBoundsException, NoArgumentFoundException {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, IndexOutOfBoundsException, NoArgumentFoundException {
         try {
             int index = Integer.parseInt(firstArgument
                     .trim()
@@ -45,14 +46,14 @@ public class InsertAtCommand extends AbstractCommand {
             if ( !(index > listManager.getArrayList().size() - 1 || index < 0) ) {
                 LocalDate creationDate = LocalDate.now();
                 try {
-                    long id = databaseManager.getNewMaxId();
+                    long id = databaseManager.getNewMaxId(currentUser);
                     requestedMusicBand.setId(id);
                     requestedMusicBand.setCreationDate(creationDate);
                 } catch (SQLException e) {
                     throw new DatabaseException("Problem with getting new Id");
                 }
                 try {
-                    int rows = databaseManager.add(requestedMusicBand);
+                    int rows = databaseManager.add(requestedMusicBand, currentUser);
                     if (rows > 0) {
                         listManager.insertAtIndex(index, requestedMusicBand);
                     }

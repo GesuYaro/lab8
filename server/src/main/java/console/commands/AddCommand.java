@@ -2,8 +2,8 @@ package console.commands;
 
 import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
+import network.CurrentUser;
 import collectionmanager.databasetools.DatabaseException;
-import collectionmanager.databasetools.DatabaseManager;
 import musicband.InputValueException;
 import console.exсeptions.NotEnoughArgumentsException;
 import musicband.*;
@@ -39,19 +39,19 @@ public class AddCommand extends AbstractCommand {
      * @throws InputValueException
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) throws InputValueException, DatabaseException {
+    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, DatabaseException {
         if (requestedMusicBand == null) throw new NotEnoughArgumentsException();
         LocalDate creationDate = LocalDate.now();
         listManager.increaseMaxId();
         try {
-            long id = databaseManager.getNewMaxId();
+            long id = databaseManager.getNewMaxId(currentUser);
             requestedMusicBand.setCreationDate(creationDate);
             requestedMusicBand.setId(id);
         } catch (SQLException e) {
             throw new DatabaseException("Problem with getting new Id");
         }
         try {
-            int rows = databaseManager.add(requestedMusicBand);
+            int rows = databaseManager.add(requestedMusicBand, currentUser);
             if (rows > 0) {
                 listManager.add(requestedMusicBand);
             }
