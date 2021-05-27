@@ -24,9 +24,10 @@ public class ClientMain {
         commandsWithExtendedRequest.add("insert_at"); //
         commandsWithExtendedRequest.add("update"); //
         ConsoleWriter consoleWriter = new ConsoleWriter(); //
+        java.io.Console standardConsole = System.console();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in)); //
         PasswordCipher passwordCipher = new PasswordCipher();
-        Authenticator authenticator = new Authenticator(bufferedReader, consoleWriter, passwordCipher);
+        Authenticator authenticator = new Authenticator(bufferedReader, consoleWriter, passwordCipher, standardConsole);
         String login = authenticator.readLogin();
         byte[] password = authenticator.readPassword();
         CurrentUser currentUser = new CurrentUser(login, password);

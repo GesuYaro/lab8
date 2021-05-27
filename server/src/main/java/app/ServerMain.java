@@ -138,14 +138,34 @@ public class ServerMain {
         return answer;
     }
 
+    private static String readPassword(BufferedReader bufferedReader, String message) {
+        String answer = null;
+        java.io.Console console = System.console();
+        if (console != null) {
+            while (answer == null) {
+                System.out.println(message);
+                answer = new String(console.readPassword());
+            }
+        } else {
+            while (answer == null) {
+                try {
+                    answer = bufferedReader.readLine();
+                } catch (IOException e) {
+                    System.out.println("Can't read password");
+                }
+            }
+        }
+        return answer;
+    }
+
     private static void setDatabaseArguments() {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         dbHost = readDatabaseArguments(bufferedReader, "Enter database host:");
         dbPort = Integer.parseInt(readDatabaseArguments(bufferedReader, "Enter database port:"));
         dbName = readDatabaseArguments(bufferedReader, "Enter database name:");
-        dbLogin = readDatabaseArguments(bufferedReader, "Enter database login");
-        dbPassword = readDatabaseArguments(bufferedReader, "Enter database password");
-        System.out.println("=======================");
+        dbLogin = readDatabaseArguments(bufferedReader, "Enter database login:");
+        dbPassword = readPassword(bufferedReader, "Enter database password:");
+        System.out.println("=========================");
     }
 
     public static void saveFile() {
