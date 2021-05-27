@@ -18,17 +18,14 @@ import java.time.LocalDate;
 public class AddCommand extends AbstractCommand {
 
     private ArrayListManager listManager;
-    private MusicBandFieldsChecker checker;
     private CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции
-     * @param reader Считыватель полей элемента коллекции
      */
-    public AddCommand(ArrayListManager listManager, MusicBandFieldsChecker reader, CollectionManager databaseManager) {
+    public AddCommand(ArrayListManager listManager, CollectionManager databaseManager) {
         super("add {element}", "add new element into collection");
         this.listManager = listManager;
-        this.checker = reader;
         this.databaseManager = databaseManager;
     }
 
@@ -39,7 +36,7 @@ public class AddCommand extends AbstractCommand {
      * @throws InputValueException
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, DatabaseException {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, DatabaseException {
         if (requestedMusicBand == null) throw new NotEnoughArgumentsException();
         LocalDate creationDate = LocalDate.now();
         listManager.increaseMaxId();
@@ -58,7 +55,7 @@ public class AddCommand extends AbstractCommand {
         } catch (SQLException e) {
             throw new DatabaseException("Problem with adding element");
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
 
     }
 }

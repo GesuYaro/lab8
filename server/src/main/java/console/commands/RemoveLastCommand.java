@@ -31,7 +31,7 @@ public class RemoveLastCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT;
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
             int rows = databaseManager.removeLast(currentUser);
             if (rows > 0) {
@@ -40,6 +40,6 @@ public class RemoveLastCommand extends AbstractCommand {
         } catch (SQLException e) {
             throw new DatabaseException("Problem with deleting element");
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
     }
 }

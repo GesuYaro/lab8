@@ -9,16 +9,13 @@ import network.CurrentUser;
  * Класс команды info, выводящей информацию о коллекции
  */
 public class InfoCommand extends AbstractCommand {
-    private Writer writer;
     private ArrayListManager listManager;
 
     /**
-     * @param writer Объект класса, выводящего в консоль
      * @param listManager Менеджер коллекции
      */
-    public InfoCommand(Writer writer, ArrayListManager listManager) {
+    public InfoCommand(ArrayListManager listManager) {
         super("info", "print information about the collection (type, date of initialization, number of elements, etc.) to standard output");
-        this.writer = writer;
         this.listManager = listManager;
     }
 
@@ -29,8 +26,9 @@ public class InfoCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
-        writer.write(listManager.info());
-        return CommandCode.DEFAULT;
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
+        commandResponse.setMessage(listManager.info());
+        return commandResponse;
     }
 }

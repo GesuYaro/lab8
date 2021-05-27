@@ -1,6 +1,7 @@
 package server;
 
 import console.Writer;
+import console.commands.CommandResponse;
 import musicband.MusicBand;
 import network.Response;
 
@@ -40,6 +41,11 @@ public class ServerWriter implements Writer {
         if (musicBand != null) {
             response.addToList(musicBand);
         }
+    }
+
+    public void write(CommandResponse commandResponse) {
+        write(commandResponse.getMessage());
+        write(commandResponse.getArrayList());
     }
 
     public void sendResponse() throws IOException {

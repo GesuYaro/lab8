@@ -12,16 +12,13 @@ import network.CurrentUser;
  */
 public class CountGreaterThanGenreCommand extends AbstractCommand{
     private ArrayListManager listManager;
-    private Writer writer;
 
     /**
-     * @param writer Объект класса, осуществляющий вывод в консоль
      * @param listManager Менеджер коллекции
      */
-    public CountGreaterThanGenreCommand(Writer writer, ArrayListManager listManager) {
+    public CountGreaterThanGenreCommand(ArrayListManager listManager) {
         super("count_greater_than_genre", "print the number of elements whose genre field value is greater than the given one");
         this.listManager = listManager;
-        this.writer = writer;
     }
 
     /**
@@ -31,12 +28,13 @@ public class CountGreaterThanGenreCommand extends AbstractCommand{
      * @throws NoArgumentFoundException
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
         try {
             firstArgument = firstArgument.trim().split(" ")[0].toUpperCase();
             MusicGenre genre = MusicGenre.valueOf(firstArgument);
             long count = listManager.countGreaterThanGenre(genre);
-            writer.write(String.valueOf(count));
+            commandResponse.setMessage(String.valueOf(count));
         } catch (IllegalArgumentException e) {
             if (firstArgument.equals("")) {
                 throw new NoArgumentFoundException();
@@ -44,6 +42,6 @@ public class CountGreaterThanGenreCommand extends AbstractCommand{
                 throw new NoArgumentFoundException("Genre " + firstArgument + " not found");
             }
         }
-        return CommandCode.DEFAULT;
+        return commandResponse;
     }
 }

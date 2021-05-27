@@ -18,7 +18,7 @@ public class ExitCommand extends AbstractCommand {
      * @return CommandCode.EXIT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
-        return CommandCode.EXIT;
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+        return new CommandResponse(CommandCode.EXIT);
     }
 }

@@ -28,7 +28,7 @@ public class ArrayListManager {
     /**
      * @return Информация о коллекции
      */
-    public String info() {
+    public synchronized String info() {
         String str = "";
         str += "Type: ArrayList<MusicBand>"
                 + "\nInitialization date: " + initializationDate.toString()
@@ -39,21 +39,21 @@ public class ArrayListManager {
     /**
      * @return Коллекцию, которой управляет менеджер
      */
-    public ArrayList<MusicBand> getArrayList() {
+    public synchronized ArrayList<MusicBand> getArrayList() {
         return arrayList;
     }
 
     /**
      * @param musicBand Добавляет объект в коллекцию
      */
-    public void add(MusicBand musicBand) {
+    public synchronized void add(MusicBand musicBand) {
         arrayList.add(musicBand);
     }
 
     /**
      * Сортирует коллекцию
      */
-    public void sort() {
+    public synchronized void sort() {
         arrayList = arrayList.stream()
                 .sorted(MusicBand::compareTo)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -63,7 +63,7 @@ public class ArrayListManager {
      * Удаляет элемент из коллекции
      * @param musicBand
      */
-    public void remove(MusicBand musicBand) {
+    public synchronized void remove(MusicBand musicBand) {
         arrayList = arrayList.stream()
                 .filter(mb -> !mb.equals(musicBand))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -72,14 +72,14 @@ public class ArrayListManager {
     /**
      * Очищает коллекцию
      */
-    public void clear() {
+    public synchronized void clear() {
         arrayList.clear();
     }
 
     /**
      * Удаляет последний элемент коллекции
      */
-    public void removeLast() {
+    public synchronized void removeLast() {
         if (arrayList.size() > 0) {
             arrayList = arrayList.stream()
                     .limit(arrayList.size() - 1)
@@ -90,7 +90,7 @@ public class ArrayListManager {
     /**
      * @return Элементы коллекции в строковом представлении
      */
-    public String show() {
+    public synchronized String show() {
         String str = "";
         for (ListIterator<MusicBand> iterator = arrayList.listIterator(); iterator.hasNext(); ) {
              str += iterator.next().toString() + "\n";
@@ -102,7 +102,7 @@ public class ArrayListManager {
      * @param index Индекс элемента коллекции
      * @return Элемент коллекции, найденный по индексу
      */
-    public MusicBand get(int index) {
+    public synchronized MusicBand get(int index) {
         return arrayList.get(index);
     }
 
@@ -110,7 +110,7 @@ public class ArrayListManager {
      * @param index Индекс куда вставить элемент
      * @param musicBand Объект, который нужно вставить в коллекцию
      */
-    public void set(int index, MusicBand musicBand) {
+    public synchronized void set(int index, MusicBand musicBand) {
         arrayList.set(index, musicBand);
     }
 
@@ -119,7 +119,7 @@ public class ArrayListManager {
      * @return Объект с id, равным заданному
      * @throws NoSuchIdException
      */
-    public MusicBand getById(long id) {
+    public synchronized MusicBand getById(long id) {
         MusicBand musicBand = null;
         Optional<MusicBand> optional = arrayList.stream().filter(a -> a.getId() == id).findFirst();
         if (optional.isPresent()) {
@@ -135,7 +135,7 @@ public class ArrayListManager {
      * @param id id элемента, который нужно заменить
      * @param musicBand Объект, который нужно вставить на место замененного
      */
-    public void replace(long id, MusicBand musicBand) {
+    public synchronized void replace(long id, MusicBand musicBand) {
         arrayList = arrayList.stream()
             .map(mb -> {
                 if (mb.getId() == id) {
@@ -149,7 +149,7 @@ public class ArrayListManager {
     /**
      * @param id id объекта, который нужно удалить
      */
-    public void removeById(long id) {
+    public synchronized void removeById(long id) {
         arrayList = arrayList.stream()
                 .filter(mb -> mb.getId() != id)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -159,7 +159,7 @@ public class ArrayListManager {
      * @param index Индекс, в который нужно вставить элемент
      * @param musicBand Объект, который нужно вставить
      */
-    public void insertAtIndex(int index, MusicBand musicBand) {
+    public synchronized void insertAtIndex(int index, MusicBand musicBand) {
         arrayList.add(index, musicBand);
     }
 
@@ -167,7 +167,7 @@ public class ArrayListManager {
      * @param genre Жанр
      * @return Количество элементов, поле genre, которых превышает введенный жанр
      */
-    public long countGreaterThanGenre(MusicGenre genre) {
+    public synchronized long countGreaterThanGenre(MusicGenre genre) {
         long count = 0;
         count = arrayList.stream()
                 .filter(mb -> mb.getGenre().compareTo(genre) < 0)
@@ -179,7 +179,7 @@ public class ArrayListManager {
      * @param singlesCount
      * @return Коллекция объектов, поле singlesCount которых меньше введенной
      */
-    public ArrayList<MusicBand> filterLessThanSinglesCount(Integer singlesCount) {
+    public synchronized ArrayList<MusicBand> filterLessThanSinglesCount(Integer singlesCount) {
         ArrayList<MusicBand> list;
         list = arrayList.stream()
                 .filter(mb -> mb.getSinglesCount() != null && mb.getSinglesCount().compareTo(singlesCount) < 0)
@@ -190,7 +190,7 @@ public class ArrayListManager {
     /**
      * @return Отсортированную коллекцию по полю genre
      */
-    public ArrayList<MusicBand> sortByGenre() {
+    public synchronized ArrayList<MusicBand> sortByGenre() {
         ArrayList<MusicBand> sortedList;
         sortedList = arrayList.stream()
                 .filter(Objects::nonNull)
@@ -210,14 +210,14 @@ public class ArrayListManager {
     /**
      * @return Максимальный id в коллекции
      */
-    public long getMaxId() {
+    public synchronized long getMaxId() {
         return maxId;
     }
 
     /**
      * Увеличивает максимальный id
      */
-    public void increaseMaxId() {
+    public synchronized void increaseMaxId() {
         if (arrayList.size() > 0) {
             for (MusicBand mb : arrayList) {
                 if (mb.getId() >= this.maxId) {
@@ -232,14 +232,14 @@ public class ArrayListManager {
     /**
      * @return Дата инициализации коллекции
      */
-    public LocalDate getInitializationDate() {
+    public synchronized LocalDate getInitializationDate() {
         return initializationDate;
     }
 
     /**
      * @return true, если в коллекции обнаружены элементы с одинаковым id
      */
-    public boolean containsRepeatingId() {
+    public synchronized boolean containsRepeatingId() {
         boolean isRepeating = false;
         HashSet<Long> ids = new HashSet<>();
         for (ListIterator<MusicBand> iterator = arrayList.listIterator(); iterator.hasNext(); ) {
@@ -253,7 +253,7 @@ public class ArrayListManager {
         return isRepeating;
     }
 
-    public void setArrayList(ArrayList<MusicBand> arrayList) {
+    public synchronized void setArrayList(ArrayList<MusicBand> arrayList) {
         this.arrayList = arrayList;
     }
 }

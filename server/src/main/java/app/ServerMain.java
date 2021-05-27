@@ -37,7 +37,6 @@ public class ServerMain {
 
     public static void main(String[] args) {
 
-        logger.info("App is turned on.");
         setArguments(args);
 
         ArrayList<MusicBand> musicBandArrayList = new ArrayList<>();
@@ -146,6 +145,7 @@ public class ServerMain {
         dbName = readDatabaseArguments(bufferedReader, "Enter database name:");
         dbLogin = readDatabaseArguments(bufferedReader, "Enter database login");
         dbPassword = readDatabaseArguments(bufferedReader, "Enter database password");
+        System.out.println("=======================");
     }
 
     public static void saveFile() {

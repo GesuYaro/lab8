@@ -17,17 +17,14 @@ import java.time.LocalDate;
 public class InsertAtCommand extends AbstractCommand {
 
     private ArrayListManager listManager;
-    private MusicBandFieldsChecker fieldsChecker;
     private CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции
-     * @param fieldsChecker Считыватель полей
      */
-    public InsertAtCommand(ArrayListManager listManager, MusicBandFieldsChecker fieldsChecker, CollectionManager databaseManager) {
+    public InsertAtCommand(ArrayListManager listManager, CollectionManager databaseManager) {
         super("insert_at index {element}", "add a new item at a given position");
         this.listManager = listManager;
-        this.fieldsChecker = fieldsChecker;
         this.databaseManager = databaseManager;
     }
 
@@ -37,7 +34,7 @@ public class InsertAtCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, IndexOutOfBoundsException, NoArgumentFoundException {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, IndexOutOfBoundsException, NoArgumentFoundException {
         try {
             int index = Integer.parseInt(firstArgument
                     .trim()
@@ -66,6 +63,6 @@ public class InsertAtCommand extends AbstractCommand {
         } catch (NumberFormatException e) {
             throw new NoArgumentFoundException();
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
     }
 }

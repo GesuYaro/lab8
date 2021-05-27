@@ -3,6 +3,8 @@ package server;
 import collectionmanager.databasetools.AuthenticationException;
 import collectionmanager.databasetools.DatabaseException;
 import console.CommandHandler;
+import console.commands.CommandCode;
+import console.commands.CommandResponse;
 import console.exсeptions.*;
 import musicband.InputValueException;
 import network.Request;
@@ -10,6 +12,8 @@ import org.slf4j.Logger;
 import server.exceptions.WrongRequestException;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class RequestHandler implements Runnable {
 
@@ -28,6 +32,7 @@ public class RequestHandler implements Runnable {
     @Override
     public void run() {
         try {
+            CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
             Request request = null;
             while (request == null){
                 try {
@@ -35,7 +40,16 @@ public class RequestHandler implements Runnable {
                     if (request != null) {
                         try {
                             logger.info("Got the request");
-                            commandHandler.execute(request);
+                            Future<CommandResponse> future = commandHandler.execute(request);
+                            try {
+                                commandResponse = future.get();
+                                if (commandResponse.getCommandCode().equals(CommandCode.NO_SUCH_COMMAND)) {
+                                    logger.warn(commandResponse.getMessage());
+                                }
+                            } catch (InterruptedException | ExecutionException e) {
+                                logger.warn("Problem with getting response from invoker");
+                            }
+                            writer.write(commandResponse);
                         } catch (NoArgumentFoundException | InputValueException | IndexOutOfBoundsException | NoSuchIdException |
                                 NotEnoughArgumentsException | DatabaseException | AuthenticationException e) {
                             writer.write(e.getMessage());

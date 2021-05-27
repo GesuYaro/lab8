@@ -14,22 +14,19 @@ import java.time.LocalDate;
 public class UpdateCommand extends AbstractCommand {
 
     private ArrayListManager listManager;
-    private MusicBandFieldsChecker fieldsChecker;
     private CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции
-     * @param fieldsChecker Считыватель полей
      */
-    public UpdateCommand(ArrayListManager listManager, MusicBandFieldsChecker fieldsChecker, CollectionManager databaseManager) {
+    public UpdateCommand(ArrayListManager listManager, CollectionManager databaseManager) {
         super("update id {element}", "update the value of the collection item whose id is equal to the given");
         this.listManager = listManager;
-        this.fieldsChecker = fieldsChecker;
         this.databaseManager = databaseManager;
     }
 
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException, NoSuchIdException{
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException, NoSuchIdException{
         try {
             if (firstArgument == null) {
                 firstArgument = "";
@@ -51,6 +48,6 @@ public class UpdateCommand extends AbstractCommand {
         } catch (NumberFormatException e) {
             throw new NoArgumentFoundException();
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
     }
 }

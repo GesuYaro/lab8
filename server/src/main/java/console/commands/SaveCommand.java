@@ -37,7 +37,7 @@ public class SaveCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
             writer = new OutputStreamWriter(new FileOutputStream(file));
             try {
@@ -54,6 +54,6 @@ public class SaveCommand extends AbstractCommand {
         } catch (FileNotFoundException | NullPointerException e) {
             logger.error("File not found");
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
     }
 }

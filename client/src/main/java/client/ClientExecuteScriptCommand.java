@@ -2,6 +2,7 @@ package client;
 
 import console.*;
 import console.commands.CommandCode;
+import console.commands.CommandResponse;
 import console.exсeptions.IncorrectScriptException;
 import console.exсeptions.NoArgumentFoundException;
 import musicband.MusicBand;
@@ -43,7 +44,7 @@ public class ClientExecuteScriptCommand {
         this.hostAddress = hostAddress;
     }
 
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException {
         String path = firstArgument.trim();
         if (path.equals("")) throw new NoArgumentFoundException();
         File file = new File(path);
@@ -85,7 +86,7 @@ public class ClientExecuteScriptCommand {
         }
         if (!isInnerScript) scripts.clear();
         else scripts.remove(file);
-        return CommandCode.DEFAULT;
+        return null;
     }
 
     private boolean containsExit(File file) throws IOException {

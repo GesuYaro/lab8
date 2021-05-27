@@ -30,7 +30,7 @@ public class ClearCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
             int rows = databaseManager.clear(currentUser);
             if (rows > 0) {
@@ -40,6 +40,6 @@ public class ClearCommand extends AbstractCommand {
         } catch (SQLException e) {
             throw new DatabaseException("Problem with clearing collection");
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
     }
 }

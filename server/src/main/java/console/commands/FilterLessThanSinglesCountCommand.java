@@ -11,16 +11,13 @@ import console.exсeptions.NoArgumentFoundException;
  */
 public class FilterLessThanSinglesCountCommand extends AbstractCommand {
     private ArrayListManager listManager;
-    private ServerWriter writer;
 
     /**
-     * @param writer Объект класса, осуществляющего вывод в консоль
      * @param listManager Менеджер коллекции
      */
-    public FilterLessThanSinglesCountCommand(ServerWriter writer, ArrayListManager listManager) {
+    public FilterLessThanSinglesCountCommand(ArrayListManager listManager) {
         super("filter_less_than_singles_count singles_count", "display elements whose singlesCount field value is less than the specified one");
         this.listManager = listManager;
-        this.writer = writer;
     }
 
     /**
@@ -30,14 +27,15 @@ public class FilterLessThanSinglesCountCommand extends AbstractCommand {
      * @throws NoArgumentFoundException
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
         try {
             Integer singlesCount = Integer.parseInt(firstArgument.trim().split(" ")[0].trim());
-            writer.write(listManager.filterLessThanSinglesCount(singlesCount));
+            commandResponse.setArrayList(listManager.filterLessThanSinglesCount(singlesCount));
         } catch (NumberFormatException e) {
             throw new NoArgumentFoundException("Argument not found. Enter integer firstArgument");
         }
 
-        return CommandCode.DEFAULT;
+        return commandResponse;
     }
 }

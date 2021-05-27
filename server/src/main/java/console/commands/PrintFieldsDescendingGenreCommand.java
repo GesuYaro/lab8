@@ -12,16 +12,13 @@ import java.util.Iterator;
  * Класс команды print_fields_descending_genre, выводящей поле genre всех объектов в убывающем порядке
  */
 public class PrintFieldsDescendingGenreCommand extends AbstractCommand {
-    private Writer writer;
     private ArrayListManager listManager;
 
     /**
-     * @param writer Объект класса, выводящего в консоль
      * @param listManager Менеджер коллекции
      */
-    public PrintFieldsDescendingGenreCommand(Writer writer, ArrayListManager listManager) {
+    public PrintFieldsDescendingGenreCommand(ArrayListManager listManager) {
         super("print_field_descending_genre", "display the genre field values of all elements in descending order");
-        this.writer = writer;
         this.listManager = listManager;
     }
 
@@ -31,7 +28,8 @@ public class PrintFieldsDescendingGenreCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
         String str = "";
         if (listManager.getArrayList().size() < 1) {
             str = "Collection is empty";
@@ -42,7 +40,7 @@ public class PrintFieldsDescendingGenreCommand extends AbstractCommand {
                 else str = "null\n" + str;
             }
         }
-        writer.write(str);
-        return CommandCode.DEFAULT;
+        commandResponse.setMessage(str);
+        return commandResponse;
     }
 }

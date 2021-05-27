@@ -15,12 +15,10 @@ public class HelpCommand extends AbstractCommand {
     private Writer writer;
 
     /**
-     * @param writer Объект класса, выводящего в консоль
      * @param commands Мапка с командами
      */
-    public HelpCommand(Writer writer, HashMap<String, Command> commands) {
+    public HelpCommand(HashMap<String, Command> commands) {
         super("help","display help for available commands");
-        this.writer = writer;
         this.commands = commands;
     }
 
@@ -44,16 +42,16 @@ public class HelpCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
         String description = "Commands:\n";
         for (String key : commands.keySet()) {
             Command command;
             command = commands.get(key);
             description += command.getName() + " : " + command.getDescription() + "\n";
         }
-        //System.out.println(description);
-        writer.write(description);
+        commandResponse.setMessage(description);
 
-        return CommandCode.DEFAULT;
+        return commandResponse;
     }
 }

@@ -32,7 +32,7 @@ public class RemoveByIdCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
         try {
             long id = Long.parseLong(firstArgument.trim().split(" ")[0]);
             int rows = databaseManager.removeById(id, currentUser);
@@ -44,6 +44,6 @@ public class RemoveByIdCommand extends AbstractCommand {
         } catch (SQLException e) {
             throw new DatabaseException("Problem with deleting element");
         }
-        return CommandCode.DEFAULT;
+        return new CommandResponse(CommandCode.DEFAULT);
     }
 }

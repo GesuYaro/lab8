@@ -11,16 +11,13 @@ import server.ServerWriter;
  */
 public class ShowCommand extends AbstractCommand {
 
-    private ServerWriter writer;
     private ArrayListManager listManager;
 
     /**
-     * @param writer Объект класса, выводящего в консоль
      * @param listManager Менеджер коллекции
      */
-    public ShowCommand(ServerWriter writer, ArrayListManager listManager) {
+    public ShowCommand(ArrayListManager listManager) {
         super("show", "print all elements of the collection in string representation");
-        this.writer = writer;
         this.listManager = listManager;
     }
 
@@ -30,8 +27,9 @@ public class ShowCommand extends AbstractCommand {
      * @return CommandCode.DEFAULT
      */
     @Override
-    public CommandCode execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
-        writer.write(listManager.getArrayList());
-        return CommandCode.DEFAULT;
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
+        commandResponse.setArrayList(listManager.getArrayList());
+        return commandResponse;
     }
 }
