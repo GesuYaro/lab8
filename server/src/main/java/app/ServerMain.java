@@ -93,14 +93,14 @@ public class ServerMain {
                 logger.error("Problem with database initialization");
                 logger.error(e.getMessage());
             }
-            databaseManager = new DatabaseManager(databaseConnection, new UserChecker(databaseConnection));
+            databaseManager = new DatabaseManager(databaseConnection);
             musicBandArrayList = databaseManager.getArrayList();
             initializationDate = databaseManager.getInitializationDate();
             ArrayListManager arrayListManager = new ArrayListManager(musicBandArrayList, initializationDate);
             Connector connector = null;
             try {
                 connector = new Connector(PORT);
-                server.Console console = new Console(arrayListManager, connector, logger, databaseManager);
+                server.Console console = new Console(arrayListManager, connector, logger, databaseManager, new UserChecker(databaseConnection));
                 console.run(singleIterationMode);
             } catch (IOException e) {
                 logger.error("Can't make a server");

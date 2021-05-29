@@ -1,5 +1,7 @@
 package console;
 
+import collectionmanager.databasetools.AuthenticationException;
+import collectionmanager.databasetools.UserChecker;
 import console.exсeptions.NoSuchCommandException;
 import console.commands.*;
 import network.Request;
@@ -18,15 +20,17 @@ public class CommandHandler {
     private volatile HistoryStorage historyStorage;
     private HashMap<String,Command> commands;
     private ExecutorService executorService;
+    private UserChecker userChecker;
 
     /**
      * @param commands Мапа с объектами команд, которые нужно будет исполнять, каждый объект должен реализовывать интерфейс Command
      * @param historyStorage Хранитель истории
      */
-    public CommandHandler(HashMap<String, Command> commands, HistoryStorage historyStorage){
+    public CommandHandler(HashMap<String, Command> commands, HistoryStorage historyStorage, UserChecker userChecker){
         this.commands = commands;
         this.historyStorage = historyStorage;
         this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
+        this.userChecker = userChecker;
     }
 
     /**
@@ -49,18 +53,23 @@ public class CommandHandler {
      * @param request Запрос
      * @return CommandCode в зависимости от результата выполнения команды
      */
-    public Future<CommandResponse> execute(Request request) throws NoSuchCommandException {
+    public Future<CommandResponse> execute(Request request) {
         Callable<CommandResponse> callable = new Callable<CommandResponse>() {
             @Override
             public CommandResponse call() {
-                if(commands.containsKey(request.getCommand())) {
-                    historyStorage.addToCommandHistory(request.getCommand());
-                    return commands.get(request.getCommand())
-                            .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser());
-                }
-                else {
-                    CommandResponse commandResponse = new CommandResponse(CommandCode.NO_SUCH_COMMAND);
-                    commandResponse.setMessage(new NoSuchCommandException(request.getCommand()).getMessage());
+                if (userChecker.checkUser(request.getUser())) {
+                    if (commands.containsKey(request.getCommand())) {
+                        historyStorage.addToCommandHistory(request.getCommand());
+                        return commands.get(request.getCommand())
+                                .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser());
+                    } else {
+                        CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
+                        commandResponse.setMessage(new NoSuchCommandException(request.getCommand()).getMessage());
+                        return commandResponse;
+                    }
+                } else {
+                    CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
+                    commandResponse.setMessage("You have entered wrong password");
                     return commandResponse;
                 }
             }
@@ -93,7 +102,7 @@ public class CommandHandler {
          * Добавляет команду в историю
          * @param command
          */
-        private void addToCommandHistory(String command) {
+        private synchronized void addToCommandHistory(String command) {
             for (int i = commandHistory.length-2; i >= 0; i--) {
                 commandHistory[i+1] = commandHistory[i];
             }

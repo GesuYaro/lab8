@@ -43,7 +43,7 @@ public class RequestHandler implements Runnable {
                             Future<CommandResponse> future = commandHandler.execute(request);
                             try {
                                 commandResponse = future.get();
-                                if (commandResponse.getCommandCode().equals(CommandCode.NO_SUCH_COMMAND)) {
+                                if (commandResponse.getCommandCode().equals(CommandCode.ERROR)) {
                                     logger.warn(commandResponse.getMessage());
                                 }
                             } catch (InterruptedException | ExecutionException e) {

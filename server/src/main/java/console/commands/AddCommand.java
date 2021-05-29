@@ -36,10 +36,12 @@ public class AddCommand extends AbstractCommand {
      * @throws InputValueException
      */
     @Override
-    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, DatabaseException {
-        if (requestedMusicBand == null) throw new NotEnoughArgumentsException();
+    public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, DatabaseException, NotEnoughArgumentsException {
+        if (requestedMusicBand == null) {
+            throw new NotEnoughArgumentsException();
+        }
         LocalDate creationDate = LocalDate.now();
-        listManager.increaseMaxId();
+
         try {
             long id = databaseManager.getNewMaxId(currentUser);
             requestedMusicBand.setCreationDate(creationDate);

@@ -4,6 +4,7 @@ import collectionmanager.ArrayListManager;
 import collectionmanager.CollectionManager;
 import collectionmanager.databasetools.DatabaseConnector;
 import collectionmanager.databasetools.DatabaseManager;
+import collectionmanager.databasetools.UserChecker;
 import console.CommandHandler;
 import console.commands.*;
 import musicband.MusicBandFieldsChecker;
@@ -25,12 +26,14 @@ public class Console {
     private Logger logger;
     private volatile CollectionManager databaseManager;
     private volatile CommandHandler commandHandler;
+    private UserChecker userChecker;
 
-    public Console(ArrayListManager arrayListManager, Connector connector, Logger logger, CollectionManager databaseManager) {
+    public Console(ArrayListManager arrayListManager, Connector connector, Logger logger, CollectionManager databaseManager, UserChecker userChecker) {
         this.arrayListManager = arrayListManager;
         this.connector = connector;
         this.logger = logger;
         this.databaseManager = databaseManager;
+        this.userChecker = userChecker;
     }
 
     public void run(boolean singleIterationMode) {
@@ -52,7 +55,7 @@ public class Console {
         commands.put("print_field_descending_genre", new PrintFieldsDescendingGenreCommand(arrayListManager));
         commands.put("help", new HelpCommand(commands));
         commands.put("exit", new ExitCommand());
-        commandHandler = new CommandHandler(commands, historyStorage);
+        commandHandler = new CommandHandler(commands, historyStorage, userChecker);
 
         logger.info("App is turned on.");
         ForkJoinPool forkJoinPool = new ForkJoinPool();

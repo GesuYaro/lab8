@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class DatabaseManager implements CollectionManager {
 
     private Connection connection;
-    private UserChecker userChecker;
 
     private static final String COLLECTION_SIZE = "SELECT COUNT(*) AS size FROM musicbands";
     private static final String INIT_DATE = "SELECT initialization_Date FROM MUSICBANDS_INITIALIZATION_DATE";
@@ -30,9 +29,8 @@ public class DatabaseManager implements CollectionManager {
     private static final String GET_ALL = "SELECT id, name, coordinate_x, coordinate_y, creation_date, number_of_participants, singles_count, music_genre, label " +
             "FROM musicbands";
 
-    public DatabaseManager(Connection connection, UserChecker userChecker) {
+    public DatabaseManager(Connection connection) {
         this.connection = connection;
-        this.userChecker = userChecker;
     }
 
     @Override
@@ -53,49 +51,37 @@ public class DatabaseManager implements CollectionManager {
     @Override
     public int add(MusicBand musicBand, CurrentUser currentUser) throws SQLException {
         int rows = 0;
-        if (userChecker.checkUser(currentUser)) {
-            PreparedStatement addStatement = connection.prepareStatement(ADD);
-            addStatement.setLong(1, musicBand.getId());
-            addStatement.setString(2, musicBand.getName());
-            addStatement.setLong(3, musicBand.getCoordinates().getX());
-            addStatement.setDouble(4, musicBand.getCoordinates().getY());
-            addStatement.setDate(5, Date.valueOf(musicBand.getCreationDate()));
-            addStatement.setInt(6, musicBand.getNumberOfParticipants());
-            addStatement.setInt(7, musicBand.getSinglesCount());
-            addStatement.setString(8, musicBand.getGenre().toString());
-            addStatement.setString(9, musicBand.getLabel().getName());
-            addStatement.setString(10, currentUser.getLogin());
-            rows = addStatement.executeUpdate();
-        } else {
-            throw new AuthenticationException("You have entered wrong password");
-        }
+        PreparedStatement addStatement = connection.prepareStatement(ADD);
+        addStatement.setLong(1, musicBand.getId());
+        addStatement.setString(2, musicBand.getName());
+        addStatement.setLong(3, musicBand.getCoordinates().getX());
+        addStatement.setDouble(4, musicBand.getCoordinates().getY());
+        addStatement.setDate(5, Date.valueOf(musicBand.getCreationDate()));
+        addStatement.setInt(6, musicBand.getNumberOfParticipants());
+        addStatement.setInt(7, musicBand.getSinglesCount());
+        addStatement.setString(8, musicBand.getGenre().toString());
+        addStatement.setString(9, musicBand.getLabel().getName());
+        addStatement.setString(10, currentUser.getLogin());
+        rows = addStatement.executeUpdate();
         return rows;
     }
 
     @Override
     public int clear(CurrentUser currentUser) throws SQLException {
         int rows = 0;
-        if (userChecker.checkUser(currentUser)) {
-            PreparedStatement clearStatement = connection.prepareStatement(CLEAR);
-            clearStatement.setString(1, currentUser.getLogin());
-            rows = clearStatement.executeUpdate();
-        } else {
-            throw new AuthenticationException("You have entered wrong password");
-        }
+        PreparedStatement clearStatement = connection.prepareStatement(CLEAR);
+        clearStatement.setString(1, currentUser.getLogin());
+        rows = clearStatement.executeUpdate();
         return rows;
     }
 
     @Override
     public int removeLast(CurrentUser currentUser) throws SQLException {
         int rows = 0;
-        if (userChecker.checkUser(currentUser)) {
-            PreparedStatement removeLastStatement = connection.prepareStatement(REMOVE_LAST);
-            removeLastStatement.setString(1, currentUser.getLogin());
-            removeLastStatement.setString(2, currentUser.getLogin());
-            rows =  removeLastStatement.executeUpdate();
-        } else {
-            throw new AuthenticationException("You have entered wrong password");
-        }
+        PreparedStatement removeLastStatement = connection.prepareStatement(REMOVE_LAST);
+        removeLastStatement.setString(1, currentUser.getLogin());
+        removeLastStatement.setString(2, currentUser.getLogin());
+        rows =  removeLastStatement.executeUpdate();
         return rows;
     }
 
@@ -121,49 +107,37 @@ public class DatabaseManager implements CollectionManager {
     @Override
     public int replace(long id, MusicBand musicBand, CurrentUser currentUser) throws SQLException {
         int rows = 0;
-        if (userChecker.checkUser(currentUser)) {
-            PreparedStatement replaceStatement = connection.prepareStatement(REPLACE_BY_ID);
-            replaceStatement.setString(1, musicBand.getName());
-            replaceStatement.setLong(2, musicBand.getCoordinates().getX());
-            replaceStatement.setDouble(3, musicBand.getCoordinates().getY());
-            replaceStatement.setInt(4, musicBand.getNumberOfParticipants());
-            replaceStatement.setInt(5, musicBand.getSinglesCount());
-            replaceStatement.setString(6, musicBand.getGenre().toString());
-            replaceStatement.setString(7, musicBand.getLabel().getName());
-            replaceStatement.setLong(8, id);
-            replaceStatement.setString(9, currentUser.getLogin());
-            rows = replaceStatement.executeUpdate();
-        } else {
-            throw new AuthenticationException("You have entered wrong password");
-        }
+        PreparedStatement replaceStatement = connection.prepareStatement(REPLACE_BY_ID);
+        replaceStatement.setString(1, musicBand.getName());
+        replaceStatement.setLong(2, musicBand.getCoordinates().getX());
+        replaceStatement.setDouble(3, musicBand.getCoordinates().getY());
+        replaceStatement.setInt(4, musicBand.getNumberOfParticipants());
+        replaceStatement.setInt(5, musicBand.getSinglesCount());
+        replaceStatement.setString(6, musicBand.getGenre().toString());
+        replaceStatement.setString(7, musicBand.getLabel().getName());
+        replaceStatement.setLong(8, id);
+        replaceStatement.setString(9, currentUser.getLogin());
+        rows = replaceStatement.executeUpdate();
         return rows;
     }
 
     @Override
     public int removeById(long id, CurrentUser currentUser) throws SQLException {
         int rows = 0;
-        if (userChecker.checkUser(currentUser)) {
-            PreparedStatement removeByIdStatement = connection.prepareStatement(REMOVE_BY_ID);
-            removeByIdStatement.setString(1, currentUser.getLogin());
-            removeByIdStatement.setLong(2, id);
-            rows = removeByIdStatement.executeUpdate();
-        } else {
-            throw new AuthenticationException("You have entered wrong password");
-        }
+        PreparedStatement removeByIdStatement = connection.prepareStatement(REMOVE_BY_ID);
+        removeByIdStatement.setString(1, currentUser.getLogin());
+        removeByIdStatement.setLong(2, id);
+        rows = removeByIdStatement.executeUpdate();
         return rows;
     }
 
     @Override
     public long getNewMaxId(CurrentUser currentUser) throws SQLException {
         Long maxId = 0L;
-        if (userChecker.checkUser(currentUser)) {
-            PreparedStatement getNewMaxIdStatement = connection.prepareStatement(GET_NEW_MAX_ID);
-            ResultSet resultSet = getNewMaxIdStatement.executeQuery();
-            if (resultSet.next()) {
-                maxId = resultSet.getLong("nextval");
-            }
-        } else {
-            throw new AuthenticationException("You have entered wrong password");
+        PreparedStatement getNewMaxIdStatement = connection.prepareStatement(GET_NEW_MAX_ID);
+        ResultSet resultSet = getNewMaxIdStatement.executeQuery();
+        if (resultSet.next()) {
+            maxId = resultSet.getLong("nextval");
         }
         return maxId;
     }

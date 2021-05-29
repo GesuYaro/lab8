@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class UserChecker {
 
-    private Connection connection;
+    private final Connection connection;
 
     public UserChecker(Connection connection) {
         this.connection = connection;
