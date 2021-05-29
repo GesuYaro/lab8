@@ -3,7 +3,6 @@ package console.commands;
 import collectionmanager.ArrayListManager;
 import musicband.MusicBand;
 import network.CurrentUser;
-import server.ServerWriter;
 import console.exсeptions.NoArgumentFoundException;
 
 /**

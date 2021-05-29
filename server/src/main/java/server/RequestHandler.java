@@ -5,6 +5,7 @@ import collectionmanager.databasetools.DatabaseException;
 import console.CommandHandler;
 import console.commands.CommandCode;
 import console.commands.CommandResponse;
+import console.commands.ExecutorResponse;
 import console.exсeptions.*;
 import musicband.InputValueException;
 import network.Request;
@@ -32,7 +33,7 @@ public class RequestHandler implements Runnable {
     @Override
     public void run() {
         try {
-            CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
+            ExecutorResponse commandResponse = new ExecutorResponse(new CommandResponse(CommandCode.DEFAULT), null);
             Request request = null;
             while (request == null){
                 try {
@@ -40,16 +41,16 @@ public class RequestHandler implements Runnable {
                     if (request != null) {
                         try {
                             logger.info("Got the request");
-                            Future<CommandResponse> future = commandHandler.execute(request);
+                            Future<ExecutorResponse> future = commandHandler.execute(request, null);
                             try {
                                 commandResponse = future.get();
-                                if (commandResponse.getCommandCode().equals(CommandCode.ERROR)) {
-                                    logger.warn(commandResponse.getMessage());
+                                if (commandResponse.getCommandResponse().getCommandCode().equals(CommandCode.ERROR)) {
+                                    logger.warn(commandResponse.getCommandResponse().getMessage());
                                 }
                             } catch (InterruptedException | ExecutionException e) {
                                 logger.warn("Problem with getting response from invoker");
                             }
-                            writer.write(commandResponse);
+                            writer.write(commandResponse.getCommandResponse());
                         } catch (NoArgumentFoundException | InputValueException | IndexOutOfBoundsException | NoSuchIdException |
                                 NotEnoughArgumentsException | DatabaseException | AuthenticationException e) {
                             writer.write(e.getMessage());

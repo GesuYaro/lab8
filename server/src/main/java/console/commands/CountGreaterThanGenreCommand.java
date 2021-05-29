@@ -1,7 +1,6 @@
 package console.commands;
 
 import collectionmanager.ArrayListManager;
-import console.Writer;
 import console.exсeptions.NoArgumentFoundException;
 import musicband.MusicBand;
 import musicband.MusicGenre;

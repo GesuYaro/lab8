@@ -5,9 +5,10 @@ import collectionmanager.CollectionManager;
 import collectionmanager.databasetools.DatabaseConnector;
 import collectionmanager.databasetools.DatabaseManager;
 import collectionmanager.databasetools.UserChecker;
-import console.CommandHandler;
+import console.*;
 import console.commands.*;
 import musicband.MusicBandFieldsChecker;
+import network.Request;
 import org.slf4j.Logger;
 
 import java.io.*;
@@ -16,7 +17,12 @@ import java.nio.channels.SocketChannel;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
 
 public class Console {
@@ -58,29 +64,64 @@ public class Console {
         commandHandler = new CommandHandler(commands, historyStorage, userChecker);
 
         logger.info("App is turned on.");
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
+
+        List<SocketChannel> socketChannelList = new LinkedList<>();
+        List<Future<RequestListenerResponse>> requestList = new LinkedList<>();
+        List<Future<ExecutorResponse>> commandResponseList = new LinkedList<>();
+
+        ForkJoinPool requestListenerPool = new ForkJoinPool();
+        ForkJoinPool responseSenderPool = new ForkJoinPool();
+
         do {
             SocketChannel socketChannel = null;
             try {
-                while (socketChannel == null) {
-                    socketChannel = connector.getSocketChannel();
-                }
+                socketChannel = connector.getSocketChannel();
             } catch (IOException e) {
                 logger.warn("Can not connect");
             }
-            SocketChannel finalSocketChannel = socketChannel;
-            RecursiveAction action = new RecursiveAction() {
-                @Override
-                protected void compute() {
-                    ServerWriter writer = new ServerWriter(finalSocketChannel);
-                    RequestReader requestReader = new RequestReader(finalSocketChannel, ByteBuffer.allocate(1024));
-                    RequestHandler requestHandler = new RequestHandler(commandHandler, requestReader, writer, logger);
-                    requestHandler.run();
-                }
-            };
-            forkJoinPool.execute(action);
 
-//            logger.info("Client disconnected");
+            if (socketChannel != null) {
+                socketChannelList.add(socketChannel);
+            }
+
+            for (Iterator<SocketChannel> socketChannelIterator = socketChannelList.iterator(); socketChannelIterator.hasNext(); ) {
+                SocketChannel currentSocketChannel = socketChannelIterator.next();
+                requestList.add(requestListenerPool.submit(new RequestListener(new RequestReader(currentSocketChannel, ByteBuffer.allocate(1024)), logger, currentSocketChannel)));
+                socketChannelIterator.remove();
+            }
+
+            for (Iterator<Future<RequestListenerResponse>> requestIterator = requestList.iterator(); requestIterator.hasNext(); ) {
+                Future<RequestListenerResponse> requestFuture = requestIterator.next();
+                try {
+                    if (requestFuture.isDone()) {
+                        commandResponseList.add(commandHandler.execute(requestFuture.get().getRequest(), requestFuture.get().getSocketChannel()));
+                        requestIterator.remove();
+                    } else if (requestFuture.isCancelled()) {
+                        logger.warn("Request is cancelled");
+                        requestIterator.remove();
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.error("Problem with getting Future<Response>");
+                    requestIterator.remove();
+                }
+            }
+
+            for (Iterator<Future<ExecutorResponse>> responseIterator = commandResponseList.iterator(); responseIterator.hasNext(); ) {
+                Future<ExecutorResponse> responseFuture = responseIterator.next();
+                try {
+                    if (responseFuture.isDone()) {
+                        responseSenderPool.submit(new ResponseSender(logger, new ServerWriter(responseFuture.get().getSocketChannel()), responseFuture.get().getCommandResponse()));
+                        responseIterator.remove();
+                    } else if (responseFuture.isCancelled()) {
+                        logger.warn("Response is cancelled");
+                        responseIterator.remove();
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.error("Problem with sending response");
+                    responseIterator.remove();
+                }
+            }
+
         } while (!singleIterationMode);
     }
 

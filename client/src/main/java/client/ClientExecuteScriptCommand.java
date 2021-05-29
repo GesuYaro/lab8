@@ -1,7 +1,6 @@
 package client;
 
 import console.*;
-import console.commands.CommandCode;
 import console.commands.CommandResponse;
 import console.exсeptions.IncorrectScriptException;
 import console.exсeptions.NoArgumentFoundException;

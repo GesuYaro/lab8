@@ -1,11 +1,11 @@
 package console;
 
-import collectionmanager.databasetools.AuthenticationException;
 import collectionmanager.databasetools.UserChecker;
 import console.exсeptions.NoSuchCommandException;
 import console.commands.*;
 import network.Request;
 
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -53,24 +53,25 @@ public class CommandHandler {
      * @param request Запрос
      * @return CommandCode в зависимости от результата выполнения команды
      */
-    public Future<CommandResponse> execute(Request request) {
-        Callable<CommandResponse> callable = new Callable<CommandResponse>() {
+    public Future<ExecutorResponse> execute(Request request, SocketChannel socketChannel) {
+        Callable<ExecutorResponse> callable = new Callable<ExecutorResponse>() {
             @Override
-            public CommandResponse call() {
+            public ExecutorResponse call() {
                 if (userChecker.checkUser(request.getUser())) {
                     if (commands.containsKey(request.getCommand())) {
                         historyStorage.addToCommandHistory(request.getCommand());
-                        return commands.get(request.getCommand())
-                                .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser());
+                        return new ExecutorResponse(commands.get(request.getCommand())
+                                .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser()),
+                                socketChannel);
                     } else {
                         CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
                         commandResponse.setMessage(new NoSuchCommandException(request.getCommand()).getMessage());
-                        return commandResponse;
+                        return new ExecutorResponse(commandResponse, socketChannel);
                     }
                 } else {
                     CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
                     commandResponse.setMessage("You have entered wrong password");
-                    return commandResponse;
+                    return new ExecutorResponse(commandResponse, socketChannel);
                 }
             }
         };

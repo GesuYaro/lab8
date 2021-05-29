@@ -1,6 +1,5 @@
 package console;
 
-import console.commands.CommandResponse;
 import console.exсeptions.NoArgumentFoundException;
 import console.exсeptions.NoSuchCommandException;
 import console.commands.CommandCode;

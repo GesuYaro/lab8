@@ -1,13 +1,9 @@
 package app;
 
-import collectionmanager.ArrayListInitializer;
 import collectionmanager.ArrayListManager;
-import collectionmanager.Parser;
 import collectionmanager.databasetools.*;
 import console.commands.Command;
-import console.commands.SaveCommand;
 import musicband.MusicBand;
-import musicband.MusicBandFieldsChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.*;
