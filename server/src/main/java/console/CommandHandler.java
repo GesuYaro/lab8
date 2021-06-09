@@ -1,8 +1,14 @@
 package console;
 
+import collectionmanager.databasetools.AuthenticationException;
+import collectionmanager.databasetools.DatabaseException;
 import collectionmanager.databasetools.UserChecker;
+import console.exсeptions.NoArgumentFoundException;
 import console.exсeptions.NoSuchCommandException;
 import console.commands.*;
+import console.exсeptions.NoSuchIdException;
+import console.exсeptions.NotEnoughArgumentsException;
+import musicband.InputValueException;
 import network.Request;
 
 import java.nio.channels.SocketChannel;
@@ -57,20 +63,27 @@ public class CommandHandler {
         Callable<ExecutorResponse> callable = new Callable<ExecutorResponse>() {
             @Override
             public ExecutorResponse call() {
-                if (userChecker.checkUser(request.getUser())) {
-                    if (commands.containsKey(request.getCommand())) {
-                        historyStorage.addToCommandHistory(request.getCommand());
-                        return new ExecutorResponse(commands.get(request.getCommand())
-                                .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser()),
-                                socketChannel);
+                try {
+                    if (userChecker.checkUser(request.getUser())) {
+                        if (commands.containsKey(request.getCommand())) {
+                            historyStorage.addToCommandHistory(request.getCommand());
+                            return new ExecutorResponse(commands.get(request.getCommand())
+                                    .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser()),
+                                    socketChannel);
+                        } else {
+                            CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
+                            commandResponse.setMessage(new NoSuchCommandException(request.getCommand()).getMessage());
+                            return new ExecutorResponse(commandResponse, socketChannel);
+                        }
                     } else {
                         CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
-                        commandResponse.setMessage(new NoSuchCommandException(request.getCommand()).getMessage());
+                        commandResponse.setMessage("You have entered wrong password");
                         return new ExecutorResponse(commandResponse, socketChannel);
                     }
-                } else {
+                } catch (NoArgumentFoundException | InputValueException | IndexOutOfBoundsException | NoSuchIdException |
+                        NotEnoughArgumentsException | DatabaseException | AuthenticationException e) {
                     CommandResponse commandResponse = new CommandResponse(CommandCode.ERROR);
-                    commandResponse.setMessage("You have entered wrong password");
+                    commandResponse.setMessage(e.getMessage());
                     return new ExecutorResponse(commandResponse, socketChannel);
                 }
             }

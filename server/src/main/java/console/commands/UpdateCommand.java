@@ -27,6 +27,7 @@ public class UpdateCommand extends AbstractCommand {
 
     @Override
     public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws NoArgumentFoundException, NoSuchIdException{
+        CommandResponse response = new CommandResponse(CommandCode.DEFAULT);
         try {
             if (firstArgument == null) {
                 firstArgument = "";
@@ -41,6 +42,9 @@ public class UpdateCommand extends AbstractCommand {
                 int rows = databaseManager.replace(id, requestedMusicBand, currentUser);
                 if (rows > 0) {
                     listManager.replace(id, requestedMusicBand);
+                    response.setMessage("Updated");
+                } else {
+                    response.setMessage("Can't update");
                 }
             } catch (SQLException e) {
                 throw new DatabaseException("Problem with updating element");
@@ -48,6 +52,6 @@ public class UpdateCommand extends AbstractCommand {
         } catch (NumberFormatException e) {
             throw new NoArgumentFoundException();
         }
-        return new CommandResponse(CommandCode.DEFAULT);
+        return response;
     }
 }

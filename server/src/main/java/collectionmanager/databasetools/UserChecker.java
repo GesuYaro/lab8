@@ -41,13 +41,11 @@ public class UserChecker {
         boolean isApproved = false;
         if (checkLogin(currentUser)) {
             isApproved = checkPassword(currentUser);
-        } else {
-            isApproved = signUpUser(currentUser);
         }
         return isApproved;
     }
 
-    private boolean checkLogin(CurrentUser currentUser) throws DatabaseException {
+    public boolean checkLogin(CurrentUser currentUser) throws DatabaseException {
         boolean isRegistered = false;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_ROW);
@@ -62,7 +60,7 @@ public class UserChecker {
         return isRegistered;
     }
 
-    private boolean signUpUser(CurrentUser currentUser) throws DatabaseException {
+    public boolean signUpUser(CurrentUser currentUser) throws DatabaseException {
         boolean isSignedUp = false;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SIGN_UP_USER);

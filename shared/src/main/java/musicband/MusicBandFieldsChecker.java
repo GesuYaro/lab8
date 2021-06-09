@@ -94,7 +94,7 @@ public class MusicBandFieldsChecker {
             name = prename;
             //name = name.replaceAll("%COMMA%", ",");
         }
-        else throw new InputValueException("Input Error\nField can't be null, string can't be empty");
+        else throw new InputValueException("Input Error\nName field can't be null, string can't be empty");
         return name;
     }
 
@@ -129,7 +129,7 @@ public class MusicBandFieldsChecker {
         long x;
         try {
             x = Long.parseLong(string.trim());
-            if (x > 3) throw new InputValueException("Field can't be greater than 3");
+            if (x > 3) throw new InputValueException("X can't be greater than 3");
         }
         catch (NumberFormatException e){
             throw new InputValueException("Input Error\nField should be long");
@@ -168,10 +168,10 @@ public class MusicBandFieldsChecker {
         double y;
         try {
             y = Double.parseDouble(string.trim());
-            if (y < -859) throw new InputValueException("Field should be greater than -859");
+            if (y < -859) throw new InputValueException("Y should be greater than -859");
         }
         catch (NumberFormatException e){
-            throw new InputValueException("Input Error\nField should be double");
+            throw new InputValueException("Input Error\nY should be double");
         }
         return y;
     }
@@ -254,7 +254,7 @@ public class MusicBandFieldsChecker {
             if (numberOfParticipants <= 0) throw new NumberFormatException();
         }
         catch (NumberFormatException e){
-            throw new InputValueException("Input Error\nEnter the natural number");
+            throw new InputValueException("Input Error\nNumber of participants should be the natural number");
         }
         return numberOfParticipants;
     }
@@ -302,7 +302,7 @@ public class MusicBandFieldsChecker {
             }
         }
         catch (NumberFormatException e){
-            throw new InputValueException("Input Error\nEnter the natural number");
+            throw new InputValueException("Input Error\nSingles count should be the natural number");
         }
         return singlesCount;
     }
@@ -323,7 +323,6 @@ public class MusicBandFieldsChecker {
                             if (musicGenre.name().equals(str)) {
                                 choicedMusicGenre = musicGenre;
                             }
-
                         }
                         if (choicedMusicGenre == null) {
                             throw new InputValueException("Input Error\nGenre should be chosen from the list");

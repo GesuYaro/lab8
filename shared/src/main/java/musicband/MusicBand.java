@@ -5,6 +5,7 @@ import collectionmanager.CSVConvertible;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Vector;
 
 /**
  * Музыкальная группа, объекты этого класса хранятся в коллекции
@@ -146,6 +147,20 @@ public class MusicBand implements Comparable<MusicBand>, CSVConvertible, Seriali
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Vector<Object> toVector() {
+        Vector<Object> vector = new Vector<>();
+        vector.add(id);
+        vector.add(name);
+        vector.add(coordinates.getX());
+        vector.add(coordinates.getY());
+        vector.add(creationDate);
+        vector.add(numberOfParticipants);
+        vector.add(singlesCount);
+        vector.add(genre.name());
+        vector.add(label.getName());
+        return vector;
     }
 }
 

@@ -54,4 +54,8 @@ public class Authenticator {
         return passwordCipher.hashPassword(password);
     }
 
+    public byte[] password(String pswrd) {
+        return passwordCipher.hashPassword(pswrd);
+    }
+
 }

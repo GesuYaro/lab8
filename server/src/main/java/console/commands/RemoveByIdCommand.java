@@ -33,17 +33,21 @@ public class RemoveByIdCommand extends AbstractCommand {
      */
     @Override
     public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) {
+        CommandResponse commandResponse = new CommandResponse(CommandCode.DEFAULT);
         try {
             long id = Long.parseLong(firstArgument.trim().split(" ")[0]);
             int rows = databaseManager.removeById(id, currentUser);
             if (rows > 0) {
                 listManager.removeById(id);
+                commandResponse.setMessage("Removed");
+            } else {
+                commandResponse.setMessage("Not Removed");
             }
         } catch (NumberFormatException e) {
             throw new NoArgumentFoundException();
         } catch (SQLException e) {
             throw new DatabaseException("Problem with deleting element");
         }
-        return new CommandResponse(CommandCode.DEFAULT);
+        return commandResponse;
     }
 }

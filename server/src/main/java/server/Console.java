@@ -61,6 +61,8 @@ public class Console {
         commands.put("print_field_descending_genre", new PrintFieldsDescendingGenreCommand(arrayListManager));
         commands.put("help", new HelpCommand(commands));
         commands.put("exit", new ExitCommand());
+        commands.put("sign_in", new SignInCommand(userChecker));
+        commands.put("sign_up", new SignUpCommand(userChecker));
         commandHandler = new CommandHandler(commands, historyStorage, userChecker);
 
         logger.info("App is turned on.");
@@ -117,6 +119,7 @@ public class Console {
                         responseIterator.remove();
                     }
                 } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
                     logger.error("Problem with sending response");
                     responseIterator.remove();
                 }

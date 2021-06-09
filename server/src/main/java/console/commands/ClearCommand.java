@@ -40,6 +40,6 @@ public class ClearCommand extends AbstractCommand {
         } catch (SQLException e) {
             throw new DatabaseException("Problem with clearing collection");
         }
-        return new CommandResponse(CommandCode.DEFAULT);
+        return new CommandResponse(CommandCode.DEFAULT, "Cleared");
     }
 }

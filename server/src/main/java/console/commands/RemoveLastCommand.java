@@ -40,6 +40,6 @@ public class RemoveLastCommand extends AbstractCommand {
         } catch (SQLException e) {
             throw new DatabaseException("Problem with deleting element");
         }
-        return new CommandResponse(CommandCode.DEFAULT);
+        return new CommandResponse(CommandCode.DEFAULT, "Removed");
     }
 }

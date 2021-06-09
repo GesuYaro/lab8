@@ -22,25 +22,26 @@ public class ClientExecuteScriptCommand {
     private Collection<String> commandsWithExtendedRequest;
     private int port;
     private String hostAddress;
-    private CurrentUser currentUser;
+    private UserManager userManager;
 
-    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, CurrentUser currentUser) {
+    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, UserManager userManager) {
         this.writer = writer;
         this.commandsWithExtendedRequest = commandsWithExtendedRequest;
         this.isInnerScript = false;
         this.scripts = new HashSet<>();
         this.port = port;
         this.hostAddress = hostAddress;
-        this.currentUser = currentUser;
+        this.userManager = userManager;
     }
 
-    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, CurrentUser currentUser, HashSet<File> scripts) {
+    public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, UserManager userManager, HashSet<File> scripts) {
         this.writer = writer;
         this.commandsWithExtendedRequest = commandsWithExtendedRequest;
         this.isInnerScript = true;
         this.scripts = scripts;
         this.port = port;
         this.hostAddress = hostAddress;
+        this.userManager = userManager;
     }
 
     public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException {
@@ -56,8 +57,8 @@ public class ClientExecuteScriptCommand {
                             BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
                             MusicBandFieldsChecker fieldsReader = new MusicBandFieldsChecker(fileReader);
                             FieldsReader scriptModeReader = new FieldsReader(fieldsReader, writer, false);
-                            RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, scriptModeReader, currentUser);
-                            ClientExecuteScriptCommand innerExecuteScriptCommand = new ClientExecuteScriptCommand(writer, commandsWithExtendedRequest, port, hostAddress, currentUser, scripts);
+                            RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, scriptModeReader, userManager, fieldsReader);
+                            ClientExecuteScriptCommand innerExecuteScriptCommand = new ClientExecuteScriptCommand(writer, commandsWithExtendedRequest, port, hostAddress, userManager, scripts);
                             client.Console console = new Console(requestFabric, fileReader, innerExecuteScriptCommand, port, hostAddress);
                             try {
                                 console.run();

@@ -8,21 +8,22 @@ public class MenuPanelDrawer implements PanelDrawer {
 
     private ActionListener frameManager;
 
+    private JPanel panel;
+
     private JButton authButton = new JButton("Сменить пользователя");
     private JButton commandsButton = new JButton("Команды");
     private JButton tableButton = new JButton("Таблица");
     private JButton visualizeButton = new JButton("Визуализировать");
     private JLabel authLabel = new JLabel("Авторизован как:");
     private JLabel userNameLabel = new JLabel("GesuYaro");
-    private JLabel versionLabel = new JLabel("ver 0.8.1");
+    private JLabel versionLabel = new JLabel("ver 0.8.2");
 
 
     public MenuPanelDrawer(ActionListener frameManager) {
         this.frameManager = frameManager;
     }
 
-    @Override
-    public JPanel drawPanel() {
+    private JPanel initPanel() {
         authButton.addActionListener(frameManager);
         commandsButton.addActionListener(frameManager);
         tableButton.addActionListener(frameManager);
@@ -46,6 +47,14 @@ public class MenuPanelDrawer implements PanelDrawer {
         versionContainer.add(versionLabel);
         pane.add(versionContainer, getButtonCons(7));
         return pane;
+    }
+
+    @Override
+    public JPanel drawPanel() {
+        if (panel == null) {
+            panel = initPanel();
+        }
+        return panel;
     }
 
     private GridBagConstraints getAuthLabelCons() {

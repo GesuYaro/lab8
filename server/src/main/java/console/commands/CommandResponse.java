@@ -12,6 +12,11 @@ public class CommandResponse {
     public CommandResponse() {
     }
 
+    public CommandResponse(CommandCode commandCode, String message) {
+        this.commandCode = commandCode;
+        this.message = message;
+    }
+
     public CommandResponse(CommandCode commandCode) {
         this.commandCode = commandCode;
     }

@@ -7,6 +7,8 @@ public class SignInPanelDrawer implements PanelDrawer {
 
     private FrameManager frameManager;
 
+    private JPanel panel;
+
     private JTextField loginField = new JTextField("");
     private JPasswordField passwordField = new JPasswordField("");
     private JLabel loginLabel = new JLabel("Логин:");
@@ -15,12 +17,12 @@ public class SignInPanelDrawer implements PanelDrawer {
     private JButton signUpButton = new JButton("Зарегистрироваться");
     private JButton backButton = new JButton("Вернуться в меню");
 
+
     public SignInPanelDrawer(FrameManager frameManager) {
         this.frameManager = frameManager;
     }
 
-    @Override
-    public JPanel drawPanel() {
+    private JPanel initPanel() {
         backButton.addActionListener(frameManager);
         loginField.setPreferredSize(new Dimension(200, 30));
         passwordField.setPreferredSize(new Dimension(200, 30));
@@ -40,6 +42,14 @@ public class SignInPanelDrawer implements PanelDrawer {
         pane.add(buttonsContainer, getButtonContainerCons(1));
         pane.add(backButton, getBackButtonCons());
         return pane;
+    }
+
+    @Override
+    public JPanel drawPanel() {
+        if (panel == null) {
+            panel = initPanel();
+        }
+        return panel;
     }
 
     private GridBagConstraints getFieldsCons(int gridy) {
