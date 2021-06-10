@@ -1,5 +1,7 @@
 package gui;
 
+import client.UserManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -9,18 +11,21 @@ public class MenuPanelDrawer implements PanelDrawer {
     private ActionListener frameManager;
 
     private JPanel panel;
+    private UserManager userManager;
 
     private JButton authButton = new JButton("Сменить пользователя");
     private JButton commandsButton = new JButton("Команды");
     private JButton tableButton = new JButton("Таблица");
     private JButton visualizeButton = new JButton("Визуализировать");
     private JLabel authLabel = new JLabel("Авторизован как:");
-    private JLabel userNameLabel = new JLabel("GesuYaro");
-    private JLabel versionLabel = new JLabel("ver 0.8.2");
+    private JLabel userNameLabel = new JLabel();
+    private JLabel versionLabel = new JLabel("ver. 0.8.3");
+    private Container userNameContainer = new Container();
 
 
-    public MenuPanelDrawer(ActionListener frameManager) {
+    public MenuPanelDrawer(ActionListener frameManager, UserManager userManager) {
         this.frameManager = frameManager;
+        this.userManager = userManager;
     }
 
     private JPanel initPanel() {
@@ -30,9 +35,11 @@ public class MenuPanelDrawer implements PanelDrawer {
         visualizeButton.addActionListener(frameManager);
         JPanel pane = new JPanel(new GridBagLayout());
         pane.setBackground(new Color(0xED9CDE));
-        Container userNameContainer = new Container();
         userNameContainer.setLayout(new BoxLayout(userNameContainer, BoxLayout.Y_AXIS));
         authLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        if (userManager.getUser() != null) {
+            userNameLabel.setText(userManager.getUser().getLogin());
+        }
         userNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         userNameContainer.add(authLabel);
         userNameContainer.add(userNameLabel);
@@ -53,6 +60,11 @@ public class MenuPanelDrawer implements PanelDrawer {
     public JPanel drawPanel() {
         if (panel == null) {
             panel = initPanel();
+        }
+        if (userManager.getUser() != null) {
+            if (!userManager.getUser().getLogin().equals(userNameLabel.getText())) {
+                updateUsername();
+            }
         }
         return panel;
     }
@@ -79,6 +91,18 @@ public class MenuPanelDrawer implements PanelDrawer {
         constraints.ipadx = 300;
         constraints.gridx = 1;
         return constraints;
+    }
+
+    private void updateUsername() {
+        if (userManager.getUser() != null) {
+            panel.remove(userNameContainer);
+            authLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            userNameLabel.setText(userManager.getUser().getLogin());
+            userNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            userNameContainer.add(authLabel);
+            userNameContainer.add(userNameLabel);
+            panel.add(userNameContainer, getAuthLabelCons());
+        }
     }
 
 }

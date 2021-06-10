@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class PasswordCipher {
-    public byte[] hashPassword(String password) {
+    public static byte[] hashPassword(String password) {
         byte[] hashedPassword = null;
         try {
             MessageDigest hasher = MessageDigest.getInstance("MD5");

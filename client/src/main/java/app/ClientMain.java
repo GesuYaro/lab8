@@ -19,6 +19,7 @@ public class ClientMain {
     private static String hostAddress;
     private static boolean consoleMode = false;
     private static Console console;
+    private static volatile UserManager userManager;
 
     public static void main(String[] args) {
         setArguments(args);
@@ -35,7 +36,7 @@ public class ClientMain {
         consoleWriter.write("============================");
         MusicBandFieldsChecker musicBandFieldsChecker = new MusicBandFieldsChecker(bufferedReader);
         FieldsReader fieldsReader = new FieldsReader(musicBandFieldsChecker, consoleWriter); //
-        UserManager userManager = new UserManager();
+        userManager = new UserManager();
         RequestFabric requestFabric = new RequestFabric(commandsWithExtendedRequest, fieldsReader, userManager, musicBandFieldsChecker); //
         ClientExecuteScriptCommand executeScriptCommand = new ClientExecuteScriptCommand(consoleWriter, commandsWithExtendedRequest, PORT, hostAddress, userManager); //
         console = new Console(requestFabric, bufferedReader, executeScriptCommand, PORT, hostAddress); //
@@ -65,6 +66,10 @@ public class ClientMain {
 
     public static Console getConsole() {
         return console;
+    }
+
+    public static UserManager getUserManager() {
+        return userManager;
     }
 
 }

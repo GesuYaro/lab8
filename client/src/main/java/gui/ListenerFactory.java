@@ -1,8 +1,11 @@
 package gui;
 
+import client.Authenticator;
 import client.Console;
+import client.UserManager;
 import musicband.MusicBand;
 import musicband.MusicGenre;
+import network.CurrentUser;
 import network.Response;
 
 import javax.swing.*;
@@ -167,6 +170,33 @@ public class ListenerFactory {
         constraints.ipady = 10;
         constraints.weightx = 1.0;
         return constraints;
+    }
+
+    public ActionListener createSigningDialog(JPanel panel, JTextField loginField, JTextField passwordField, UserManager userManager, Authenticator authenticator, String commandName) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingWorker<Response, Response> swingWorker = new SwingWorker<Response, Response>() {
+                    @Override
+                    protected Response doInBackground() throws Exception {
+                        CurrentUser prevUser = userManager.getUser();
+                        CurrentUser newUser = new CurrentUser(loginField.getText(), authenticator.password(passwordField.getText()));
+                        userManager.setUser(newUser);
+                        Response response = console.request(commandName);
+                        if (response != null) {
+                            if (response.getMessage() != null && !response.getMessage().trim().equals("Successful")) {
+                                userManager.setUser(prevUser);
+                            }
+                            JOptionPane.showMessageDialog(panel, response.getMessage());
+                        } else {
+                            userManager.setUser(prevUser);
+                        }
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+            }
+        };
     }
 
 }

@@ -20,6 +20,9 @@ public class Authenticator {
         this.console = console;
     }
 
+    public Authenticator() {
+    }
+
     public String readLogin() {
         String login = null;
         consoleWriter.write("Enter your login:");

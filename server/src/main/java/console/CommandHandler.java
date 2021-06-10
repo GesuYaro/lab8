@@ -64,7 +64,7 @@ public class CommandHandler {
             @Override
             public ExecutorResponse call() {
                 try {
-                    if (userChecker.checkUser(request.getUser())) {
+                    if ((userChecker.checkUser(request.getUser()) || (request.getCommand() != null) && request.getCommand().trim().equals("sign_up"))) {
                         if (commands.containsKey(request.getCommand())) {
                             historyStorage.addToCommandHistory(request.getCommand());
                             return new ExecutorResponse(commands.get(request.getCommand())

@@ -13,11 +13,11 @@ public class UserManager {
     public UserManager() {
     }
 
-    public CurrentUser getUser() {
+    public synchronized CurrentUser getUser() {
         return user;
     }
 
-    public void setUser(CurrentUser user) {
+    public synchronized void setUser(CurrentUser user) {
         this.user = user;
     }
 }

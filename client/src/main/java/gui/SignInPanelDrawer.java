@@ -1,11 +1,17 @@
 package gui;
 
+import client.Authenticator;
+import client.UserManager;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class SignInPanelDrawer implements PanelDrawer {
 
     private FrameManager frameManager;
+    private ListenerFactory listenerFactory;
+    private UserManager userManager;
+    private Authenticator authenticator;
 
     private JPanel panel;
 
@@ -17,15 +23,19 @@ public class SignInPanelDrawer implements PanelDrawer {
     private JButton signUpButton = new JButton("Зарегистрироваться");
     private JButton backButton = new JButton("Вернуться в меню");
 
-
-    public SignInPanelDrawer(FrameManager frameManager) {
+    public SignInPanelDrawer(FrameManager frameManager, ListenerFactory listenerFactory, UserManager userManager, Authenticator authenticator) {
         this.frameManager = frameManager;
+        this.listenerFactory = listenerFactory;
+        this.userManager = userManager;
+        this.authenticator = authenticator;
     }
 
     private JPanel initPanel() {
         backButton.addActionListener(frameManager);
         loginField.setPreferredSize(new Dimension(200, 30));
         passwordField.setPreferredSize(new Dimension(200, 30));
+        signInButton.addActionListener(listenerFactory.createSigningDialog(panel, loginField, passwordField, userManager, authenticator, "sign_in"));
+        signUpButton.addActionListener(listenerFactory.createSigningDialog(panel, loginField, passwordField, userManager, authenticator, "sign_up"));
         Container loginContainer = new Container();
         loginContainer.setLayout(new GridBagLayout());
         loginContainer.add(loginLabel, getFieldsCons(0));
