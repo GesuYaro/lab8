@@ -9,9 +9,13 @@ import network.CurrentUser;
 import network.Response;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 public class ListenerFactory {
 
@@ -198,5 +202,34 @@ public class ListenerFactory {
             }
         };
     }
+
+    public TableModelListener createTableModelListener(String commandName, JTable table) {
+        return new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                SwingWorker swingWorker = new SwingWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        TableModel tableModel = table.getModel();
+                        int changedRow = e.getFirstRow();
+                        int changedColumn = e.getColumn();
+                        String id = tableModel.getValueAt(changedRow, 0).toString();
+                        String name = tableModel.getValueAt(changedRow, 1).toString();
+                        String x = tableModel.getValueAt(changedRow, 2).toString();
+                        String y = tableModel.getValueAt(changedRow, 3).toString();
+                        String date = tableModel.getValueAt(changedRow, 4).toString();
+                        String participants = tableModel.getValueAt(changedRow, 5).toString();
+                        String singles = tableModel.getValueAt(changedRow, 6).toString();
+                        String genre = tableModel.getValueAt(changedRow, 7).toString();
+                        String label = tableModel.getValueAt(changedRow, 8).toString();
+                        console.extendedRequest(commandName + " " + id, name, x, y, participants, singles, genre, label);
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+            }
+        };
+    }
+
 
 }

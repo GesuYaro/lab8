@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class Console {
@@ -95,8 +96,8 @@ public class Console {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Connection refused");
-            e.printStackTrace();
+            response = new Response();
+            response.setMessage("Connection refused");
         }
         return response;
     }
@@ -148,8 +149,8 @@ public class Console {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Connection refused");
-                e.printStackTrace();
+                response = new Response();
+                response.setMessage("Connection refused");
             }
         } catch (InputValueException e) {
             response = new Response();

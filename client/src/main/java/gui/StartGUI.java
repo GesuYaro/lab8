@@ -13,7 +13,7 @@ public class StartGUI implements Runnable {
         Map<String, PanelDrawer> map = new HashMap<>();
         FrameManager frameManager = new FrameManager(map, new MainFrame());
         ListenerFactory listenerFactory = new ListenerFactory(ClientMain.getConsole());
-        TablePanelDrawer tablePanelDrawer = new TablePanelDrawer(frameManager);
+        TablePanelDrawer tablePanelDrawer = new TablePanelDrawer(frameManager, ClientMain.getConsole(), listenerFactory);
         map.put("Сменить пользователя", new SignInPanelDrawer(frameManager, listenerFactory, ClientMain.getUserManager(), new Authenticator()));
         map.put("Вернуться в меню", new MenuPanelDrawer(frameManager, ClientMain.getUserManager()));
         map.put("Таблица", tablePanelDrawer);

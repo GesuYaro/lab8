@@ -1,36 +1,45 @@
 package gui;
 
-import musicband.Coordinates;
-import musicband.Label;
+import client.Console;
 import musicband.MusicBand;
-import musicband.MusicGenre;
+import network.Response;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class TablePanelDrawer implements PanelDrawer {
 
     private ActionListener frameManager;
+    private Console console;
+    private ListenerFactory listenerFactory;
+
     private JPanel panel;
     private ArrayList<MusicBand> musicbands = new ArrayList<>();
-    private Vector<String> columnNames = new Vector<>();
+    private volatile Vector<String> columnNames = new Vector<>();
 
 
-    private JTable table = new MusicTable();
+    private volatile JTable table = new MusicTable();
     private JButton backButton = new JButton("Вернуться в меню");
     private JScrollPane scrollPane;
 
-    public TablePanelDrawer(ActionListener frameManager) {
+    public TablePanelDrawer(ActionListener frameManager, Console console, ListenerFactory listenerFactory) {
         this.frameManager = frameManager;
+        this.console = console;
+        this.listenerFactory = listenerFactory;
     }
-
 
     private JPanel initPanel() {
         columnNames.add("id");
@@ -42,10 +51,9 @@ public class TablePanelDrawer implements PanelDrawer {
         columnNames.add("singles");
         columnNames.add("genre");
         columnNames.add("label");
-        musicbands.add(new MusicBand(1,"ddd", new Coordinates(1L,1.0), LocalDate.now(), 2, 5, MusicGenre.RAP, new Label("popit")));
-        musicbands.add(new MusicBand(2,"www", new Coordinates(1L,1.0), LocalDate.now(), 7, 7, MusicGenre.RAP, new Label("popit")));
         backButton.addActionListener(frameManager);
-        table.setModel(buildTableModel());
+//        table.setModel(buildTableModel());
+        table.setAutoCreateRowSorter(true);
         table.setFillsViewportHeight(true);
         scrollPane = new JScrollPane(table);
         JPanel pane = new JPanel(new GridBagLayout());
@@ -56,19 +64,42 @@ public class TablePanelDrawer implements PanelDrawer {
     }
 
     @Override
-    public JPanel drawPanel() {
+    public synchronized JPanel drawPanel() {
         if (panel == null) {
             panel = initPanel();
         }
+        updateTable();
+
         return panel;
     }
 
     public void updateTable() {
-        panel.remove(scrollPane);
-        table.setModel(buildTableModel());
-        table.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(table);
-        panel.add(scrollPane);
+        SwingWorker swingWorker = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Response response = console.request("show");
+                synchronized (table) {
+                    synchronized (columnNames) {
+                        if (response != null) {
+                            TableModel tableModel = buildTableModel(response.getList());
+                            tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
+                            table.setModel(tableModel);
+                            TableRowSorter<TableModel> sorter
+                                    = new TableRowSorter<TableModel>(table.getModel());
+                            table.setRowSorter(sorter);
+                            table.repaint();
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+        swingWorker.execute();
+        try {
+            swingWorker.get(100, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException ignored) {}
     }
 
     private GridBagConstraints getBackButtonCons() {
@@ -95,13 +126,13 @@ public class TablePanelDrawer implements PanelDrawer {
         return constraints;
     }
 
-    public DefaultTableModel buildTableModel() {
+    public MusicTableModel buildTableModel(ArrayList<MusicBand> musicbands) {
         Vector<Vector<Object>> data = new Vector<>();
         for (MusicBand musicBand : musicbands){
             Vector<Object> vector = musicBand.toVector();
             data.add(vector);
         }
-        return new DefaultTableModel(data, columnNames);
+        return new MusicTableModel(data, columnNames);
     }
 
     public void setColumnNames(Vector<String> columnNames) {
@@ -114,76 +145,72 @@ public class TablePanelDrawer implements PanelDrawer {
 
         @Override
         public boolean isCellEditable(int row, int column) {
-            return false;
+            return true;
         }
     }
 
-    /*private class Table extends AbstractTableModel {
+    class MusicTableModel extends AbstractTableModel {
 
-        private int rowCount;
-        private int columnCount;
-        private String[] columnNames;
-        private Object[][] data;
+        private Vector<Vector<Object>> data;
+        private Vector<String> columnNames;
 
-        @Override
-        public int getRowCount() {
-            return rowCount;
-        }
-
-        @Override
-        public int getColumnCount() {
-            return columnCount;
-        }
-
-        @Override
-        public String getColumnName(int columnIndex) {
-            return columnNames[columnIndex];
-        }
-
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            return getValueAt(0, columnIndex).getClass();
-        }
-
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return false;
-        }
-
-        @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            return data[rowIndex][columnIndex];
-        }
-
-        @Override
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            data[rowIndex][columnIndex] = aValue;
-            fireTableCellUpdated(rowIndex, columnIndex);
-        }
-
-        public void setRowCount(int rowCount) {
-            this.rowCount = rowCount;
-        }
-
-        public void setColumnCount(int columnCount) {
-            this.columnCount = columnCount;
-        }
-
-        public String[] getColumnNames() {
-            return columnNames;
-        }
-
-        public void setColumnNames(String[] columnNames) {
+        public MusicTableModel(Vector<Vector<Object>> data, Vector<String> columnNames) {
+            super();
+            this.data = data;
             this.columnNames = columnNames;
         }
 
-        public Object[][] getData() {
-            return data;
+        public int getColumnCount() {
+            return columnNames.size();
         }
 
-        public void setData(Object[][] data) {
-            this.data = data;
+        public int getRowCount() {
+            return data.size();
         }
-    }*/
 
+        public String getColumnName(int col) {
+            return columnNames.get(col);
+        }
+
+        public Object getValueAt(int row, int col) {
+            return data.get(row).get(col);
+        }
+
+        public Class getColumnClass(int c) {
+            Class clazz = Object.class;
+            switch (c) {
+                case 0 :
+                case 2 :
+                    clazz = Long.class;
+                    break;
+                case 1 :
+                case 7 :
+                case 8 :
+                    clazz = String.class;
+                    break;
+                case 3 :
+                    clazz = Double.class;
+                    break;
+                case 4 :
+                    clazz = LocalDate.class;
+                    break;
+                case 5 :
+                case 6 :
+                    clazz = Integer.class;
+                    break;
+            }
+            return clazz;
+        }
+
+        public boolean isCellEditable(int row, int col) {
+            return true;
+        }
+
+        public void setValueAt(Object value, int row, int col) {
+            Vector<Object> element = data.get(row);
+            element.set(col, value);
+            data.set(row, element);
+            fireTableCellUpdated(row, col);
+        }
+    }
 }
