@@ -1,7 +1,5 @@
 package gui;
 
-import client.Console;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;

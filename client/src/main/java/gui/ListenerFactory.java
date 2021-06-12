@@ -15,7 +15,6 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 
 public class ListenerFactory {
 
@@ -223,6 +222,33 @@ public class ListenerFactory {
                         String genre = tableModel.getValueAt(changedRow, 7).toString();
                         String label = tableModel.getValueAt(changedRow, 8).toString();
                         console.extendedRequest(commandName + " " + id, name, x, y, participants, singles, genre, label);
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+            }
+        };
+    }
+
+    public ActionListener createUpdateListener(VisualizationPanelDrawer drawer) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingWorker swingWorker = new SwingWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        try {
+                            Response response = console.request("show");
+                            if (response != null) {
+                                if (!drawer.getMusicBands().equals(response.getList())) {
+                                    System.out.println("another list");
+                                    drawer.setMusicBands(response.getList());
+                                    drawer.updateButtons(response.getList());
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         return null;
                     }
                 };

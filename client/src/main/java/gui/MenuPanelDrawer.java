@@ -19,7 +19,7 @@ public class MenuPanelDrawer implements PanelDrawer {
     private JButton visualizeButton = new JButton("Визуализировать");
     private JLabel authLabel = new JLabel("Авторизован как:");
     private JLabel userNameLabel = new JLabel();
-    private JLabel versionLabel = new JLabel("ver. 0.8.3");
+    private JLabel versionLabel = new JLabel("ver. 0.8.5");
     private Container userNameContainer = new Container();
 
 

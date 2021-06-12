@@ -37,6 +37,7 @@ public class AddCommand extends AbstractCommand {
      */
     @Override
     public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand, CurrentUser currentUser) throws InputValueException, DatabaseException, NotEnoughArgumentsException {
+        CommandResponse response = new CommandResponse(CommandCode.DEFAULT);
         if (requestedMusicBand == null) {
             throw new NotEnoughArgumentsException();
         }
@@ -53,11 +54,12 @@ public class AddCommand extends AbstractCommand {
             int rows = databaseManager.add(requestedMusicBand, currentUser);
             if (rows > 0) {
                 listManager.add(requestedMusicBand);
+                response.setMessage("Successful");
             }
         } catch (SQLException e) {
             throw new DatabaseException("Problem with adding element");
         }
-        return new CommandResponse(CommandCode.DEFAULT);
+        return response;
 
     }
 }

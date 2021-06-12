@@ -44,7 +44,7 @@ public class RequestFabric {
         Integer singlesCount = fieldsReader.readSinglesCount();
         MusicGenre musicGenre = fieldsReader.readMusicGenre();
         Label label = fieldsReader.readLabel();
-        return new Request(command, argument, new MusicBand(0, name, coordinates, null, numberOfParticipants, singlesCount, musicGenre, label), userManager.getUser());
+        return new Request(command, argument, new MusicBand(0, name, coordinates, null, numberOfParticipants, singlesCount, musicGenre, label, ""), userManager.getUser());
     }
 
     public Request createExtendedRequest(String command, String argument, String name, String x, String y,
@@ -56,7 +56,7 @@ public class RequestFabric {
         Integer rSinglesCount = checker.readSinglesCount(singlesCount);
         MusicGenre rMusicGenre = checker.readMusicGenre(genre);
         Label rLabel = checker.readLabel(label);
-        return new Request(command, argument, new MusicBand(0, rName, rCoordinates, null, rNumberOfParticipants, rSinglesCount, rMusicGenre, rLabel), userManager.getUser());
+        return new Request(command, argument, new MusicBand(0, rName, rCoordinates, null, rNumberOfParticipants, rSinglesCount, rMusicGenre, rLabel, ""), userManager.getUser());
     }
 
 }

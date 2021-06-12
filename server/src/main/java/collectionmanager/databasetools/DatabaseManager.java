@@ -26,7 +26,7 @@ public class DatabaseManager implements CollectionManager {
     private static final String REMOVE_BY_ID = "DELETE FROM musicbands WHERE owner = ? AND id = ?";
     private static final String GET_NEW_MAX_ID = "SELECT nextval('musicband_ids')";
     private static final String GET_INIT_DATE = "SELECT initialization_date FROM musicbands_initialization_date";
-    private static final String GET_ALL = "SELECT id, name, coordinate_x, coordinate_y, creation_date, number_of_participants, singles_count, music_genre, label " +
+    private static final String GET_ALL = "SELECT id, name, coordinate_x, coordinate_y, creation_date, number_of_participants, singles_count, music_genre, label, owner " +
             "FROM musicbands";
 
     public DatabaseManager(Connection connection) {
@@ -99,7 +99,8 @@ public class DatabaseManager implements CollectionManager {
                     resultSet.getInt("number_of_participants"),
                     resultSet.getInt("singles_count"),
                     MusicGenre.valueOf(resultSet.getString("music_genre")),
-                    new Label(resultSet.getString("label")));
+                    new Label(resultSet.getString("label")),
+                    resultSet.getString("owner"));
         }
         return musicBand;
     }
@@ -168,7 +169,8 @@ public class DatabaseManager implements CollectionManager {
             Integer singlesCount = resultSet.getInt("singles_count");
             MusicGenre musicGenre = MusicGenre.valueOf(resultSet.getString("music_genre"));
             Label label = new Label(resultSet.getString("label"));
-            list.add(new MusicBand(id, name, new Coordinates(coordinateX, coordinateY), creationDate, numberOfParticipants, singlesCount, musicGenre, label));
+            String owner = resultSet.getString("owner");
+            list.add(new MusicBand(id, name, new Coordinates(coordinateX, coordinateY), creationDate, numberOfParticipants, singlesCount, musicGenre, label, owner));
         }
         return list;
     }

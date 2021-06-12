@@ -19,6 +19,7 @@ public class StartGUI implements Runnable {
         map.put("Таблица", tablePanelDrawer);
         map.put("Команды", new CommandsPanelDrawer(frameManager, listenerFactory));
         map.put("Show", tablePanelDrawer);
+        map.put("Визуализировать", new VisualizationPanelDrawer(frameManager, listenerFactory));
         frameManager.start();
     }
 }
