@@ -12,6 +12,7 @@ public class SignInPanelDrawer implements PanelDrawer {
     private ListenerFactory listenerFactory;
     private UserManager userManager;
     private Authenticator authenticator;
+    private String panelName = "Войти";
 
     private JPanel panel;
 
@@ -21,7 +22,6 @@ public class SignInPanelDrawer implements PanelDrawer {
     private JLabel passwordLabel = new JLabel("Пароль:");
     private JButton signInButton = new JButton("Войти");
     private JButton signUpButton = new JButton("Зарегистрироваться");
-    private JButton backButton = new JButton("Вернуться в меню");
 
     public SignInPanelDrawer(FrameManager frameManager, ListenerFactory listenerFactory, UserManager userManager, Authenticator authenticator) {
         this.frameManager = frameManager;
@@ -31,7 +31,7 @@ public class SignInPanelDrawer implements PanelDrawer {
     }
 
     private JPanel initPanel() {
-        backButton.addActionListener(frameManager);
+//        backButton.addActionListener(frameManager);
         loginField.setPreferredSize(new Dimension(200, 30));
         passwordField.setPreferredSize(new Dimension(200, 30));
         signInButton.addActionListener(listenerFactory.createSigningDialog(panel, loginField, passwordField, userManager, authenticator, "sign_in"));
@@ -50,7 +50,7 @@ public class SignInPanelDrawer implements PanelDrawer {
         pane.setBackground(new Color(0xED9CDE));
         pane.add(loginContainer, getTextFieldCons(0));
         pane.add(buttonsContainer, getButtonContainerCons(1));
-        pane.add(backButton, getBackButtonCons());
+//        pane.add(backButton, getBackButtonCons());
         return pane;
     }
 
@@ -60,6 +60,11 @@ public class SignInPanelDrawer implements PanelDrawer {
             panel = initPanel();
         }
         return panel;
+    }
+
+    @Override
+    public String getPanelName() {
+        return panelName;
     }
 
     private GridBagConstraints getFieldsCons(int gridy) {

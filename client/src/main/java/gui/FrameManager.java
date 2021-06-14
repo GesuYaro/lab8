@@ -23,6 +23,9 @@ public class FrameManager implements ActionListener {
         PanelDrawer drawer = panelDrawers.get(string);
         if (drawer != null) {
             frame.updatePane(drawer.drawPanel());
+            if (string.equals("Выйти")) {
+                hideMenu();
+            }
             frame.setVisible(true);
         } else {
             System.out.println("no drawer found: " + string);
@@ -30,7 +33,15 @@ public class FrameManager implements ActionListener {
     }
 
     public void start() {
-        frame.updatePane(panelDrawers.get("Вернуться в меню").drawPanel());
+        frame.updatePane(panelDrawers.get("Выйти").drawPanel());
         frame.setVisible(true);
+    }
+
+    public void showMenu() {
+        frame.showMenu();
+    }
+
+    public void hideMenu() {
+        frame.hideMenu();
     }
 }

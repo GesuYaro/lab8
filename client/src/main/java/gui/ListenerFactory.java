@@ -19,12 +19,14 @@ import java.awt.event.ActionListener;
 public class ListenerFactory {
 
     private Console console;
+    private FrameManager frameManager;
 
-    public ListenerFactory(Console console) {
+    public ListenerFactory(Console console, FrameManager frameManager) {
         this.console = console;
+        this.frameManager = frameManager;
     }
 
-    public ActionListener createSimpleDialogListener(JPanel panel, String commandName) {
+    public ActionListener createSimpleDialogListener(Component panel, String commandName) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -33,7 +35,15 @@ public class ListenerFactory {
                     protected Response doInBackground() throws Exception {
                         Response response = console.request(commandName);
                         if (response != null) {
-                            JOptionPane.showMessageDialog(panel, response.getMessage());
+                            if (response.getMessage() != null && response.getMessage().trim().equals("")) {
+                                String message = "";
+                                for (MusicBand mb : response.getList()) {
+                                    message += mb.toString() + "\n";
+                                }
+                                JOptionPane.showMessageDialog(panel, message);
+                            } else {
+                                JOptionPane.showMessageDialog(panel, response.getMessage());
+                            }
                         }
                         return null;
                     }
@@ -43,7 +53,7 @@ public class ListenerFactory {
         };
     }
 
-    public ActionListener createAskingDialogListener(JPanel panel, String commandName) {
+    public ActionListener createAskingDialogListener(Component panel, String commandName) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,7 +85,7 @@ public class ListenerFactory {
     }
 
 
-    public ActionListener createExtendedAskingDialog(JPanel panel, String commandName, boolean hasArgument) {
+    public ActionListener createExtendedAskingDialog(Component panel, String commandName, boolean hasArgument) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -190,6 +200,10 @@ public class ListenerFactory {
                             if (response.getMessage() != null && !response.getMessage().trim().equals("Successful")) {
                                 userManager.setUser(prevUser);
                             }
+                            if (commandName.trim().equals("sign_in") && response.getMessage() != null && response.getMessage().trim().equals("Successful")) {
+                                frameManager.actionPerformed(e);
+                                frameManager.showMenu();
+                            }
                             JOptionPane.showMessageDialog(panel, response.getMessage());
                         } else {
                             userManager.setUser(prevUser);
@@ -237,17 +251,12 @@ public class ListenerFactory {
                 SwingWorker swingWorker = new SwingWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
-                        try {
-                            Response response = console.request("show");
-                            if (response != null) {
-                                if (!drawer.getMusicBands().equals(response.getList())) {
-                                    System.out.println("another list");
-                                    drawer.setMusicBands(response.getList());
-                                    drawer.updateButtons(response.getList());
-                                }
+                        Response response = console.request("show");
+                        if (response != null) {
+                            if (!drawer.getMusicBands().equals(response.getList())) {
+                                drawer.setMusicBands(response.getList());
+                                drawer.updateButtons(response.getList());
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                         return null;
                     }
@@ -257,5 +266,25 @@ public class ListenerFactory {
         };
     }
 
+    public ActionListener createUpdateTableListener(TablePanelDrawer drawer) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingWorker swingWorker = new SwingWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        Response response = console.request("show");
+                        if (response != null) {
+                            if (!drawer.getMusicBands().equals(response.getList())) {
+                                drawer.updateTable(response.getList());
+                            }
+                        }
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+            }
+        };
+    }
 
 }

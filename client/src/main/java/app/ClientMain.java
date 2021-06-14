@@ -41,7 +41,7 @@ public class ClientMain {
         ClientExecuteScriptCommand executeScriptCommand = new ClientExecuteScriptCommand(consoleWriter, commandsWithExtendedRequest, PORT, hostAddress, userManager); //
         console = new Console(requestFabric, bufferedReader, executeScriptCommand, PORT, hostAddress); //
         if (!consoleMode) {
-            userManager.setUser(new CurrentUser("pupa", authenticator.password("")));
+//            userManager.setUser(new CurrentUser("pupa", authenticator.password("")));
             SwingUtilities.invokeLater(new StartGUI());
         } else {
             String login = authenticator.readLogin();

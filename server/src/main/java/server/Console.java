@@ -119,7 +119,6 @@ public class Console {
                         responseIterator.remove();
                     }
                 } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
                     logger.error("Problem with sending response");
                     responseIterator.remove();
                 }

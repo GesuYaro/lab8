@@ -12,6 +12,7 @@ public class MenuPanelDrawer implements PanelDrawer {
 
     private JPanel panel;
     private UserManager userManager;
+    private String panelName = "Меню";
 
     private JButton authButton = new JButton("Сменить пользователя");
     private JButton commandsButton = new JButton("Команды");
@@ -54,6 +55,11 @@ public class MenuPanelDrawer implements PanelDrawer {
         versionContainer.add(versionLabel);
         pane.add(versionContainer, getButtonCons(7));
         return pane;
+    }
+
+    @Override
+    public String getPanelName() {
+        return panelName;
     }
 
     @Override

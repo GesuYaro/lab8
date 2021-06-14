@@ -1,15 +1,16 @@
 package gui;
 
 import client.Console;
+import client.UserManager;
 import musicband.MusicBand;
+import musicband.MusicGenre;
 import network.Response;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,20 +24,22 @@ public class TablePanelDrawer implements PanelDrawer {
     private ActionListener frameManager;
     private Console console;
     private ListenerFactory listenerFactory;
+    private UserManager userManager;
+    private String panelName = "Таблица";
 
     private JPanel panel;
     private ArrayList<MusicBand> musicbands = new ArrayList<>();
-    private volatile Vector<String> columnNames = new Vector<>();
+    private Vector<String> columnNames = new Vector<>();
 
 
     private volatile JTable table = new MusicTable();
-    private JButton backButton = new JButton("Вернуться в меню");
     private JScrollPane scrollPane;
 
-    public TablePanelDrawer(ActionListener frameManager, Console console, ListenerFactory listenerFactory) {
+    public TablePanelDrawer(ActionListener frameManager, Console console, ListenerFactory listenerFactory, UserManager userManager) {
         this.frameManager = frameManager;
         this.console = console;
         this.listenerFactory = listenerFactory;
+        this.userManager = userManager;
     }
 
     private JPanel initPanel() {
@@ -49,16 +52,21 @@ public class TablePanelDrawer implements PanelDrawer {
         columnNames.add("singles");
         columnNames.add("genre");
         columnNames.add("label");
-        backButton.addActionListener(frameManager);
 //        table.setModel(buildTableModel());
         table.setAutoCreateRowSorter(true);
         table.setFillsViewportHeight(true);
         scrollPane = new JScrollPane(table);
         JPanel pane = new JPanel(new GridBagLayout());
         pane.setBackground(new Color(0xED9CDE));
-        pane.add(backButton, getBackButtonCons());
         pane.add(scrollPane, getTableCons());
+        Timer timer = new Timer(3000, listenerFactory.createUpdateTableListener(this));
+        timer.start();
         return pane;
+    }
+
+    @Override
+    public String getPanelName() {
+        return panelName;
     }
 
     @Override
@@ -66,26 +74,59 @@ public class TablePanelDrawer implements PanelDrawer {
         if (panel == null) {
             panel = initPanel();
         }
-        updateTable();
 
         return panel;
     }
 
-    public void updateTable() {
+    public void updateTable(ArrayList<MusicBand> newMusicBands) {
         SwingWorker swingWorker = new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                Response response = console.request("show");
                 synchronized (table) {
                     synchronized (columnNames) {
-                        if (response != null) {
-                            TableModel tableModel = buildTableModel(response.getList());
-                            tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
-                            table.setModel(tableModel);
-                            TableRowSorter<TableModel> sorter
-                                    = new TableRowSorter<TableModel>(table.getModel());
-                            table.setRowSorter(sorter);
-                            table.repaint();
+                        synchronized (musicbands) {
+                            if (musicbands.size() != newMusicBands.size()) {
+                                musicbands = newMusicBands;
+                                TableModel tableModel = buildTableModel(musicbands);
+                                table.setModel(tableModel);
+                                tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
+                                StreamAPITableRowSorter<TableModel> sorter
+                                        = new StreamAPITableRowSorter<TableModel>(tableModel);
+                                table.setRowSorter(sorter);
+                                TableColumn genreColumn = table.getColumnModel().getColumn(7);
+                                JComboBox<String> comboBox = new JComboBox<>();
+                                for (MusicGenre genre : MusicGenre.values()) {
+                                    comboBox.addItem(genre.name());
+                                }
+                                genreColumn.setCellEditor(new DefaultCellEditor(comboBox));
+                            } else {
+                                try {
+                                    if (!musicbands.equals(newMusicBands) && !musicbands.isEmpty()) {
+                                        ArrayList<MusicBand> changed = new ArrayList<>(newMusicBands);
+                                        changed.removeAll(musicbands);
+                                        for (int row = 0; row < table.getRowCount(); row++) {
+                                            for (int changedRow = 0; changedRow < changed.size(); changedRow++) {
+                                                if (Long.valueOf(changed.get(changedRow).getId()).equals(table.getModel().getValueAt(row, 0))) {
+                                                    MusicBand newMusicBand = changed.get(changedRow);
+                                                    table.getModel().setValueAt(newMusicBand.getName(), row, 1);
+                                                    table.getModel().setValueAt(newMusicBand.getCoordinates().getX(), row, 2);
+                                                    table.getModel().setValueAt(newMusicBand.getCoordinates().getY(), row, 3);
+                                                    table.getModel().setValueAt(newMusicBand.getCreationDate(), row, 4);
+                                                    table.getModel().setValueAt(newMusicBand.getNumberOfParticipants(), row, 5);
+                                                    table.getModel().setValueAt(newMusicBand.getSinglesCount(), row, 6);
+                                                    table.getModel().setValueAt(newMusicBand.getGenre().name(), row, 7);
+                                                    table.getModel().setValueAt(newMusicBand.getLabel().getName(), row, 8);
+                                                }
+                                            }
+                                        }
+                                        musicbands = newMusicBands;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+//                        table.repaint();
                         }
                     }
                 }
@@ -94,8 +135,9 @@ public class TablePanelDrawer implements PanelDrawer {
         };
         swingWorker.execute();
         try {
-            swingWorker.get(100, TimeUnit.MILLISECONDS);
+            swingWorker.get(200, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Interrupted");
             e.printStackTrace();
         } catch (TimeoutException ignored) {}
     }
@@ -117,7 +159,7 @@ public class TablePanelDrawer implements PanelDrawer {
         constraints.fill = GridBagConstraints.BOTH;
         constraints.anchor = GridBagConstraints.SOUTH;
         constraints.weighty = 0.5;
-        constraints.insets = new Insets(40, 5, 5, 5);
+        constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridy = 0;
         constraints.gridx = 0;
         constraints.weightx = 0.5;
@@ -137,13 +179,26 @@ public class TablePanelDrawer implements PanelDrawer {
         this.columnNames = columnNames;
     }
 
+    public ArrayList<MusicBand> getMusicBands() {
+        return musicbands;
+    }
+
+    public void setMusicBands(ArrayList<MusicBand> musicbands) {
+        this.musicbands = musicbands;
+    }
+
     private class MusicTable extends JTable {
         public MusicTable() {
         }
 
         @Override
         public boolean isCellEditable(int row, int column) {
-            return true;
+            if (column != 0 && column != 4) {
+                if (userManager.getUser() != null) {
+                    return getMusicBands().get(row).getOwner().equals(userManager.getUser().getLogin());
+                }
+            }
+            return false;
         }
     }
 
@@ -201,7 +256,13 @@ public class TablePanelDrawer implements PanelDrawer {
         }
 
         public boolean isCellEditable(int row, int col) {
-            return true;
+            if (col != 0 && col != 4)
+            if (userManager.getUser() != null) {
+                boolean o = getMusicBands().get(row).getOwner().equals(userManager.getUser().getLogin());
+                System.out.println(o);
+                return o;
+            }
+            return false;
         }
 
         public void setValueAt(Object value, int row, int col) {

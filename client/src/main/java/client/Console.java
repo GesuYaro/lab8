@@ -92,6 +92,9 @@ public class Console {
                             System.out.println("Problem with the response from server");
                         }
                         socket.close();
+                    } else {
+                        response = new Response();
+                        response.setMessage("Server unavailable");
                     }
                 }
             }

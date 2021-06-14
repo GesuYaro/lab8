@@ -8,43 +8,45 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VisualizationPanelDrawer implements PanelDrawer {
 
     private JPanel panel;
-    private JPanel visualizationPanel;
+    private ScrollableJPanel visualizationPanel;
     private ListenerFactory listenerFactory;
     private ActionListener frameManager;
+    private String panelName = "Визуализация";
+
     private ArrayList<MusicBand> musicBands = new ArrayList<>();
     private volatile ConcurrentHashMap<MusicBand, MusicBandButton> buttonHashMap = new ConcurrentHashMap<>();
     private Timer timer;
 
-    private JButton backButton = new JButton("Вернуться в меню");
-
     public VisualizationPanelDrawer(ActionListener frameManager, ListenerFactory listenerFactory) {
         this.listenerFactory = listenerFactory;
         this.frameManager = frameManager;
-        visualizationPanel = new JPanel(null);
+        visualizationPanel = new ScrollableJPanel();
+        visualizationPanel.setLayout(null);
+        visualizationPanel.setPreferredSize(new Dimension(1000, 1000));
         this.listenerFactory = listenerFactory;
         timer = new Timer(3000, listenerFactory.createUpdateListener(this));
     }
 
     private JPanel initPanel() {
         JPanel pane = new JPanel(new BorderLayout());
-
-        visualizationPanel.setSize(500, 500);
+//        visualizationPanel.setSize(500, 500);
         JScrollPane scrollPane = new JScrollPane(visualizationPanel,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pane.setBackground(new Color(0xED9CDE));
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pane.add(scrollPane, BorderLayout.CENTER);
-        backButton.addActionListener(frameManager);
-        pane.add(backButton, BorderLayout.NORTH);
+        pane.setBackground(new Color(0xED9CDE));
         timer.start();
         return pane;
+    }
+
+    @Override
+    public String getPanelName() {
+        return panelName;
     }
 
     @Override
@@ -68,22 +70,36 @@ public class VisualizationPanelDrawer implements PanelDrawer {
 
     public synchronized void updateButtons(ArrayList<MusicBand> list) {
         synchronized (buttonHashMap) {
-            System.out.println("inside updateButtons");
+
             HashMap<MusicBand, MusicBandButton> newButtons = new HashMap<>();
             HashMap<MusicBand, MusicBandButton> oldButtons = new HashMap<>();
+            int biggestX = 0;
+            int biggestY = 0;
+
             for (MusicBand mb : list) {
                 if (buttonHashMap.containsKey(mb)) {
-                    System.out.println("old----------");
-                    oldButtons.put(mb, buttonHashMap.get(mb));
+                    MusicBandButton button = buttonHashMap.get(mb);
+                    if (button.getX() + button.getW() > biggestX) {
+                        biggestX = button.getX() + button.getW();
+                    }
+                    if (button.getY() + button.getH() > biggestY) {
+                        biggestY = button.getY() + button.getH();
+                    }
+                    oldButtons.put(mb, button);
                 } else {
-                    System.out.println("new");
-                    newButtons.put(mb, create(mb));
+                    MusicBandButton button = create(mb);
+                    if (button.getX() + button.getW() > biggestX) {
+                        biggestX = button.getX() + button.getW();
+                    }
+                    if (button.getY() + button.getH() > biggestY) {
+                        biggestY = button.getY() + button.getH();
+                    }
+                    newButtons.put(mb, button);
                 }
             }
 
             for (MusicBand mb : buttonHashMap.keySet()) {
                 if (!oldButtons.containsKey(mb)) {
-                    System.out.println("REMOVING=====");
                     visualizationPanel.remove(buttonHashMap.get(mb));
                     buttonHashMap.remove(mb);
                 }
@@ -92,9 +108,9 @@ public class VisualizationPanelDrawer implements PanelDrawer {
             buttonHashMap.putAll(newButtons);
 
             for (MusicBand button : newButtons.keySet()) {
-                System.out.println("ADDING++++++++++++");
                 visualizationPanel.add(newButtons.get(button));
             }
+            visualizationPanel.setPreferredSize(new Dimension(biggestX, biggestY));
             visualizationPanel.repaint();
         }
     }

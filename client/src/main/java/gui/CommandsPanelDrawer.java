@@ -10,6 +10,7 @@ public class CommandsPanelDrawer implements PanelDrawer {
     private ActionListener frameManager;
     private JPanel panel;
     private ListenerFactory listenerFactory;
+    private String panelName = "Команды";
 
     private JButton addButton = new JButton("Add"); //---------------
     private JButton clearButton = new JButton("Clear");
@@ -23,11 +24,15 @@ public class CommandsPanelDrawer implements PanelDrawer {
     private JButton removeLastButton = new JButton("Remove last");
     private JButton showButton = new JButton("Show");
     private JButton updateButton = new JButton("Update"); //--------------------
-    private JButton backButton = new JButton("Вернуться в меню");
 
     public CommandsPanelDrawer(ActionListener frameManager, ListenerFactory listenerFactory) {
         this.frameManager = frameManager;
         this.listenerFactory = listenerFactory;
+    }
+
+    @Override
+    public String getPanelName() {
+        return panelName;
     }
 
     @Override
@@ -52,7 +57,6 @@ public class CommandsPanelDrawer implements PanelDrawer {
         insertAtButton.addActionListener(listenerFactory.createExtendedAskingDialog(panel, "insert_at", true));
         showButton.addActionListener(frameManager);
 
-        backButton.addActionListener(frameManager);
         JPanel pane = new JPanel(new GridBagLayout());
         Container buttons = new Container();
         buttons.setLayout(new GridLayout(6, 2, 5 ,5));
@@ -69,7 +73,6 @@ public class CommandsPanelDrawer implements PanelDrawer {
         buttons.add(showButton);
         buttons.add(updateButton);
         pane.setBackground(new Color(0xED9CDE));
-        pane.add(backButton, getBackButtonCons());
         pane.add(buttons, getButtonCons(0, 0));
         return pane;
     }

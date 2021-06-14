@@ -44,7 +44,7 @@ public class MusicBandButton extends JComponent implements MouseListener {
                 if (!isAnimationDone) {
                     updateColor();
                     repaint();
-                    if (a >= 254) {
+                    if (a >= 200) {
                         isAnimationDone = true;
                     }
                 }
@@ -110,4 +110,21 @@ public class MusicBandButton extends JComponent implements MouseListener {
         return super.getMaximumSize();
     }
 
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public int getH() {
+        return h;
+    }
 }
