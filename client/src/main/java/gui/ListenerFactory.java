@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -286,5 +287,43 @@ public class ListenerFactory {
             }
         };
     }
+
+    public ActionListener createFilterListener(JPanel panel, StreamAPITableRowSorter<TableModel> sorter, TablePanelDrawer.FilterKeyStore filterKeyStore) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingWorker swingWorker = new SwingWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        try {
+                            String result = JOptionPane.showInputDialog(panel, "Фильтр:", filterKeyStore.getNameFilter());
+                            RowFilter<TableModel, Object> rf = null;
+                            try {
+                                rf = RowFilter.regexFilter(result, 1);
+                            } catch (java.util.regex.PatternSyntaxException e) {
+                                return null;
+                            }
+                            filterKeyStore.setNameFilter(result);
+                            sorter.setRowFilter(rf);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+
+            }
+        };
+    }
+
+    private JDialog createDialog(String title, JFrame frame) {
+        JDialog dialog = new JDialog(frame, title, true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setSize(180, 90);
+        dialog.setLayout(new BorderLayout());
+        return dialog;
+    }
+
 
 }

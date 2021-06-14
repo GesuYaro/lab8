@@ -23,7 +23,6 @@ public class StartGUI implements Runnable {
         mainFrame.addMenu(new CommandsMenu("Команды", listenerFactory));
         TablePanelDrawer tablePanelDrawer = new TablePanelDrawer(frameManager, ClientMain.getConsole(), listenerFactory, ClientMain.getUserManager());
 
-        CommandsPanelDrawer commandsPanelDrawer = new CommandsPanelDrawer(frameManager, listenerFactory);
         VisualizationPanelDrawer visualizationPanelDrawer = new VisualizationPanelDrawer(frameManager, listenerFactory);
 
         LinkedList<PanelDrawer> panelDrawers = new LinkedList<>();

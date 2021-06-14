@@ -66,7 +66,9 @@ public class CommandHandler {
                 try {
                     if ((userChecker.checkUser(request.getUser()) || (request.getCommand() != null) && request.getCommand().trim().equals("sign_up"))) {
                         if (commands.containsKey(request.getCommand())) {
-                            if (!request.getCommand().equals("show")) historyStorage.addToCommandHistory(request.getCommand());
+                            if (!request.getCommand().equals("show") && !request.getCommand().equals("sign_in") && !request.getCommand().equals("sign_up")) {
+                                historyStorage.addToCommandHistory(request.getCommand());
+                            }
                             return new ExecutorResponse(commands.get(request.getCommand())
                                     .execute(request.getFirstArg() != null ? request.getFirstArg() : "", request.getMusicBand(), request.getUser()),
                                     socketChannel);
