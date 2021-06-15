@@ -255,7 +255,7 @@ public class ListenerFactory {
                         Response response = console.request("show");
                         if (response != null) {
                             if (!drawer.getMusicBands().equals(response.getList())) {
-                                drawer.setMusicBands(response.getList());
+//                                drawer.setMusicBands(response.getList());
                                 drawer.updateButtons(response.getList());
                             }
                         }

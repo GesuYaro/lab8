@@ -13,10 +13,10 @@ import java.awt.geom.RoundRectangle2D;
 
 public class MusicBandButton extends JComponent implements MouseListener {
 
-    private int x;
-    private int y;
-    private int w;
-    private int h;
+    private volatile int x;
+    private volatile int y;
+    private volatile int w;
+    private volatile int h;
 
     private Ellipse2D leftCircle;
     private Ellipse2D rightCircle;
@@ -32,7 +32,12 @@ public class MusicBandButton extends JComponent implements MouseListener {
     private int g;
     private int b;
     private int a;
-    private boolean isAnimationDone;
+    private volatile int newX;
+    private volatile int newY;
+    private volatile int newW;
+    private volatile boolean isAppearingDone;
+    private volatile boolean isResizingDone;
+    private volatile boolean isLocationChangingDone;
 
     public MusicBandButton(int x, int y, int w, int h, int r, int g ,int b) {
         super();
@@ -48,14 +53,30 @@ public class MusicBandButton extends JComponent implements MouseListener {
         this.r = r;
         this.g = g;
         this.b = b;
+        isLocationChangingDone = true;
+        isResizingDone = true;
         timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isAnimationDone) {
+                if (!isAppearingDone) {
                     updateColor();
-                    repaint();
+                    MusicBandButton.this.repaint();
                     if (a >= 200) {
-                        isAnimationDone = true;
+                        isAppearingDone = true;
+                    }
+                }
+                if (!isResizingDone) {
+                    updateSize();
+                    MusicBandButton.this.repaint();
+                    if (MusicBandButton.this.w == newW) {
+                        isResizingDone = true;
+                    }
+                }
+                if (!isLocationChangingDone) {
+                    updateLocation();
+                    MusicBandButton.this.repaint();
+                    if (MusicBandButton.this.x == newX && MusicBandButton.this.y == newY) {
+                        isLocationChangingDone = true;
                     }
                 }
             }
@@ -87,10 +108,59 @@ public class MusicBandButton extends JComponent implements MouseListener {
         System.out.println("exited");
     }
 
+    public void changeState(int x, int y, int width) {
+        System.out.printf("new state x = %d, y = %d, w = %d\n", x, y, width);
+        System.out.printf("old state x = %d, y = %d, w = %d\n", this.x, this.y, this.w);
+        if (x != this.x || y != this.y) {
+            System.out.println("new coords");
+            newX = x;
+            newY = y;
+            isLocationChangingDone = false;
+        }
+        if (width != this.w) {
+            System.out.println("new w");
+            newW = width;
+            isResizingDone = false;
+        }
+    }
+
+    private void updateLocation() {
+        System.out.println("updating location");
+        if (newX > this.x) {
+            this.x++;
+        }
+        if (newX < this.x) {
+            this.x--;
+        }
+        if (newY > this.y) {
+            this.y++;
+        }
+        if (newY < this.y) {
+            this.y--;
+        }
+        super.setLocation(this.x, this.y);
+    }
+
+    private void updateSize() {
+        System.out.println("updating size");
+        if (this.w > newW) {
+            this.w--;
+        }
+        if (this.w < newW) {
+            this.w++;
+        }
+        super.setSize(w, Double.valueOf(w * 0.65).intValue());
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        timer.start();
+        draw(g2);
+    }
+
+    private void draw(Graphics2D g2) {
         bodyRectangle = new RoundRectangle2D.Double(0, 0, w, w * 0.65, w * 0.2, w * 0.2);
         stickerRectangle = new Rectangle2D.Double(w * 0.09, w * 0.09, w * 0.83, w * 0.65 * 0.48);
         innerRectangle = new RoundRectangle2D.Double(w * 0.2, w * 0.2, w * 0.6, w * 0.15, w * 0.2, w * 0.2);
@@ -99,11 +169,6 @@ public class MusicBandButton extends JComponent implements MouseListener {
         upperLine = new Line2D.Double(w * 0.2, w * 0.43, w * 0.8, w * 0.43);
         leftLine = new Line2D.Double(w * 0.16, w * 0.65, w * 0.2, w * 0.43);
         rightLine = new Line2D.Double(w * 0.8, w * 0.43, w * 0.84, w * 0.65);
-        timer.start();
-        draw(g2);
-    }
-
-    private void draw(Graphics2D g2) {
         Color bodyColor = new Color(r, g, b, a);
         Color stickerColor = new Color(b, r, g, a);
         Color circleColor = new Color(g, b, r ,a);

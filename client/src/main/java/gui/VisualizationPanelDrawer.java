@@ -20,7 +20,11 @@ public class VisualizationPanelDrawer implements PanelDrawer {
 
     private ArrayList<MusicBand> musicBands = new ArrayList<>();
     private volatile ConcurrentHashMap<MusicBand, MusicBandButton> buttonHashMap = new ConcurrentHashMap<>();
+    private Rule columnRule = new Rule(Rule.HORIZONTAL, true);
+    private Rule rowRule = new Rule(Rule.VERTICAL, true);
     private Timer timer;
+    private int biggestX = 0;
+    private int biggestY = 0;
 
     public VisualizationPanelDrawer(ActionListener frameManager, ListenerFactory listenerFactory) {
         this.listenerFactory = listenerFactory;
@@ -38,6 +42,10 @@ public class VisualizationPanelDrawer implements PanelDrawer {
         JScrollPane scrollPane = new JScrollPane(visualizationPanel,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setColumnHeaderView(columnRule);
+        scrollPane.setRowHeaderView(rowRule);
+        columnRule.setPreferredWidth(800);
+        rowRule.setPreferredHeight(460);
         pane.add(scrollPane, BorderLayout.CENTER);
         pane.setBackground(new Color(0xED9CDE));
         timer.start();
@@ -73,8 +81,6 @@ public class VisualizationPanelDrawer implements PanelDrawer {
 
             HashMap<MusicBand, MusicBandButton> newButtons = new HashMap<>();
             HashMap<MusicBand, MusicBandButton> oldButtons = new HashMap<>();
-            int biggestX = 0;
-            int biggestY = 0;
 
             for (MusicBand mb : list) {
                 if (buttonHashMap.containsKey(mb)) {
@@ -87,6 +93,7 @@ public class VisualizationPanelDrawer implements PanelDrawer {
                     }
                     oldButtons.put(mb, button);
                 } else {
+                    boolean isNew = true;
                     MusicBandButton button = create(mb);
                     if (button.getX() + button.getW() > biggestX) {
                         biggestX = button.getX() + button.getW();
@@ -94,7 +101,26 @@ public class VisualizationPanelDrawer implements PanelDrawer {
                     if (button.getY() + button.getH() > biggestY) {
                         biggestY = button.getY() + button.getH();
                     }
-                    newButtons.put(mb, button);
+                    for (MusicBand oldMB : musicBands) {
+                        if (oldMB.getId() == mb.getId()) {
+                            isNew = false;
+                            MusicBandButton musicBandButton = buttonHashMap.get(oldMB);
+                            buttonHashMap.remove(oldMB);
+                            oldMB.setName(mb.getName());
+                            oldMB.setCoordinates(mb.getCoordinates());
+                            oldMB.setCreationDate(mb.getCreationDate());
+                            oldMB.setNumberOfParticipants(mb.getNumberOfParticipants());
+                            oldMB.setSinglesCount(mb.getSinglesCount());
+                            oldMB.setGenre(mb.getGenre());
+                            oldMB.setLabel(mb.getLabel());
+                            musicBandButton.changeState(mb.getCoordinates().getX().intValue() + 200, mb.getCoordinates().getY().intValue() + 200, mb.getNumberOfParticipants());
+                            oldButtons.put(oldMB, musicBandButton);
+                            buttonHashMap.put(oldMB, musicBandButton);
+                        }
+                    }
+                    if (isNew) {
+                        newButtons.put(mb, button);
+                    }
                 }
             }
 
@@ -106,12 +132,15 @@ public class VisualizationPanelDrawer implements PanelDrawer {
             }
 
             buttonHashMap.putAll(newButtons);
-
+            musicBands = list;
             for (MusicBand button : newButtons.keySet()) {
                 visualizationPanel.add(newButtons.get(button));
             }
             visualizationPanel.setPreferredSize(new Dimension(biggestX, biggestY));
+            columnRule.setPreferredWidth(biggestX);
+            rowRule.setPreferredHeight(biggestY);
             visualizationPanel.repaint();
+            visualizationPanel.revalidate();
         }
     }
 

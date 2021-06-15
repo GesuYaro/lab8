@@ -182,6 +182,34 @@ public class MusicBand implements Comparable<MusicBand>, CSVConvertible, Seriali
     public int hashCode() {
         return 1;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setNumberOfParticipants(int numberOfParticipants) {
+        this.numberOfParticipants = numberOfParticipants;
+    }
+
+    public void setSinglesCount(Integer singlesCount) {
+        this.singlesCount = singlesCount;
+    }
+
+    public void setGenre(MusicGenre genre) {
+        this.genre = genre;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }
 
 
