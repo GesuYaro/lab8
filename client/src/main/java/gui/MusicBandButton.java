@@ -10,6 +10,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.LinkedList;
 
 public class MusicBandButton extends JComponent implements MouseListener {
 
@@ -26,6 +27,7 @@ public class MusicBandButton extends JComponent implements MouseListener {
     private Line2D upperLine;
     private Line2D leftLine;
     private Line2D rightLine;
+    private LinkedList<ActionListener> listeners = new LinkedList<>();
 
     private Timer timer;
     private int r;
@@ -85,47 +87,52 @@ public class MusicBandButton extends JComponent implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("clicked " + e.getButton());
+        notifyListeners(e);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("pressed");
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println("released");
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("entered");
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("exited");
+    }
+
+    public void addActionListener(ActionListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyListeners(MouseEvent e) {
+        ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, new String(), e.getWhen(), e.getModifiers());
+        synchronized(listeners) {
+            for (int i = 0; i < listeners.size(); i++) {
+                ActionListener tmp = listeners.get(i);
+                tmp.actionPerformed(evt);
+            }
+        }
     }
 
     public void changeState(int x, int y, int width) {
-        System.out.printf("new state x = %d, y = %d, w = %d\n", x, y, width);
-        System.out.printf("old state x = %d, y = %d, w = %d\n", this.x, this.y, this.w);
         if (x != this.x || y != this.y) {
-            System.out.println("new coords");
             newX = x;
             newY = y;
             isLocationChangingDone = false;
         }
         if (width != this.w) {
-            System.out.println("new w");
             newW = width;
             isResizingDone = false;
         }
     }
 
     private void updateLocation() {
-        System.out.println("updating location");
         if (newX > this.x) {
             this.x++;
         }
@@ -142,7 +149,6 @@ public class MusicBandButton extends JComponent implements MouseListener {
     }
 
     private void updateSize() {
-        System.out.println("updating size");
         if (this.w > newW) {
             this.w--;
         }

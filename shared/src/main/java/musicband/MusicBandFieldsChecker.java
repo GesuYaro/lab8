@@ -108,7 +108,7 @@ public class MusicBandFieldsChecker {
             String string = reader.readLine();
             if (string != null) {
                 x = Long.parseLong(string.trim());
-                if (x > 3) throw new InputValueException("Field can't be greater than 3");
+                if (x < -153) throw new InputValueException("Field can't be less than -153");
             } else throw new InputValueException("Input Error\nField can't be null");
         }
         catch (NumberFormatException e){
@@ -129,7 +129,7 @@ public class MusicBandFieldsChecker {
         long x;
         try {
             x = Long.parseLong(string.trim());
-            if (x > 3) throw new InputValueException("X can't be greater than 3");
+            if (x < -153) throw new InputValueException("X can't be less than -153");
         }
         catch (NumberFormatException e){
             throw new InputValueException("Input Error\nField should be long");
@@ -147,7 +147,7 @@ public class MusicBandFieldsChecker {
                 String string = reader.readLine();
                 if (string != null) {
                     y = Double.parseDouble(string.trim());
-                    if (y < -859) throw new InputValueException("Field should be greater than -859");
+                    if (y < -159) throw new InputValueException("Field should be greater than -159");
                 } else throw new InputValueException("Input Error\nField can't be null");
             }
             catch (NumberFormatException e){
@@ -168,7 +168,7 @@ public class MusicBandFieldsChecker {
         double y;
         try {
             y = Double.parseDouble(string.trim());
-            if (y < -859) throw new InputValueException("Y should be greater than -859");
+            if (y < -159) throw new InputValueException("Y should be greater than -159");
         }
         catch (NumberFormatException e){
             throw new InputValueException("Input Error\nY should be double");

@@ -1,23 +1,25 @@
 package gui;
 
+import app.LocaleManager;
+
 import javax.swing.*;
 
 public class CommandsMenu extends JMenu {
 
-    public CommandsMenu(String s, ListenerFactory listenerFactory) {
+    public CommandsMenu(String s, ListenerFactory listenerFactory, LocaleManager localeManager) {
         super(s);
-        JMenuItem add = new JMenuItem("Add");
-        JMenuItem clear = new JMenuItem("Clear");
-        JMenuItem filter = new JMenuItem("Filter less than Singles");
-        JMenuItem help = new JMenuItem("Help");
-        JMenuItem history = new JMenuItem("History");
-        JMenuItem info = new JMenuItem("Info");
-        JMenuItem insert = new JMenuItem("Insert at");
-        JMenuItem printField = new JMenuItem("Print genre descending");
-        JMenuItem remove = new JMenuItem("Remove by ID");
-        JMenuItem removeLast = new JMenuItem("Remove Last");
-        JMenuItem show = new JMenuItem("Show");
-        JMenuItem update = new JMenuItem("Update");
+        JMenuItem add = new JMenuItem(localeManager.getBundle().getString("add"));
+        JMenuItem clear = new JMenuItem(localeManager.getBundle().getString("clear"));
+        JMenuItem filter = new JMenuItem(localeManager.getBundle().getString("filter less than singles"));
+        JMenuItem help = new JMenuItem(localeManager.getBundle().getString("help"));
+        JMenuItem history = new JMenuItem(localeManager.getBundle().getString("history"));
+        JMenuItem info = new JMenuItem(localeManager.getBundle().getString("info"));
+        JMenuItem insert = new JMenuItem(localeManager.getBundle().getString("insert at"));
+        JMenuItem printField = new JMenuItem(localeManager.getBundle().getString("print genre descending"));
+        JMenuItem remove = new JMenuItem(localeManager.getBundle().getString("remove by id"));
+        JMenuItem removeLast = new JMenuItem(localeManager.getBundle().getString("remove last"));
+        JMenuItem show = new JMenuItem(localeManager.getBundle().getString("show"));
+        JMenuItem update = new JMenuItem(localeManager.getBundle().getString("update"));
         info.addActionListener(listenerFactory.createSimpleDialogListener(this, "info"));
         clear.addActionListener(listenerFactory.createSimpleDialogListener(this, "clear"));
         help.addActionListener(listenerFactory.createSimpleDialogListener(this, "help"));

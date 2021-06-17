@@ -1,17 +1,22 @@
 package gui;
 
+import app.LocaleManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 import java.util.Map;
 
 public class FrameManager implements ActionListener {
 
     private Map<String, PanelDrawer> panelDrawers;
     private MainFrame frame;
+    private LocaleManager localeManager;
 
-    public FrameManager(Map<String, PanelDrawer> panelDrawers, MainFrame frame) {
+    public FrameManager(Map<String, PanelDrawer> panelDrawers, MainFrame frame, LocaleManager localeManager) {
         this.panelDrawers = panelDrawers;
         this.frame = frame;
+        this.localeManager = localeManager;
     }
 
     @Override
@@ -23,7 +28,7 @@ public class FrameManager implements ActionListener {
         PanelDrawer drawer = panelDrawers.get(string);
         if (drawer != null) {
             frame.updatePane(drawer.drawPanel());
-            if (string.equals("Выйти")) {
+            if (string.equals(localeManager.getBundle().getString("sign out"))) {
                 hideMenu();
             }
             frame.setVisible(true);
@@ -33,7 +38,7 @@ public class FrameManager implements ActionListener {
     }
 
     public void start() {
-        frame.updatePane(panelDrawers.get("Выйти").drawPanel());
+        frame.updatePane(panelDrawers.get(localeManager.getBundle().getString("sign out")).drawPanel());
         frame.setVisible(true);
     }
 

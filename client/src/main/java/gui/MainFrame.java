@@ -1,6 +1,7 @@
 package gui;
 
 import app.ClientMain;
+import app.LocaleManager;
 import javafx.scene.control.SeparatorMenuItem;
 
 import javax.swing.*;
@@ -13,9 +14,10 @@ public class MainFrame extends JFrame {
     private int height = 460;
     private JMenuBar jMenuBar = new JMenuBar();
     private JLabel userLabel;
+    private LocaleManager localeManager;
 
 
-    public MainFrame(JButton logoutButton) {
+    public MainFrame(JButton logoutButton, LocaleManager localeManager) {
         super("Music Bands");
         this.setSize(width, height);
         this.setMinimumSize(new Dimension(480, 440));
@@ -29,6 +31,7 @@ public class MainFrame extends JFrame {
 //        jMenuBar.add(new JSeparator());
         jMenuBar.setVisible(false);
         this.setJMenuBar(jMenuBar);
+        this.localeManager = localeManager;
     }
 
 
@@ -37,7 +40,7 @@ public class MainFrame extends JFrame {
     }
 
     public void showMenu() {
-        userLabel.setText("Авторизован как: " + ClientMain.getUserManager().getUser().getLogin());
+        userLabel.setText(localeManager.getBundle().getString("logged as") + ": " + ClientMain.getUserManager().getUser().getLogin());
         jMenuBar.setVisible(true);
     }
 

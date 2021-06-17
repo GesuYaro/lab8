@@ -1,5 +1,6 @@
 package gui;
 
+import app.LocaleManager;
 import client.Console;
 import client.UserManager;
 import musicband.MusicBand;
@@ -11,7 +12,9 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 public class TablePanelDrawer implements PanelDrawer {
@@ -20,60 +23,68 @@ public class TablePanelDrawer implements PanelDrawer {
     private Console console;
     private ListenerFactory listenerFactory;
     private UserManager userManager;
-    private String panelName = "Таблица";
+    private LocaleManager localeManager;
+    private String panelName;
     private String filterSign = "\u26DB";
-    private StreamAPITableRowSorter<TableModel> sorter;
+    private volatile StreamAPITableRowSorter<MusicTableModel> sorter;
+
+    private JButton filterButton0 = new JButton(filterSign);
+    private JButton filterButton1 = new JButton(filterSign);
+    private JButton filterButton2 = new JButton(filterSign);
+    private JButton filterButton3 = new JButton(filterSign);
+    private JButton filterButton4 = new JButton(filterSign);
+    private JButton filterButton5 = new JButton(filterSign);
+    private JButton filterButton6 = new JButton(filterSign);
+    private JButton filterButton7 = new JButton(filterSign);
+    private JButton filterButton8 = new JButton(filterSign);
 
     private JPanel panel;
     private ArrayList<MusicBand> musicbands = new ArrayList<>();
     private Vector<String> columnNames = new Vector<>();
 
+    private FilterKeyStore nameFilterStore = new FilterKeyStore();
+    private FilterKeyStore idFilterStore = new FilterKeyStore();
+    private FilterKeyStore xFilterStore = new FilterKeyStore();
+    private FilterKeyStore yFilterStore = new FilterKeyStore();
+    private FilterKeyStore dateFilterStore = new FilterKeyStore();
+    private FilterKeyStore participantsFilterStore = new FilterKeyStore();
+    private FilterKeyStore singlesFilterStore = new FilterKeyStore();
+    private FilterKeyStore genreFilterStore = new FilterKeyStore();
+    private FilterKeyStore labelFilterStore = new FilterKeyStore();
 
-    private volatile JTable table = new MusicTable();
+    private volatile JTable table = new JTable();
     private JScrollPane scrollPane;
 
-    public TablePanelDrawer(ActionListener frameManager, Console console, ListenerFactory listenerFactory, UserManager userManager) {
+    public TablePanelDrawer(ActionListener frameManager, Console console, ListenerFactory listenerFactory, UserManager userManager, LocaleManager localeManager) {
         this.frameManager = frameManager;
         this.console = console;
         this.listenerFactory = listenerFactory;
         this.userManager = userManager;
+        this.localeManager = localeManager;
+        panelName = localeManager.getBundle().getString("table");
     }
 
     private JPanel initPanel() {
-        columnNames.add("id");
-        columnNames.add("name");
-        columnNames.add("X");
-        columnNames.add("Y");
-        columnNames.add("date");
-        columnNames.add("participants");
-        columnNames.add("singles");
-        columnNames.add("genre");
-        columnNames.add("label");
-        table.setAutoCreateRowSorter(true);
+        columnNames.add(localeManager.getBundle().getString("id"));
+        columnNames.add(localeManager.getBundle().getString("name"));
+        columnNames.add(localeManager.getBundle().getString("x"));
+        columnNames.add(localeManager.getBundle().getString("y"));
+        columnNames.add(localeManager.getBundle().getString("date"));
+        columnNames.add(localeManager.getBundle().getString("participants"));
+        columnNames.add(localeManager.getBundle().getString("singles"));
+        columnNames.add(localeManager.getBundle().getString("genre"));
+        columnNames.add(localeManager.getBundle().getString("label"));
+//        table.setAutoCreateRowSorter(true);
         table.setFillsViewportHeight(true);
         scrollPane = new JScrollPane(table);
         JPanel pane = new JPanel(new GridBagLayout());
         pane.setBackground(new Color(0xED9CDE));
 
-        JButton filterButton0 = new JButton(filterSign);
-        JButton filterButton1 = new JButton(filterSign);
-        JButton filterButton2 = new JButton(filterSign);
-        JButton filterButton3 = new JButton(filterSign);
-        JButton filterButton4 = new JButton(filterSign);
-        JButton filterButton5 = new JButton(filterSign);
-        JButton filterButton6 = new JButton(filterSign);
-        JButton filterButton7 = new JButton(filterSign);
-        JButton filterButton8 = new JButton(filterSign);
+        table.setDefaultRenderer(LocalDate.class, new DateRenderer());
 
-        TableModel tableModel = buildTableModel(musicbands);
+        MusicTableModel tableModel = buildTableModel(musicbands);
         table.setModel(tableModel);
         tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
-        sorter = new StreamAPITableRowSorter<TableModel>(tableModel);
-        table.setRowSorter(sorter);
-
-        FilterKeyStore nameFilterStore = new FilterKeyStore();
-
-        filterButton1.addActionListener(listenerFactory.createFilterListener(panel, sorter, nameFilterStore));
 
         pane.add(scrollPane, getTableCons());
 
@@ -86,6 +97,8 @@ public class TablePanelDrawer implements PanelDrawer {
         pane.add(filterButton6, getBackButtonCons(6, 0));
         pane.add(filterButton7, getBackButtonCons(7, 0));
         pane.add(filterButton8, getBackButtonCons(8, 0));
+
+        panelName = localeManager.getBundle().getString("table");
 
         Timer timer = new Timer(2000, listenerFactory.createUpdateTableListener(this));
         timer.start();
@@ -115,10 +128,20 @@ public class TablePanelDrawer implements PanelDrawer {
                         synchronized (musicbands) {
                             if (musicbands.size() != newMusicBands.size() && newMusicBands.size() != 0) {
                                 musicbands = newMusicBands;
-                                TableModel tableModel = buildTableModel(musicbands);
+                                MusicTableModel tableModel = buildTableModel(musicbands);
                                 table.setModel(tableModel);
                                 tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
-                                sorter = new StreamAPITableRowSorter<TableModel>(tableModel);
+                                sorter = new StreamAPITableRowSorter<MusicTableModel>(tableModel);
+                                filterButton0.addActionListener(listenerFactory.createFilterListener(panel, sorter, idFilterStore, table, 0));
+                                filterButton1.addActionListener(listenerFactory.createFilterListener(panel, sorter, nameFilterStore, table, 1));
+                                filterButton2.addActionListener(listenerFactory.createFilterListener(panel, sorter, xFilterStore, table, 2));
+                                filterButton3.addActionListener(listenerFactory.createFilterListener(panel, sorter, yFilterStore, table, 3));
+                                filterButton4.addActionListener(listenerFactory.createFilterListener(panel, sorter, dateFilterStore, table, 4));
+                                filterButton5.addActionListener(listenerFactory.createFilterListener(panel, sorter, participantsFilterStore, table, 5));
+                                filterButton6.addActionListener(listenerFactory.createFilterListener(panel, sorter, singlesFilterStore, table, 6));
+                                filterButton7.addActionListener(listenerFactory.createFilterListener(panel, sorter, genreFilterStore, table, 7));
+                                filterButton8.addActionListener(listenerFactory.createFilterListener(panel, sorter, labelFilterStore, table, 8));
+
                                 table.setRowSorter(sorter);
                                 TableColumn genreColumn = table.getColumnModel().getColumn(7);
                                 JComboBox<String> comboBox = new JComboBox<>();
@@ -155,12 +178,6 @@ public class TablePanelDrawer implements PanelDrawer {
             }
         };
         swingWorker.execute();
-//        try {
-//            swingWorker.get();
-//        } catch (InterruptedException | ExecutionException e) {
-//            System.out.println("Interrupted");
-//            e.printStackTrace();
-//        }
     }
 
     private GridBagConstraints getBackButtonCons(int gridx, int gridy) {
@@ -208,21 +225,6 @@ public class TablePanelDrawer implements PanelDrawer {
 
     public void setMusicBands(ArrayList<MusicBand> musicbands) {
         this.musicbands = musicbands;
-    }
-
-    public class MusicTable extends JTable {
-        public MusicTable() {
-        }
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            if (column != 0 && column != 4) {
-                if (userManager.getUser() != null) {
-                    return getMusicBands().get(row).getOwner().equals(userManager.getUser().getLogin());
-                }
-            }
-            return false;
-        }
     }
 
     public class MusicTableModel extends AbstractTableModel {
@@ -281,9 +283,7 @@ public class TablePanelDrawer implements PanelDrawer {
         public boolean isCellEditable(int row, int col) {
             if (col != 0 && col != 4)
                 if (userManager.getUser() != null) {
-                    boolean o = getMusicBands().get(row).getOwner().equals(userManager.getUser().getLogin());
-                    System.out.println(o);
-                    return o;
+                    return getMusicBands().get(row).getOwner().equals(userManager.getUser().getLogin());
                 }
             return false;
         }
@@ -309,6 +309,19 @@ public class TablePanelDrawer implements PanelDrawer {
 
         public void setNameFilter(String nameFilter) {
             this.nameFilter = nameFilter;
+        }
+    }
+
+    class DateRenderer extends DefaultTableCellRenderer {
+        public DateRenderer() { super(); }
+
+        public void setValue(Object value) {
+            if (value != null && value.getClass().equals(LocalDate.class)) {
+                    Date date = java.util.Date.from(LocalDate.parse(value.toString()).atStartOfDay()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant());
+                setText(localeManager.formatDate(date));
+            } else setText("illegal");
         }
     }
 }

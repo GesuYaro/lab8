@@ -1,6 +1,8 @@
 package gui;
 
+import app.LocaleManager;
 import client.PasswordCipher;
+import client.UserManager;
 import musicband.MusicBand;
 
 import javax.swing.*;
@@ -16,7 +18,9 @@ public class VisualizationPanelDrawer implements PanelDrawer {
     private ScrollableJPanel visualizationPanel;
     private ListenerFactory listenerFactory;
     private ActionListener frameManager;
-    private String panelName = "Визуализация";
+    private UserManager userManager;
+    private LocaleManager localeManager;
+    private String panelName;
 
     private ArrayList<MusicBand> musicBands = new ArrayList<>();
     private volatile ConcurrentHashMap<MusicBand, MusicBandButton> buttonHashMap = new ConcurrentHashMap<>();
@@ -26,19 +30,23 @@ public class VisualizationPanelDrawer implements PanelDrawer {
     private int biggestX = 0;
     private int biggestY = 0;
 
-    public VisualizationPanelDrawer(ActionListener frameManager, ListenerFactory listenerFactory) {
+    public VisualizationPanelDrawer(ActionListener frameManager, ListenerFactory listenerFactory, UserManager userManager, LocaleManager localeManager) {
         this.listenerFactory = listenerFactory;
         this.frameManager = frameManager;
         visualizationPanel = new ScrollableJPanel();
         visualizationPanel.setLayout(null);
         visualizationPanel.setPreferredSize(new Dimension(1000, 1000));
         this.listenerFactory = listenerFactory;
+        this.userManager = userManager;
+        this.localeManager = localeManager;
+        panelName = localeManager.getBundle().getString("visualization");
         timer = new Timer(3000, listenerFactory.createUpdateListener(this));
     }
 
     private JPanel initPanel() {
         JPanel pane = new JPanel(new BorderLayout());
 //        visualizationPanel.setSize(500, 500);
+        panelName = localeManager.getBundle().getString("visualization");
         JScrollPane scrollPane = new JScrollPane(visualizationPanel,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -133,8 +141,10 @@ public class VisualizationPanelDrawer implements PanelDrawer {
 
             buttonHashMap.putAll(newButtons);
             musicBands = list;
-            for (MusicBand button : newButtons.keySet()) {
-                visualizationPanel.add(newButtons.get(button));
+            for (MusicBand musicBand : newButtons.keySet()) {
+                MusicBandButton musicBandButton = newButtons.get(musicBand);
+                musicBandButton.addActionListener(listenerFactory.createShowChangeDialog(panel, "update", musicBand, musicBand.getOwner().equals(userManager.getUser().getLogin())));
+                visualizationPanel.add(musicBandButton);
             }
             visualizationPanel.setPreferredSize(new Dimension(biggestX, biggestY));
             columnRule.setPreferredWidth(biggestX);

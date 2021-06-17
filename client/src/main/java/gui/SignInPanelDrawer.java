@@ -1,5 +1,6 @@
 package gui;
 
+import app.LocaleManager;
 import client.Authenticator;
 import client.UserManager;
 
@@ -12,22 +13,31 @@ public class SignInPanelDrawer implements PanelDrawer {
     private ListenerFactory listenerFactory;
     private UserManager userManager;
     private Authenticator authenticator;
-    private String panelName = "Войти";
+    private LocaleManager localeManager;
+    private String panelName;
 
     private JPanel panel;
 
-    private JTextField loginField = new JTextField("");
-    private JPasswordField passwordField = new JPasswordField("");
-    private JLabel loginLabel = new JLabel("Логин:");
-    private JLabel passwordLabel = new JLabel("Пароль:");
-    private JButton signInButton = new JButton("Войти");
-    private JButton signUpButton = new JButton("Зарегистрироваться");
+    private JTextField loginField;
+    private JPasswordField passwordField;
+    private JLabel loginLabel;
+    private JLabel passwordLabel;
+    private JButton signInButton;
+    private JButton signUpButton;
 
-    public SignInPanelDrawer(FrameManager frameManager, ListenerFactory listenerFactory, UserManager userManager, Authenticator authenticator) {
+    public SignInPanelDrawer(FrameManager frameManager, ListenerFactory listenerFactory, UserManager userManager, Authenticator authenticator, LocaleManager localeManager) {
         this.frameManager = frameManager;
         this.listenerFactory = listenerFactory;
         this.userManager = userManager;
         this.authenticator = authenticator;
+        this.localeManager = localeManager;
+        panelName = localeManager.getBundle().getString("sign in");
+        loginField = new JTextField("");
+        passwordField = new JPasswordField("");
+        loginLabel = new JLabel(localeManager.getBundle().getString("login") + ":");
+        passwordLabel = new JLabel(localeManager.getBundle().getString("password") + ":");
+        signInButton = new JButton(localeManager.getBundle().getString("sign in"));
+        signUpButton = new JButton(localeManager.getBundle().getString("sign up"));
     }
 
     private JPanel initPanel() {
