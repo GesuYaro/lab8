@@ -229,17 +229,24 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
 
     @Override
     public void updateLanguage() {
-        panelName = localeManager.getBundle().getString("table");
-        columnNames.clear();
-        columnNames.add(localeManager.getBundle().getString("id"));
-        columnNames.add(localeManager.getBundle().getString("name"));
-        columnNames.add(localeManager.getBundle().getString("x"));
-        columnNames.add(localeManager.getBundle().getString("y"));
-        columnNames.add(localeManager.getBundle().getString("date"));
-        columnNames.add(localeManager.getBundle().getString("participants"));
-        columnNames.add(localeManager.getBundle().getString("singles"));
-        columnNames.add(localeManager.getBundle().getString("genre"));
-        columnNames.add(localeManager.getBundle().getString("label"));
+        try {
+            panelName = localeManager.getBundle().getString("table");
+            columnNames.clear();
+            columnNames.add(localeManager.getBundle().getString("id"));
+            columnNames.add(localeManager.getBundle().getString("name"));
+            columnNames.add(localeManager.getBundle().getString("x"));
+            columnNames.add(localeManager.getBundle().getString("y"));
+            columnNames.add(localeManager.getBundle().getString("date"));
+            columnNames.add(localeManager.getBundle().getString("participants"));
+            columnNames.add(localeManager.getBundle().getString("singles"));
+            columnNames.add(localeManager.getBundle().getString("genre"));
+            columnNames.add(localeManager.getBundle().getString("label"));
+            MusicTableModel tableModel = buildTableModel(musicbands);
+            table.setModel(tableModel);
+            table.repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public class MusicTableModel extends AbstractTableModel {

@@ -4,22 +4,38 @@ import app.LocaleManager;
 
 import javax.swing.*;
 
-public class CommandsMenu extends JMenu {
+public class CommandsMenu extends JMenu implements LanguageChangeable {
+
+    private LocaleManager localeManager;
+
+    private JMenuItem add;
+    private JMenuItem clear;
+    private JMenuItem filter;
+    private JMenuItem help;
+    private JMenuItem history;
+    private JMenuItem info;
+    private JMenuItem insert;
+    private JMenuItem printField;
+    private JMenuItem remove;
+    private JMenuItem removeLast;
+    private JMenuItem show;
+    private JMenuItem update;
 
     public CommandsMenu(String name, ListenerFactory listenerFactory, LocaleManager localeManager) {
         super(name);
-        JMenuItem add = new JMenuItem(localeManager.getBundle().getString("add"));
-        JMenuItem clear = new JMenuItem(localeManager.getBundle().getString("clear"));
-        JMenuItem filter = new JMenuItem(localeManager.getBundle().getString("filter less than singles"));
-        JMenuItem help = new JMenuItem(localeManager.getBundle().getString("help"));
-        JMenuItem history = new JMenuItem(localeManager.getBundle().getString("history"));
-        JMenuItem info = new JMenuItem(localeManager.getBundle().getString("info"));
-        JMenuItem insert = new JMenuItem(localeManager.getBundle().getString("insert at"));
-        JMenuItem printField = new JMenuItem(localeManager.getBundle().getString("print genre descending"));
-        JMenuItem remove = new JMenuItem(localeManager.getBundle().getString("remove by id"));
-        JMenuItem removeLast = new JMenuItem(localeManager.getBundle().getString("remove last"));
-        JMenuItem show = new JMenuItem(localeManager.getBundle().getString("show"));
-        JMenuItem update = new JMenuItem(localeManager.getBundle().getString("update"));
+        this.localeManager = localeManager;
+        add = new JMenuItem(localeManager.getBundle().getString("add"));
+        clear = new JMenuItem(localeManager.getBundle().getString("clear"));
+        filter = new JMenuItem(localeManager.getBundle().getString("filter less than singles"));
+        help = new JMenuItem(localeManager.getBundle().getString("help"));
+        history = new JMenuItem(localeManager.getBundle().getString("history"));
+        info = new JMenuItem(localeManager.getBundle().getString("info"));
+        insert = new JMenuItem(localeManager.getBundle().getString("insert at"));
+        printField = new JMenuItem(localeManager.getBundle().getString("print genre descending"));
+        remove = new JMenuItem(localeManager.getBundle().getString("remove by id"));
+        removeLast = new JMenuItem(localeManager.getBundle().getString("remove last"));
+        show = new JMenuItem(localeManager.getBundle().getString("show"));
+        update = new JMenuItem(localeManager.getBundle().getString("update"));
         info.addActionListener(listenerFactory.createSimpleDialogListener(this, "info"));
         clear.addActionListener(listenerFactory.createSimpleDialogListener(this, "clear"));
         help.addActionListener(listenerFactory.createSimpleDialogListener(this, "help"));
@@ -46,4 +62,20 @@ public class CommandsMenu extends JMenu {
         this.add(show);
     }
 
+    @Override
+    public void updateLanguage() {
+        this.setName(localeManager.getBundle().getString("commands"));
+        add.setText(localeManager.getBundle().getString("add"));
+        clear.setText(localeManager.getBundle().getString("clear"));
+        filter.setText(localeManager.getBundle().getString("filter less than singles"));
+        help.setText(localeManager.getBundle().getString("help"));
+        history.setText(localeManager.getBundle().getString("history"));
+        info.setText(localeManager.getBundle().getString("info"));
+        insert.setText(localeManager.getBundle().getString("insert at"));
+        printField.setText(localeManager.getBundle().getString("print genre descending"));
+        remove.setText(localeManager.getBundle().getString("remove by id"));
+        removeLast.setText(localeManager.getBundle().getString("remove last"));
+        show.setText(localeManager.getBundle().getString("show"));
+        update.setText(localeManager.getBundle().getString("update"));
+    }
 }

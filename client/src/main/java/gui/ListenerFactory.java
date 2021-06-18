@@ -402,7 +402,7 @@ public class ListenerFactory {
                 SwingWorker swingWorker = new SwingWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
-                        String result = JOptionPane.showInputDialog(panel, "Фильтр:", filterKeyStore.getNameFilter());
+                        String result = JOptionPane.showInputDialog(panel, "", filterKeyStore.getNameFilter());
                         RowFilter<TablePanelDrawer.MusicTableModel, Integer> rf = null;
                         try {
                             rf = RowFilter.regexFilter(result, columnNumber);

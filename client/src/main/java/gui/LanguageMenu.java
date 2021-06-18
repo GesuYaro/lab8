@@ -17,10 +17,16 @@ public class LanguageMenu extends JMenu {
         this.languageListener = languageListener;
         JMenuItem ru = new JMenuItem("русский");
         JMenuItem ro = new JMenuItem("română");
+        JMenuItem sq = new JMenuItem("shqiptare");
+        JMenuItem es_CO = new JMenuItem("colombia española");
         ru.addActionListener(createListener("ru"));
         ro.addActionListener(createListener("ro"));
+        sq.addActionListener(createListener("sq"));
+        es_CO.addActionListener(createListener("es-CO"));
         this.add(ru);
         this.add(ro);
+        this.add(sq);
+        this.add(es_CO);
     }
 
     private ActionListener createListener(String localeName) {

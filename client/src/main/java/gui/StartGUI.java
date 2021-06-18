@@ -24,8 +24,10 @@ public class StartGUI implements Runnable {
         FrameManager frameManager = new FrameManager(map, mainFrame, localeManager);
         logoutButton.addActionListener(frameManager);
         ListenerFactory listenerFactory = new ListenerFactory(ClientMain.getConsole(), frameManager, localeManager);
-        mainFrame.addMenu(new CommandsMenu(localeManager.getBundle().getString("commands"), listenerFactory, localeManager));
-        mainFrame.addMenu(new LanguageMenu("\uD83C", new LanguageChangeListener(languageChangeableList), localeManager));
+        CommandsMenu commandsMenu = new CommandsMenu(localeManager.getBundle().getString("commands"), listenerFactory, localeManager);
+        mainFrame.setCommandsMenu(commandsMenu);
+        languageChangeableList.add(commandsMenu);
+        mainFrame.addMenu(new LanguageMenu("\u2690", new LanguageChangeListener(languageChangeableList), localeManager));
         TablePanelDrawer tablePanelDrawer = new TablePanelDrawer(frameManager, ClientMain.getConsole(), listenerFactory, ClientMain.getUserManager(), localeManager);
         languageChangeableList.add(tablePanelDrawer);
         VisualizationPanelDrawer visualizationPanelDrawer = new VisualizationPanelDrawer(frameManager, listenerFactory, ClientMain.getUserManager(), localeManager);
@@ -39,6 +41,7 @@ public class StartGUI implements Runnable {
         languageChangeableList.add(signInPanelDrawer);
         map.put(localeManager.getBundle().getString("sign out"), signInPanelDrawer);
         map.put(localeManager.getBundle().getString("sign in"), tabbedPanelDrawer);
+        languageChangeableList.add(mainFrame);
         frameManager.start();
     }
 }
