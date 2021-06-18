@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class VisualizationPanelDrawer implements PanelDrawer {
+public class VisualizationPanelDrawer implements PanelDrawer, LanguageChangeable {
 
     private JPanel panel;
     private ScrollableJPanel visualizationPanel;
@@ -162,4 +162,8 @@ public class VisualizationPanelDrawer implements PanelDrawer {
         this.musicBands = musicBands;
     }
 
+    @Override
+    public void updateLanguage() {
+        panelName = localeManager.getBundle().getString("visualization");
+    }
 }

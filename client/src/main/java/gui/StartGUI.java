@@ -4,6 +4,7 @@ import app.ClientMain;
 import app.LocaleManager;
 import client.Authenticator;
 import client.UserManager;
+import sun.awt.image.ImageWatched;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
@@ -15,6 +16,7 @@ public class StartGUI implements Runnable {
 
     @Override
     public void run() {
+        LinkedList<LanguageChangeable> languageChangeableList = new LinkedList<>();
         LocaleManager localeManager = ClientMain.getLocaleManager();
         Map<String, PanelDrawer> map = new HashMap<>();
         JButton logoutButton = new JButton(localeManager.getBundle().getString("sign out"));
@@ -23,15 +25,19 @@ public class StartGUI implements Runnable {
         logoutButton.addActionListener(frameManager);
         ListenerFactory listenerFactory = new ListenerFactory(ClientMain.getConsole(), frameManager, localeManager);
         mainFrame.addMenu(new CommandsMenu(localeManager.getBundle().getString("commands"), listenerFactory, localeManager));
+        mainFrame.addMenu(new LanguageMenu("\uD83C", new LanguageChangeListener(languageChangeableList), localeManager));
         TablePanelDrawer tablePanelDrawer = new TablePanelDrawer(frameManager, ClientMain.getConsole(), listenerFactory, ClientMain.getUserManager(), localeManager);
-
+        languageChangeableList.add(tablePanelDrawer);
         VisualizationPanelDrawer visualizationPanelDrawer = new VisualizationPanelDrawer(frameManager, listenerFactory, ClientMain.getUserManager(), localeManager);
-
+        languageChangeableList.add(visualizationPanelDrawer);
         LinkedList<PanelDrawer> panelDrawers = new LinkedList<>();
         panelDrawers.add(tablePanelDrawer);
         panelDrawers.add(visualizationPanelDrawer);
         TabbedPanelDrawer tabbedPanelDrawer = new TabbedPanelDrawer(panelDrawers);
-        map.put(localeManager.getBundle().getString("sign out"), new SignInPanelDrawer(frameManager, listenerFactory, ClientMain.getUserManager(), new Authenticator(), localeManager));
+        languageChangeableList.add(tabbedPanelDrawer);
+        SignInPanelDrawer signInPanelDrawer = new SignInPanelDrawer(frameManager, listenerFactory, ClientMain.getUserManager(), new Authenticator(), localeManager);
+        languageChangeableList.add(signInPanelDrawer);
+        map.put(localeManager.getBundle().getString("sign out"), signInPanelDrawer);
         map.put(localeManager.getBundle().getString("sign in"), tabbedPanelDrawer);
         frameManager.start();
     }

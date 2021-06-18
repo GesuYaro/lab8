@@ -7,7 +7,7 @@ import client.UserManager;
 import javax.swing.*;
 import java.awt.*;
 
-public class SignInPanelDrawer implements PanelDrawer {
+public class SignInPanelDrawer implements PanelDrawer, LanguageChangeable {
 
     private FrameManager frameManager;
     private ListenerFactory listenerFactory;
@@ -31,6 +31,10 @@ public class SignInPanelDrawer implements PanelDrawer {
         this.userManager = userManager;
         this.authenticator = authenticator;
         this.localeManager = localeManager;
+
+    }
+
+    private JPanel initPanel() {
         panelName = localeManager.getBundle().getString("sign in");
         loginField = new JTextField("");
         passwordField = new JPasswordField("");
@@ -38,10 +42,6 @@ public class SignInPanelDrawer implements PanelDrawer {
         passwordLabel = new JLabel(localeManager.getBundle().getString("password") + ":");
         signInButton = new JButton(localeManager.getBundle().getString("sign in"));
         signUpButton = new JButton(localeManager.getBundle().getString("sign up"));
-    }
-
-    private JPanel initPanel() {
-//        backButton.addActionListener(frameManager);
         loginField.setPreferredSize(new Dimension(200, 30));
         passwordField.setPreferredSize(new Dimension(200, 30));
         signInButton.addActionListener(listenerFactory.createSigningDialog(panel, loginField, passwordField, userManager, authenticator, "sign_in"));
@@ -60,7 +60,6 @@ public class SignInPanelDrawer implements PanelDrawer {
         pane.setBackground(new Color(0xED9CDE));
         pane.add(loginContainer, getTextFieldCons(0));
         pane.add(buttonsContainer, getButtonContainerCons(1));
-//        pane.add(backButton, getBackButtonCons());
         return pane;
     }
 
@@ -126,5 +125,13 @@ public class SignInPanelDrawer implements PanelDrawer {
         constraints.gridy = 0;
         constraints.gridx = 1;
         return constraints;
+    }
+
+    @Override
+    public void updateLanguage() {
+        loginLabel.setText(localeManager.getBundle().getString("login") + ":");
+        passwordLabel.setText(localeManager.getBundle().getString("password") + ":");
+        signInButton.setText(localeManager.getBundle().getString("sign in"));
+        signUpButton.setText(localeManager.getBundle().getString("sign up"));
     }
 }

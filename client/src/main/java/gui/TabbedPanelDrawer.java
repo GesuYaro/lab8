@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.util.List;
 import java.util.ListIterator;
 
-public class TabbedPanelDrawer implements PanelDrawer {
+public class TabbedPanelDrawer implements PanelDrawer, LanguageChangeable {
 
     private JTabbedPane tabbedPane;
     private List<PanelDrawer> panelDrawers;
-    private String panelName = "Вкладки";
+    private String panelName = "tabs";
 
     public TabbedPanelDrawer(List<PanelDrawer> panelDrawers) {
         this.panelDrawers = panelDrawers;
@@ -30,4 +30,14 @@ public class TabbedPanelDrawer implements PanelDrawer {
         return panelName;
     }
 
+    @Override
+    public void updateLanguage() {
+        tabbedPane.removeAll();
+        for (ListIterator<PanelDrawer> it = panelDrawers.listIterator(); it.hasNext(); ) {
+            PanelDrawer drawer = it.next();
+            if (drawer != null) {
+                tabbedPane.addTab(drawer.getPanelName(), drawer.drawPanel());
+            }
+        }
+    }
 }

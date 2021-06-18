@@ -6,8 +6,8 @@ import javax.swing.*;
 
 public class CommandsMenu extends JMenu {
 
-    public CommandsMenu(String s, ListenerFactory listenerFactory, LocaleManager localeManager) {
-        super(s);
+    public CommandsMenu(String name, ListenerFactory listenerFactory, LocaleManager localeManager) {
+        super(name);
         JMenuItem add = new JMenuItem(localeManager.getBundle().getString("add"));
         JMenuItem clear = new JMenuItem(localeManager.getBundle().getString("clear"));
         JMenuItem filter = new JMenuItem(localeManager.getBundle().getString("filter less than singles"));

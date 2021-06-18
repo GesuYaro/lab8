@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -17,9 +19,9 @@ public class LocaleManager {
         bundle = ResourceBundle.getBundle("gui.properties.Resources", locale);
     }
 
-    public void changeLocale(Locale locale) {
-        this.locale = locale;
-        bundle = ResourceBundle.getBundle("Resources", locale);
+    public void changeLocale(String localeName) {
+        this.locale = Locale.forLanguageTag(localeName);
+        bundle = ResourceBundle.getBundle("gui.properties.Resources", locale);
     }
 
     public ResourceBundle getBundle() {
@@ -33,7 +35,10 @@ public class LocaleManager {
 
     public String formatDate(LocalDate date) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-        return dateFormat.format(date);
+        Date castedDate = java.util.Date.from(LocalDate.parse(date.toString()).atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+        return dateFormat.format(castedDate);
     }
 
     public String formatDate(Object date) {

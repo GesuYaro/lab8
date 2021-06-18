@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
-public class TablePanelDrawer implements PanelDrawer {
+public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
 
     private ActionListener frameManager;
     private Console console;
@@ -225,6 +225,21 @@ public class TablePanelDrawer implements PanelDrawer {
 
     public void setMusicBands(ArrayList<MusicBand> musicbands) {
         this.musicbands = musicbands;
+    }
+
+    @Override
+    public void updateLanguage() {
+        panelName = localeManager.getBundle().getString("table");
+        columnNames.clear();
+        columnNames.add(localeManager.getBundle().getString("id"));
+        columnNames.add(localeManager.getBundle().getString("name"));
+        columnNames.add(localeManager.getBundle().getString("x"));
+        columnNames.add(localeManager.getBundle().getString("y"));
+        columnNames.add(localeManager.getBundle().getString("date"));
+        columnNames.add(localeManager.getBundle().getString("participants"));
+        columnNames.add(localeManager.getBundle().getString("singles"));
+        columnNames.add(localeManager.getBundle().getString("genre"));
+        columnNames.add(localeManager.getBundle().getString("label"));
     }
 
     public class MusicTableModel extends AbstractTableModel {
