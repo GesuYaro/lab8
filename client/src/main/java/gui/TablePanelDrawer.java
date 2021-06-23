@@ -138,60 +138,58 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
             @Override
             protected Object doInBackground() throws Exception {
                 synchronized (table) {
-                    synchronized (columnNames) {
-                        synchronized (musicbands) {
-                            if (musicbands.size() != newMusicBands.size() && newMusicBands.size() != 0) {
-                                musicbands = newMusicBands;
-                                MusicTableModel tableModel = buildTableModel(musicbands);
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        table.setModel(tableModel);
-                                        tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
-                                        sorter = new StreamAPITableRowSorter<MusicTableModel>(tableModel);
-                                        filterButton0.addActionListener(listenerFactory.createFilterListener(panel, sorter, idFilterStore, table, 0));
-                                        filterButton1.addActionListener(listenerFactory.createFilterListener(panel, sorter, nameFilterStore, table, 1));
-                                        filterButton2.addActionListener(listenerFactory.createFilterListener(panel, sorter, xFilterStore, table, 2));
-                                        filterButton3.addActionListener(listenerFactory.createFilterListener(panel, sorter, yFilterStore, table, 3));
-                                        filterButton4.addActionListener(listenerFactory.createFilterListener(panel, sorter, dateFilterStore, table, 4));
-                                        filterButton5.addActionListener(listenerFactory.createFilterListener(panel, sorter, participantsFilterStore, table, 5));
-                                        filterButton6.addActionListener(listenerFactory.createFilterListener(panel, sorter, singlesFilterStore, table, 6));
-                                        filterButton7.addActionListener(listenerFactory.createFilterListener(panel, sorter, genreFilterStore, table, 7));
-                                        filterButton8.addActionListener(listenerFactory.createFilterListener(panel, sorter, labelFilterStore, table, 8));
+                    synchronized (musicbands) {
+                        if (musicbands.size() != newMusicBands.size() && newMusicBands.size() != 0) {
+                            musicbands = newMusicBands;
+                            MusicTableModel tableModel = buildTableModel(musicbands);
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    table.setModel(tableModel);
+                                    tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
+                                    sorter = new StreamAPITableRowSorter<MusicTableModel>(tableModel);
+                                    filterButton0.addActionListener(listenerFactory.createFilterListener(panel, sorter, idFilterStore, table, 0));
+                                    filterButton1.addActionListener(listenerFactory.createFilterListener(panel, sorter, nameFilterStore, table, 1));
+                                    filterButton2.addActionListener(listenerFactory.createFilterListener(panel, sorter, xFilterStore, table, 2));
+                                    filterButton3.addActionListener(listenerFactory.createFilterListener(panel, sorter, yFilterStore, table, 3));
+                                    filterButton4.addActionListener(listenerFactory.createFilterListener(panel, sorter, dateFilterStore, table, 4));
+                                    filterButton5.addActionListener(listenerFactory.createFilterListener(panel, sorter, participantsFilterStore, table, 5));
+                                    filterButton6.addActionListener(listenerFactory.createFilterListener(panel, sorter, singlesFilterStore, table, 6));
+                                    filterButton7.addActionListener(listenerFactory.createFilterListener(panel, sorter, genreFilterStore, table, 7));
+                                    filterButton8.addActionListener(listenerFactory.createFilterListener(panel, sorter, labelFilterStore, table, 8));
 
-                                        table.setRowSorter(sorter);
-                                        TableColumn genreColumn = table.getColumnModel().getColumn(7);
-                                        JComboBox<String> comboBox = new JComboBox<>();
-                                        for (MusicGenre genre : MusicGenre.values()) {
-                                            comboBox.addItem(genre.name());
-                                        }
-                                        genreColumn.setCellEditor(new DefaultCellEditor(comboBox));
+                                    table.setRowSorter(sorter);
+                                    TableColumn genreColumn = table.getColumnModel().getColumn(7);
+                                    JComboBox<String> comboBox = new JComboBox<>();
+                                    for (MusicGenre genre : MusicGenre.values()) {
+                                        comboBox.addItem(genre.name());
                                     }
-                                });
-                            } else {
-                                if (!musicbands.equals(newMusicBands) && !musicbands.isEmpty()) {
-                                    ArrayList<MusicBand> changed = new ArrayList<>(newMusicBands);
-                                    changed.removeAll(musicbands);
-                                    for (int row = 0; row < table.getRowCount(); row++) {
-                                        for (int changedRow = 0; changedRow < changed.size(); changedRow++) {
-                                            if (Long.valueOf(changed.get(changedRow).getId()).equals(table.getModel().getValueAt(row, 0))) {
-                                                MusicBand newMusicBand = changed.get(changedRow);
-                                                table.getModel().setValueAt(newMusicBand.getName(), row, 1);
-                                                table.getModel().setValueAt(newMusicBand.getCoordinates().getX(), row, 2);
-                                                table.getModel().setValueAt(newMusicBand.getCoordinates().getY(), row, 3);
-                                                table.getModel().setValueAt(newMusicBand.getCreationDate(), row, 4);
-                                                table.getModel().setValueAt(newMusicBand.getNumberOfParticipants(), row, 5);
-                                                table.getModel().setValueAt(newMusicBand.getSinglesCount(), row, 6);
-                                                table.getModel().setValueAt(newMusicBand.getGenre().name(), row, 7);
-                                                table.getModel().setValueAt(newMusicBand.getLabel().getName(), row, 8);
-                                            }
-                                        }
-                                    }
-                                    musicbands = newMusicBands;
+                                    genreColumn.setCellEditor(new DefaultCellEditor(comboBox));
                                 }
+                            });
+                        } else {
+                            if (!musicbands.equals(newMusicBands) && !musicbands.isEmpty()) {
+                                ArrayList<MusicBand> changed = new ArrayList<>(newMusicBands);
+                                changed.removeAll(musicbands);
+                                for (int row = 0; row < table.getRowCount(); row++) {
+                                    for (int changedRow = 0; changedRow < changed.size(); changedRow++) {
+                                        if (Long.valueOf(changed.get(changedRow).getId()).equals(table.getModel().getValueAt(row, 0))) {
+                                            MusicBand newMusicBand = changed.get(changedRow);
+                                            table.getModel().setValueAt(newMusicBand.getName(), row, 1);
+                                            table.getModel().setValueAt(newMusicBand.getCoordinates().getX(), row, 2);
+                                            table.getModel().setValueAt(newMusicBand.getCoordinates().getY(), row, 3);
+                                            table.getModel().setValueAt(newMusicBand.getCreationDate(), row, 4);
+                                            table.getModel().setValueAt(newMusicBand.getNumberOfParticipants(), row, 5);
+                                            table.getModel().setValueAt(newMusicBand.getSinglesCount(), row, 6);
+                                            table.getModel().setValueAt(newMusicBand.getGenre().name(), row, 7);
+                                            table.getModel().setValueAt(newMusicBand.getLabel().getName(), row, 8);
+                                        }
+                                    }
+                                }
+                                musicbands = newMusicBands;
                             }
-
                         }
+
                     }
                 }
                 return null;
