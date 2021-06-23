@@ -143,7 +143,7 @@ public class VisualizationPanelDrawer implements PanelDrawer, LanguageChangeable
             musicBands = list;
             for (MusicBand musicBand : newButtons.keySet()) {
                 MusicBandButton musicBandButton = newButtons.get(musicBand);
-                musicBandButton.addActionListener(listenerFactory.createShowChangeDialog(panel, "update", musicBand, musicBand.getOwner().equals(userManager.getUser().getLogin())));
+                musicBandButton.addActionListener(listenerFactory.createShowChangeListener(panel, "update", musicBand, musicBand.getOwner().equals(userManager.getUser().getLogin())));
                 visualizationPanel.add(musicBandButton);
             }
             visualizationPanel.setPreferredSize(new Dimension(biggestX, biggestY));

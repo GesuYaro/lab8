@@ -45,6 +45,8 @@ public class ClientExecuteScriptCommand {
     }
 
     public CommandResponse execute(String firstArgument, MusicBand requestedMusicBand) throws NoArgumentFoundException {
+        CommandResponse commandResponse = new CommandResponse();
+        String message = "";
         String path = firstArgument.trim();
         if (path.equals("")) throw new NoArgumentFoundException();
         File file = new File(path);
@@ -64,29 +66,38 @@ public class ClientExecuteScriptCommand {
                                 console.run();
                             } catch (IncorrectScriptException e) {
                                 writer.write(e.getMessage());
+                                message += e.getMessage() + "\n";
                             } catch (NullPointerException | StackOverflowError e) {
                                 writer.write("Error. Incorrect Script");
+                                message += "Error. Incorrect Script\n";
                             }
                         } else {
                             writer.write("Script doesn't contain exit. It wouldn't be executed.");
+                            message += "Script doesn't contain exit. It wouldn't be executed.\n";
                         }
                     } else {
                         writer.write("Recursion found. Stopping the script");
+                        message += "Recursion found. Stopping the script\n";
                     }
                 } else {
                     writer.write("Access denied. Can't read the file");
+                    message += "Access denied. Can't read the file\n";
                 }
             } else {
                 writer.write("Can't access the file " + path);
+                message += "Can't access the file " + path + "\n";
             }
         } catch (FileNotFoundException | SecurityException e) {
             writer.write("Can't access the file " + path);
+            message += "Can't access the file " + path + "\n";
         } catch (IOException e) {
             writer.write("Unexpected error with file");
+            message += "Unexpected error with file\n";
         }
         if (!isInnerScript) scripts.clear();
         else scripts.remove(file);
-        return null;
+        commandResponse.setMessage(message);
+        return commandResponse;
     }
 
     private boolean containsExit(File file) throws IOException {
@@ -96,5 +107,12 @@ public class ClientExecuteScriptCommand {
         return contains;
     }
 
+    public ConsoleWriter getWriter() {
+        return writer;
+    }
+
+    public void setWriter(ConsoleWriter writer) {
+        this.writer = writer;
+    }
 }
 

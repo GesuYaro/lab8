@@ -92,7 +92,6 @@ public class MusicBandFieldsChecker {
         prename = string.trim();
         if (!prename.equals("")) {
             name = prename;
-            //name = name.replaceAll("%COMMA%", ",");
         }
         else throw new InputValueException("Input Error\nName field can't be null, string can't be empty");
         return name;
@@ -132,7 +131,7 @@ public class MusicBandFieldsChecker {
             if (x < -153) throw new InputValueException("X can't be less than -153");
         }
         catch (NumberFormatException e){
-            throw new InputValueException("Input Error\nField should be long");
+            throw new InputValueException("Input Error\nX should be long");
         }
         return x;
     }
@@ -151,7 +150,7 @@ public class MusicBandFieldsChecker {
                 } else throw new InputValueException("Input Error\nField can't be null");
             }
             catch (NumberFormatException e){
-                throw new InputValueException("Input Error\nField should be double");
+                throw new InputValueException("Input Error\nY should be double");
             }
             catch (IOException e) {
                 throw new InputValueException("Unexpected input error");

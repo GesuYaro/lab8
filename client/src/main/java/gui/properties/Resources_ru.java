@@ -37,7 +37,16 @@ public class Resources_ru extends ListResourceBundle {
             {"label", "лейбл"},
             {"enter argument", "введите аргумент"},
             {"enter fields", "заполните поля"},
-            {"successful", "успешно"}
+            {"successful", "успешно"},
+            {"delete?", "удалить?"},
+            {"Input Error\nName field can't be null, string can't be empty", "Ошибка ввода\nИмя не может быть пустым"},
+            {"X can't be less than -153", "X не может быть меньше -153"},
+            {"Input Error\nX should be long", "Ошибка ввода\nX должен быть целым числом"},
+            {"Y should be greater than -159", "Y должен быть больше -159"},
+            {"Input Error\nY should be double", "Ошибка ввода\nY должен быть числом"},
+            {"Input Error\nNumber of participants should be the natural number", "Ошибка ввода\nКоличество участников должно быть натуральным числом"},
+            {"Input Error\nSingles count should be the natural number", "Ошибка ввода\nКоличество синглов должно быть натуральным числом"},
+            {"execute script", "исполнить скрипт"}
     };
 
     @Override

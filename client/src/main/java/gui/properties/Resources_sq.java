@@ -36,7 +36,20 @@ public class Resources_sq extends ListResourceBundle {
             {"label", "emërtim"},
             {"enter argument", "hyj në argument"},
             {"enter fields", "hyj në fusha"},
-            {"successful", "e suksesshme"}
+            {"successful", "e suksesshme"},
+            {"delete?", "fshihet"},
+            {"Input Error\nName field can't be null, string can't be empty", "Gabim i hyrjes\nFusha e emrit nuk mund të jetë null, vargu nuk mund të jetë bosh"},
+            {"X can't be less than -153", "X nuk mund të jetë më pak se -153"},
+            {"Input Error\nX should be long", "Gabim i hyrjes\n" +
+                    "X duhet të jetë e gjatë"},
+            {"Y should be greater than -159", "Y duhet të jetë më i madh se -159"},
+            {"Input Error\nY should be double", "Gabim i hyrjes\n" +
+                    "Y duhet të jetë dyfish"},
+            {"Input Error\nNumber of participants should be the natural number", "Gabim i hyrjes\n" +
+                    "Numri i pjesëmarrësve duhet të jetë numri natyror"},
+            {"Input Error\nSingles count should be the natural number", "Gabim i hyrjes\n" +
+                    "Numri i teke duhet të jetë numri natyror"},
+            {"execute script", "ekzekutoni skenarin"}
     };
 
     @Override

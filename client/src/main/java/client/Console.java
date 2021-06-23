@@ -1,6 +1,7 @@
 package client;
 
 import client.exceptions.NotAResponseException;
+import console.commands.CommandResponse;
 import musicband.InputValueException;
 import musicband.MusicBand;
 import network.Request;
@@ -68,7 +69,10 @@ public class Console {
                 }
                 if (command[0].equals("execute_script")) {
                     if (command.length > 1) {
-                        clientExecuteScriptCommand.execute(command[1], null);
+                        CommandResponse commandResponse = clientExecuteScriptCommand.execute(command[1], null);
+                        if (commandResponse != null) {
+                            return new Response(commandResponse.getMessage(), null);
+                        }
                     } else {
                         System.out.println("Argument not found");
                     }

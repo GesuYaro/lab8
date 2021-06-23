@@ -57,6 +57,30 @@ public class ListenerFactory {
         };
     }
 
+    public ActionListener createFileChoosingListener(Component panel) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingWorker<Response, Response> swingWorker = new SwingWorker<Response, Response>() {
+                    @Override
+                    protected Response doInBackground() throws Exception {
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                        int result = fileChooser.showOpenDialog(panel);
+                        if (result == JFileChooser.APPROVE_OPTION ) {
+                            Response response = console.request("execute_script " + fileChooser.getSelectedFile().getAbsolutePath());
+                            if (response != null) {
+                                JOptionPane.showMessageDialog(panel, response.getMessage());
+                            }
+                        }
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+            }
+        };
+    }
+
     public ActionListener createAskingDialogListener(Component panel, String commandName) {
         return new ActionListener() {
             @Override
@@ -88,73 +112,101 @@ public class ListenerFactory {
         };
     }
 
+    public ActionListener createDeletingListener (Component panel, long id) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int result = JOptionPane.showConfirmDialog(panel, localeManager.getBundle().getString("delete?"), localeManager.getBundle().getString("delete?"), JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    Response response = null;
+                    response = console.request("remove_by_id " + id);
+                }
+            }
+        };
+    }
 
-    public ActionListener createShowChangeDialog(Component panel, String commandName, MusicBand musicBand, boolean ownerView) {
+
+    public ActionListener createShowChangeListener(Component panel, String commandName, MusicBand musicBand, boolean ownerView) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingWorker<Response, Response> swingWorker = new SwingWorker<Response, Response>() {
                     @Override
                     protected Response doInBackground() throws Exception {
-
                         JPanel fieldsPanel = new JPanel(new GridBagLayout());
                         if (ownerView) {
-                            JTextField nameTF = new JTextField(musicBand.getName());
-                            JTextField xTF = new JTextField(musicBand.getCoordinates().getX().toString());
-                            JTextField yTF = new JTextField(musicBand.getCoordinates().getY().toString());
-                            JTextField participantsTF = new JTextField("" + musicBand.getNumberOfParticipants());
-                            JTextField singlesTF = new JTextField("" + musicBand.getSinglesCount());
-                            JComboBox<MusicGenre> genreCB = new JComboBox<>(MusicGenre.values());
-                            genreCB.setSelectedItem(musicBand.getGenre());
-                            JTextField labelTF = new JTextField(musicBand.getLabel().getName());
+                            if (e.getActionCommand().equals("1")) {
+                                JTextField nameTF = new JTextField(musicBand.getName());
+                                JTextField xTF = new JTextField(musicBand.getCoordinates().getX().toString());
+                                JTextField yTF = new JTextField(musicBand.getCoordinates().getY().toString());
+                                JTextField participantsTF = new JTextField("" + musicBand.getNumberOfParticipants());
+                                JTextField singlesTF = new JTextField("" + musicBand.getSinglesCount());
+                                JComboBox<MusicGenre> genreCB = new JComboBox<>(MusicGenre.values());
+                                genreCB.setSelectedItem(musicBand.getGenre());
+                                JTextField labelTF = new JTextField(musicBand.getLabel().getName());
 
-                            JLabel idLabel = new JLabel(localeManager.getBundle().getString("id") + ": " + musicBand.getId());
-                            JLabel nameLabel = new JLabel(localeManager.getBundle().getString("name") + ":");
-                            JLabel xLabel = new JLabel(localeManager.getBundle().getString("x") + ":");
-                            JLabel yLabel = new JLabel(localeManager.getBundle().getString("y") +":");
-                            JLabel dateLabel = new JLabel(localeManager.getBundle().getString("date") + ": " + localeManager.formatDate(musicBand.getCreationDate()));
-                            JLabel participantsLabel = new JLabel(localeManager.getBundle().getString("participants") + ":");
-                            JLabel singlesLabel = new JLabel(localeManager.getBundle().getString("singles") +":");
-                            JLabel genreLabel = new JLabel(localeManager.getBundle().getString("genre") + ":");
-                            JLabel labelLabel = new JLabel(localeManager.getBundle().getString("label") + ":");
+                                JLabel idLabel = new JLabel(localeManager.getBundle().getString("id") + ": " + musicBand.getId());
+                                JLabel nameLabel = new JLabel(localeManager.getBundle().getString("name") + ":");
+                                JLabel xLabel = new JLabel(localeManager.getBundle().getString("x") + ":");
+                                JLabel yLabel = new JLabel(localeManager.getBundle().getString("y") + ":");
+                                JLabel dateLabel = new JLabel(localeManager.getBundle().getString("date") + ": " + localeManager.formatDate(musicBand.getCreationDate()));
+                                JLabel participantsLabel = new JLabel(localeManager.getBundle().getString("participants") + ":");
+                                JLabel singlesLabel = new JLabel(localeManager.getBundle().getString("singles") + ":");
+                                JLabel genreLabel = new JLabel(localeManager.getBundle().getString("genre") + ":");
+                                JLabel labelLabel = new JLabel(localeManager.getBundle().getString("label") + ":");
 
-                            fieldsPanel.add(idLabel, getLabelCons(0));
-                            fieldsPanel.add(nameLabel, getLabelCons(1));
-                            fieldsPanel.add(xLabel, getLabelCons(2));
-                            fieldsPanel.add(yLabel, getLabelCons(3));
-                            fieldsPanel.add(dateLabel, getLabelCons(4));
-                            fieldsPanel.add(participantsLabel, getLabelCons(5));
-                            fieldsPanel.add(singlesLabel, getLabelCons(6));
-                            fieldsPanel.add(genreLabel, getLabelCons(7));
-                            fieldsPanel.add(labelLabel, getLabelCons(8));
+                                fieldsPanel.add(idLabel, getLabelCons(0));
+                                fieldsPanel.add(nameLabel, getLabelCons(1));
+                                fieldsPanel.add(xLabel, getLabelCons(2));
+                                fieldsPanel.add(yLabel, getLabelCons(3));
+                                fieldsPanel.add(dateLabel, getLabelCons(4));
+                                fieldsPanel.add(participantsLabel, getLabelCons(5));
+                                fieldsPanel.add(singlesLabel, getLabelCons(6));
+                                fieldsPanel.add(genreLabel, getLabelCons(7));
+                                fieldsPanel.add(labelLabel, getLabelCons(8));
 
-                            fieldsPanel.add(nameTF, getTextFieldCons(1));
-                            fieldsPanel.add(xTF, getTextFieldCons(2));
-                            fieldsPanel.add(yTF, getTextFieldCons(3));
-                            fieldsPanel.add(participantsTF, getTextFieldCons(5));
-                            fieldsPanel.add(singlesTF, getTextFieldCons(6));
-                            fieldsPanel.add(genreCB, getTextFieldCons(7));
-                            fieldsPanel.add(labelTF, getTextFieldCons(8));
+                                fieldsPanel.add(nameTF, getTextFieldCons(1));
+                                fieldsPanel.add(xTF, getTextFieldCons(2));
+                                fieldsPanel.add(yTF, getTextFieldCons(3));
+                                fieldsPanel.add(participantsTF, getTextFieldCons(5));
+                                fieldsPanel.add(singlesTF, getTextFieldCons(6));
+                                fieldsPanel.add(genreCB, getTextFieldCons(7));
+                                fieldsPanel.add(labelTF, getTextFieldCons(8));
 
-                            int result = JOptionPane.showConfirmDialog(panel, fieldsPanel,
-                                    "Object", JOptionPane.OK_CANCEL_OPTION);
-                            if (result == JOptionPane.OK_OPTION) {
-                                Response response = null;
-                                response = console.extendedRequest(commandName + " " + musicBand.getId(), nameTF.getText(), xTF.getText(),
-                                        yTF.getText(), participantsTF.getText(), singlesTF.getText(),
-                                        genreCB.getSelectedItem() != null ? genreCB.getSelectedItem().toString() : "",
-                                        labelTF.getText());
-                                if (response != null) {
-                                    String message = "";
-                                    if (response.getMessage() != null) {
-                                        message += response.getMessage();
-                                    }
-                                    if (response.getList() != null) {
-                                        for (MusicBand mb : response.getList()) {
-                                            message += mb.toString() + "\n";
+                                int result = JOptionPane.showConfirmDialog(panel, fieldsPanel,
+                                        "Object", JOptionPane.OK_CANCEL_OPTION);
+                                if (result == JOptionPane.OK_OPTION) {
+                                    if (!nameTF.getText().equals(musicBand.getName()) || !xTF.getText().equals(musicBand.getCoordinates().getX().toString())
+                                    || !yTF.getText().equals(musicBand.getCoordinates().getY().toString()) || !participantsTF.getText().equals(Integer.valueOf(musicBand.getNumberOfParticipants()).toString())
+                                    || !singlesTF.getText().equals(musicBand.getSinglesCount().toString()) || (genreCB.getSelectedItem() != null && !genreCB.getSelectedItem().equals(musicBand.getGenre()))
+                                    || !labelTF.getText().equals(musicBand.getLabel().getName())) {
+                                        Response response = null;
+                                        response = console.extendedRequest(commandName + " " + musicBand.getId(), nameTF.getText(), xTF.getText(),
+                                                yTF.getText(), participantsTF.getText(), singlesTF.getText(),
+                                                genreCB.getSelectedItem() != null ? genreCB.getSelectedItem().toString() : "",
+                                                labelTF.getText());
+                                        if (response != null) {
+                                            String message = "";
+                                            if (response.getMessage() != null) {
+                                                message += response.getMessage();
+                                            }
+                                            if (response.getList() != null) {
+                                                for (MusicBand mb : response.getList()) {
+                                                    message += mb.toString() + "\n";
+                                                }
+                                            }
+                                            JOptionPane.showMessageDialog(panel, message);
                                         }
                                     }
-                                    JOptionPane.showMessageDialog(panel, message);
+                                }
+                            } else {
+                                if (e.getActionCommand().equals("3")) {
+                                    int result = JOptionPane.showConfirmDialog(panel, fieldsPanel,
+                                            localeManager.getBundle().getString("delete?"), JOptionPane.OK_CANCEL_OPTION);
+                                    if (result == JOptionPane.OK_OPTION) {
+                                        Response response = null;
+                                        response = console.request("remove_by_id " + musicBand.getId());
+                                    }
                                 }
                             }
                         } else {
@@ -202,7 +254,7 @@ public class ListenerFactory {
                             arg = JOptionPane.showInputDialog(panel, localeManager.getBundle().getString("enter argument"));
                         }
 
-                        JPanel fieldsPanel = new JPanel(new GridBagLayout());
+//                        JPanel fieldsPanel = new JPanel(new GridBagLayout());
 
                         JTextField nameTF = new JTextField();
                         JTextField xTF = new JTextField();
@@ -212,51 +264,35 @@ public class ListenerFactory {
                         JComboBox<MusicGenre> genreCB = new JComboBox<>(MusicGenre.values());
                         JTextField labelTF = new JTextField();
 
-                        JLabel nameLabel = new JLabel(localeManager.getBundle().getString("name") + ":");
-                        JLabel xLabel = new JLabel(localeManager.getBundle().getString("x") + ":");
-                        JLabel yLabel = new JLabel(localeManager.getBundle().getString("y") + ":");
-                        JLabel participantsLabel = new JLabel(localeManager.getBundle().getString("participants") + ":");
-                        JLabel singlesLabel = new JLabel(localeManager.getBundle().getString("singles") + ":");
-                        JLabel genreLabel = new JLabel(localeManager.getBundle().getString("genre") + ":");
-                        JLabel labelLabel = new JLabel(localeManager.getBundle().getString("label") + ":");
+                        FieldDialog fieldDialog = new FieldDialog(localeManager, nameTF, xTF, yTF, participantsTF, singlesTF, genreCB, labelTF, console, commandName, arg);
+                        fieldDialog.setVisible(true);
 
-                        fieldsPanel.add(nameLabel, getLabelCons(0));
-                        fieldsPanel.add(xLabel, getLabelCons(1));
-                        fieldsPanel.add(yLabel, getLabelCons(2));
-                        fieldsPanel.add(participantsLabel, getLabelCons(3));
-                        fieldsPanel.add(singlesLabel, getLabelCons(4));
-                        fieldsPanel.add(genreLabel, getLabelCons(5));
-                        fieldsPanel.add(labelLabel, getLabelCons(6));
+//                        JLabel nameLabel = new JLabel(localeManager.getBundle().getString("name") + ":");
+//                        JLabel xLabel = new JLabel(localeManager.getBundle().getString("x") + ":");
+//                        JLabel yLabel = new JLabel(localeManager.getBundle().getString("y") + ":");
+//                        JLabel participantsLabel = new JLabel(localeManager.getBundle().getString("participants") + ":");
+//                        JLabel singlesLabel = new JLabel(localeManager.getBundle().getString("singles") + ":");
+//                        JLabel genreLabel = new JLabel(localeManager.getBundle().getString("genre") + ":");
+//                        JLabel labelLabel = new JLabel(localeManager.getBundle().getString("label") + ":");
 
-                        fieldsPanel.add(nameTF, getTextFieldCons(0));
-                        fieldsPanel.add(xTF, getTextFieldCons(1));
-                        fieldsPanel.add(yTF, getTextFieldCons(2));
-                        fieldsPanel.add(participantsTF, getTextFieldCons(3));
-                        fieldsPanel.add(singlesTF, getTextFieldCons(4));
-                        fieldsPanel.add(genreCB, getTextFieldCons(5));
-                        fieldsPanel.add(labelTF, getTextFieldCons(6));
+//                        fieldsPanel.add(nameLabel, getLabelCons(0));
+//                        fieldsPanel.add(xLabel, getLabelCons(1));
+//                        fieldsPanel.add(yLabel, getLabelCons(2));
+//                        fieldsPanel.add(participantsLabel, getLabelCons(3));
+//                        fieldsPanel.add(singlesLabel, getLabelCons(4));
+//                        fieldsPanel.add(genreLabel, getLabelCons(5));
+//                        fieldsPanel.add(labelLabel, getLabelCons(6));
+//
+//                        fieldsPanel.add(nameTF, getTextFieldCons(0));
+//                        fieldsPanel.add(xTF, getTextFieldCons(1));
+//                        fieldsPanel.add(yTF, getTextFieldCons(2));
+//                        fieldsPanel.add(participantsTF, getTextFieldCons(3));
+//                        fieldsPanel.add(singlesTF, getTextFieldCons(4));
+//                        fieldsPanel.add(genreCB, getTextFieldCons(5));
+//                        fieldsPanel.add(labelTF, getTextFieldCons(6));
 
-                        int result = JOptionPane.showConfirmDialog(panel, fieldsPanel,
-                                localeManager.getBundle().getString("enter fields"), JOptionPane.OK_CANCEL_OPTION);
-                        if (result == JOptionPane.OK_OPTION) {
-                            Response response = null;
-                            response = console.extendedRequest(commandName + " " + arg, nameTF.getText(), xTF.getText(),
-                                    yTF.getText(), participantsTF.getText(), singlesTF.getText(),
-                                    genreCB.getSelectedItem() != null ? genreCB.getSelectedItem().toString() : "",
-                                    labelTF.getText());
-                            if (response != null) {
-                                String message = "";
-                                if (response.getMessage() != null) {
-                                    message += response.getMessage();
-                                }
-                                if (response.getList() != null) {
-                                    for (MusicBand mb : response.getList()) {
-                                        message += mb.toString() + "\n";
-                                    }
-                                }
-                                JOptionPane.showMessageDialog(panel, message);
-                            }
-                        }
+//                        int result = JOptionPane.showConfirmDialog(panel, fieldsPanel,
+//                                localeManager.getBundle().getString("enter fields"), JOptionPane.OK_CANCEL_OPTION);
                         return null;
                     }
                 };

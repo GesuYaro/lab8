@@ -25,10 +25,16 @@ public class FrameManager implements ActionListener {
     }
 
     public void newPane(String string) {
+        if (string.equals(localeManager.getBundle().getString("sign out"))) {
+            string = "sign out";
+        }
+        if (string.equals(localeManager.getBundle().getString("sign in"))) {
+            string = "sign in";
+        }
         PanelDrawer drawer = panelDrawers.get(string);
         if (drawer != null) {
             frame.updatePane(drawer.drawPanel());
-            if (string.equals(localeManager.getBundle().getString("sign out"))) {
+            if (string.equals("sign out")) {
                 hideMenu();
             }
             frame.setVisible(true);
@@ -38,7 +44,8 @@ public class FrameManager implements ActionListener {
     }
 
     public void start() {
-        frame.updatePane(panelDrawers.get(localeManager.getBundle().getString("sign out")).drawPanel());
+        frame.updatePane(panelDrawers.get("sign out").drawPanel());
+        hideMenu();
         frame.setVisible(true);
     }
 

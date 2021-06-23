@@ -37,7 +37,21 @@ public class Resources_ro extends ListResourceBundle {
             {"label", "eticheta"},
             {"enter argument", "introduceți argumentul"},
             {"enter fields", "introduceți câmpuri"},
-            {"successful", "de succes"}
+            {"successful", "de succes"},
+            {"delete?", "șterge?"},
+            {"Input Error\nName field can't be null, string can't be empty", "Eroare de intrare\n" +
+                    "Câmpul de nume nu poate fi nul, șirul nu poate fi gol"},
+            {"X can't be less than -153", "X nu poate fi mai mic de -153"},
+            {"Input Error\nX should be long", "Eroare de intrare\n" +
+                    "X ar trebui să fie lung"},
+            {"Y should be greater than -159", "Y ar trebui să fie mai mare de -159"},
+            {"Input Error\nY should be double", "Eroare de intrare\n" +
+                    "Y ar trebui să fie dublu"},
+            {"Input Error\nNumber of participants should be the natural number", "Eroare de intrare\n" +
+                    "Numărul de participanți ar trebui să fie numărul natural"},
+            {"Input Error\nSingles count should be the natural number", "Eroare de intrare\n" +
+                    "Numărul de singuri ar trebui să fie numărul natural"},
+            {"execute script", "executați scriptul"}
     };
 
     @Override

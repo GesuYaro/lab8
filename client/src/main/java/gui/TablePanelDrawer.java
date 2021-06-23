@@ -10,7 +10,10 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -100,6 +103,17 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
 
         panelName = localeManager.getBundle().getString("table");
 
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                if (e.getButton() == 3 && table.isCellEditable(row, 1)) {
+                    Long id = (Long) table.getValueAt(row, 0);
+                    listenerFactory.createDeletingListener(panel, id).actionPerformed(new ActionEvent(table, ActionEvent.ACTION_PERFORMED, "" + e.getButton(), e.getWhen(), e.getModifiers()));
+                }
+            }
+        });
+
         Timer timer = new Timer(2000, listenerFactory.createUpdateTableListener(this));
         timer.start();
         return pane;
@@ -129,26 +143,31 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
                             if (musicbands.size() != newMusicBands.size() && newMusicBands.size() != 0) {
                                 musicbands = newMusicBands;
                                 MusicTableModel tableModel = buildTableModel(musicbands);
-                                table.setModel(tableModel);
-                                tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
-                                sorter = new StreamAPITableRowSorter<MusicTableModel>(tableModel);
-                                filterButton0.addActionListener(listenerFactory.createFilterListener(panel, sorter, idFilterStore, table, 0));
-                                filterButton1.addActionListener(listenerFactory.createFilterListener(panel, sorter, nameFilterStore, table, 1));
-                                filterButton2.addActionListener(listenerFactory.createFilterListener(panel, sorter, xFilterStore, table, 2));
-                                filterButton3.addActionListener(listenerFactory.createFilterListener(panel, sorter, yFilterStore, table, 3));
-                                filterButton4.addActionListener(listenerFactory.createFilterListener(panel, sorter, dateFilterStore, table, 4));
-                                filterButton5.addActionListener(listenerFactory.createFilterListener(panel, sorter, participantsFilterStore, table, 5));
-                                filterButton6.addActionListener(listenerFactory.createFilterListener(panel, sorter, singlesFilterStore, table, 6));
-                                filterButton7.addActionListener(listenerFactory.createFilterListener(panel, sorter, genreFilterStore, table, 7));
-                                filterButton8.addActionListener(listenerFactory.createFilterListener(panel, sorter, labelFilterStore, table, 8));
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        table.setModel(tableModel);
+                                        tableModel.addTableModelListener(listenerFactory.createTableModelListener("update", table));
+                                        sorter = new StreamAPITableRowSorter<MusicTableModel>(tableModel);
+                                        filterButton0.addActionListener(listenerFactory.createFilterListener(panel, sorter, idFilterStore, table, 0));
+                                        filterButton1.addActionListener(listenerFactory.createFilterListener(panel, sorter, nameFilterStore, table, 1));
+                                        filterButton2.addActionListener(listenerFactory.createFilterListener(panel, sorter, xFilterStore, table, 2));
+                                        filterButton3.addActionListener(listenerFactory.createFilterListener(panel, sorter, yFilterStore, table, 3));
+                                        filterButton4.addActionListener(listenerFactory.createFilterListener(panel, sorter, dateFilterStore, table, 4));
+                                        filterButton5.addActionListener(listenerFactory.createFilterListener(panel, sorter, participantsFilterStore, table, 5));
+                                        filterButton6.addActionListener(listenerFactory.createFilterListener(panel, sorter, singlesFilterStore, table, 6));
+                                        filterButton7.addActionListener(listenerFactory.createFilterListener(panel, sorter, genreFilterStore, table, 7));
+                                        filterButton8.addActionListener(listenerFactory.createFilterListener(panel, sorter, labelFilterStore, table, 8));
 
-                                table.setRowSorter(sorter);
-                                TableColumn genreColumn = table.getColumnModel().getColumn(7);
-                                JComboBox<String> comboBox = new JComboBox<>();
-                                for (MusicGenre genre : MusicGenre.values()) {
-                                    comboBox.addItem(genre.name());
-                                }
-                                genreColumn.setCellEditor(new DefaultCellEditor(comboBox));
+                                        table.setRowSorter(sorter);
+                                        TableColumn genreColumn = table.getColumnModel().getColumn(7);
+                                        JComboBox<String> comboBox = new JComboBox<>();
+                                        for (MusicGenre genre : MusicGenre.values()) {
+                                            comboBox.addItem(genre.name());
+                                        }
+                                        genreColumn.setCellEditor(new DefaultCellEditor(comboBox));
+                                    }
+                                });
                             } else {
                                 if (!musicbands.equals(newMusicBands) && !musicbands.isEmpty()) {
                                     ArrayList<MusicBand> changed = new ArrayList<>(newMusicBands);
@@ -171,6 +190,7 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
                                     musicbands = newMusicBands;
                                 }
                             }
+
                         }
                     }
                 }
@@ -229,23 +249,25 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
 
     @Override
     public void updateLanguage() {
-        try {
-            panelName = localeManager.getBundle().getString("table");
-            columnNames.clear();
-            columnNames.add(localeManager.getBundle().getString("id"));
-            columnNames.add(localeManager.getBundle().getString("name"));
-            columnNames.add(localeManager.getBundle().getString("x"));
-            columnNames.add(localeManager.getBundle().getString("y"));
-            columnNames.add(localeManager.getBundle().getString("date"));
-            columnNames.add(localeManager.getBundle().getString("participants"));
-            columnNames.add(localeManager.getBundle().getString("singles"));
-            columnNames.add(localeManager.getBundle().getString("genre"));
-            columnNames.add(localeManager.getBundle().getString("label"));
-            MusicTableModel tableModel = buildTableModel(musicbands);
-            table.setModel(tableModel);
-            table.repaint();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (panel != null) {
+            try {
+                panelName = localeManager.getBundle().getString("table");
+                columnNames.clear();
+                columnNames.add(localeManager.getBundle().getString("id"));
+                columnNames.add(localeManager.getBundle().getString("name"));
+                columnNames.add(localeManager.getBundle().getString("x"));
+                columnNames.add(localeManager.getBundle().getString("y"));
+                columnNames.add(localeManager.getBundle().getString("date"));
+                columnNames.add(localeManager.getBundle().getString("participants"));
+                columnNames.add(localeManager.getBundle().getString("singles"));
+                columnNames.add(localeManager.getBundle().getString("genre"));
+                columnNames.add(localeManager.getBundle().getString("label"));
+                MusicTableModel tableModel = buildTableModel(musicbands);
+                table.setModel(tableModel);
+                table.repaint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -273,7 +295,11 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
         }
 
         public Object getValueAt(int row, int col) {
-            return data.get(row).get(col);
+            if (row <= data.size() - 1 && col <= columnNames.size() - 1) {
+                return data.get(row).get(col);
+            } else {
+                return null;
+            }
         }
 
         public Class getColumnClass(int c) {
@@ -335,13 +361,15 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
     }
 
     class DateRenderer extends DefaultTableCellRenderer {
-        public DateRenderer() { super(); }
+        public DateRenderer() {
+            super();
+        }
 
         public void setValue(Object value) {
             if (value != null && value.getClass().equals(LocalDate.class)) {
-                    Date date = java.util.Date.from(LocalDate.parse(value.toString()).atStartOfDay()
-                            .atZone(ZoneId.systemDefault())
-                            .toInstant());
+                Date date = java.util.Date.from(LocalDate.parse(value.toString()).atStartOfDay()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant());
                 setText(localeManager.formatDate(date));
             } else setText("illegal");
         }

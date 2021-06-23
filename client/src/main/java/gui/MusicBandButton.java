@@ -111,7 +111,7 @@ public class MusicBandButton extends JComponent implements MouseListener {
     }
 
     private void notifyListeners(MouseEvent e) {
-        ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, new String(), e.getWhen(), e.getModifiers());
+        ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "" + e.getButton(), e.getWhen(), e.getModifiers());
         synchronized(listeners) {
             for (int i = 0; i < listeners.size(); i++) {
                 ActionListener tmp = listeners.get(i);

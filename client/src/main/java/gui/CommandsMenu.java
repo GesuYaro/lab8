@@ -20,6 +20,7 @@ public class CommandsMenu extends JMenu implements LanguageChangeable {
     private JMenuItem removeLast;
     private JMenuItem show;
     private JMenuItem update;
+    private JMenuItem execute;
 
     public CommandsMenu(String name, ListenerFactory listenerFactory, LocaleManager localeManager) {
         super(name);
@@ -36,6 +37,7 @@ public class CommandsMenu extends JMenu implements LanguageChangeable {
         removeLast = new JMenuItem(localeManager.getBundle().getString("remove last"));
         show = new JMenuItem(localeManager.getBundle().getString("show"));
         update = new JMenuItem(localeManager.getBundle().getString("update"));
+        execute = new JMenuItem(localeManager.getBundle().getString("execute script"));
         info.addActionListener(listenerFactory.createSimpleDialogListener(this, "info"));
         clear.addActionListener(listenerFactory.createSimpleDialogListener(this, "clear"));
         help.addActionListener(listenerFactory.createSimpleDialogListener(this, "help"));
@@ -48,6 +50,7 @@ public class CommandsMenu extends JMenu implements LanguageChangeable {
         add.addActionListener(listenerFactory.createExtendedAskingDialog(this, "add", false));
         insert.addActionListener(listenerFactory.createExtendedAskingDialog(this, "insert_at", true));
         show.addActionListener(listenerFactory.createSimpleDialogListener(this , "show"));
+        execute.addActionListener(listenerFactory.createFileChoosingListener(this));
         this.add(add);
         this.add(clear);
         this.add(help);
@@ -60,6 +63,7 @@ public class CommandsMenu extends JMenu implements LanguageChangeable {
         this.add(add);
         this.add(insert);
         this.add(show);
+        this.add(execute);
     }
 
     @Override
@@ -77,5 +81,6 @@ public class CommandsMenu extends JMenu implements LanguageChangeable {
         removeLast.setText(localeManager.getBundle().getString("remove last"));
         show.setText(localeManager.getBundle().getString("show"));
         update.setText(localeManager.getBundle().getString("update"));
+        execute.setText(localeManager.getBundle().getString("execute script"));
     }
 }

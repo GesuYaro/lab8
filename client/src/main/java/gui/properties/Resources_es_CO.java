@@ -37,7 +37,21 @@ public class Resources_es_CO extends ListResourceBundle {
             {"label", "etiqueta"},
             {"enter argument", "ingresar argumento"},
             {"enter fields", "ingrese campos"},
-            {"successful", "exitoso"}
+            {"successful", "exitoso"},
+            {"delete?", "¿eliminar?"},
+            {"Input Error\nName field can't be null, string can't be empty", "Error de entrada\n" +
+                    "El campo de nombre no puede ser nulo, la cadena no puede estar vacía"},
+            {"X can't be less than -153", "X no puede ser menor que -153"},
+            {"Input Error\nX should be long", "Error de entrada\n" +
+                    "X debería ser larga"},
+            {"Y should be greater than -159", "Y debería ser mayor que -159"},
+            {"Input Error\nY should be double", "Error de entrada\n" +
+                    "Y debería ser el doble"},
+            {"Input Error\nNumber of participants should be the natural number", "Error de entrada\n" +
+                    "El número de participantes debe ser el número natural."},
+            {"Input Error\nSingles count should be the natural number", "Error de entrada\n" +
+                    "El recuento de solteros debe ser el número natural"},
+            {"execute script", "ejecutar script"}
     };
 
     @Override

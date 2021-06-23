@@ -14,13 +14,15 @@ import java.util.Map;
 
 public class StartGUI implements Runnable {
 
+    private static MainFrame mainFrame;
+
     @Override
     public void run() {
         LinkedList<LanguageChangeable> languageChangeableList = new LinkedList<>();
         LocaleManager localeManager = ClientMain.getLocaleManager();
         Map<String, PanelDrawer> map = new HashMap<>();
         JButton logoutButton = new JButton(localeManager.getBundle().getString("sign out"));
-        MainFrame mainFrame = new MainFrame(logoutButton, localeManager);
+        mainFrame = new MainFrame(logoutButton, localeManager);
         FrameManager frameManager = new FrameManager(map, mainFrame, localeManager);
         logoutButton.addActionListener(frameManager);
         ListenerFactory listenerFactory = new ListenerFactory(ClientMain.getConsole(), frameManager, localeManager);
@@ -39,9 +41,13 @@ public class StartGUI implements Runnable {
         languageChangeableList.add(tabbedPanelDrawer);
         SignInPanelDrawer signInPanelDrawer = new SignInPanelDrawer(frameManager, listenerFactory, ClientMain.getUserManager(), new Authenticator(), localeManager);
         languageChangeableList.add(signInPanelDrawer);
-        map.put(localeManager.getBundle().getString("sign out"), signInPanelDrawer);
-        map.put(localeManager.getBundle().getString("sign in"), tabbedPanelDrawer);
+        map.put("sign out", signInPanelDrawer);
+        map.put("sign in", tabbedPanelDrawer);
         languageChangeableList.add(mainFrame);
         frameManager.start();
+    }
+
+    public static MainFrame getMainFrame() {
+        return mainFrame;
     }
 }

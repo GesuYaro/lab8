@@ -6,9 +6,10 @@ import java.util.ListIterator;
 
 public class TabbedPanelDrawer implements PanelDrawer, LanguageChangeable {
 
-    private JTabbedPane tabbedPane;
+    private JTabbedPane tabbedPane = new JTabbedPane();
     private List<PanelDrawer> panelDrawers;
     private String panelName = "tabs";
+
 
     public TabbedPanelDrawer(List<PanelDrawer> panelDrawers) {
         this.panelDrawers = panelDrawers;

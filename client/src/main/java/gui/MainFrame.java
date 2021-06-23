@@ -35,6 +35,7 @@ public class MainFrame extends JFrame implements LanguageChangeable {
         jMenuBar.setVisible(false);
         this.setJMenuBar(jMenuBar);
         this.localeManager = localeManager;
+        jMenuBar.setVisible(true);
     }
 
 
@@ -44,11 +45,16 @@ public class MainFrame extends JFrame implements LanguageChangeable {
 
     public void showMenu() {
         userLabel.setText(localeManager.getBundle().getString("logged as") + ": " + ClientMain.getUserManager().getUser().getLogin());
-        jMenuBar.setVisible(true);
+        commandsMenu.setVisible(true);
+        userLabel.setVisible(true);
+        logoutButton.setVisible(true);
     }
 
     public void hideMenu() {
-        jMenuBar.setVisible(false);
+        logoutButton.setVisible(false);
+        commandsMenu.setVisible(false);
+        userLabel.setVisible(false);
+//        jMenuBar.setVisible(false);
     }
 
     public void addMenu(JMenu menu) {
@@ -67,6 +73,8 @@ public class MainFrame extends JFrame implements LanguageChangeable {
     public void updateLanguage() {
         commandsMenu.setText(localeManager.getBundle().getString("commands"));
         logoutButton.setText(localeManager.getBundle().getString("sign out"));
-        userLabel.setText(localeManager.getBundle().getString("logged as") + ": " + ClientMain.getUserManager().getUser().getLogin());
+        if (ClientMain.getUserManager().getUser() != null) {
+            userLabel.setText(localeManager.getBundle().getString("logged as") + ": " + ClientMain.getUserManager().getUser().getLogin());
+        }
     }
 }
