@@ -10,12 +10,12 @@ import java.awt.*;
 
 public class MainFrame extends JFrame implements LanguageChangeable {
 
-    private int width = 800;
-    private int height = 460;
-    private JMenuBar jMenuBar = new JMenuBar();
-    private JLabel userLabel;
-    private LocaleManager localeManager;
-    private JButton logoutButton;
+    private final int width = 800;
+    private final int height = 460;
+    private final JMenuBar jMenuBar = new JMenuBar();
+    private final JLabel userLabel;
+    private final LocaleManager localeManager;
+    private final JButton logoutButton;
     private CommandsMenu commandsMenu;
 
 

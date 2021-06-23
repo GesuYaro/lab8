@@ -10,9 +10,9 @@ import java.util.concurrent.RecursiveTask;
 
 public class RequestListener extends RecursiveTask<RequestListenerResponse> {
 
-    private RequestReader requestReader;
-    private Logger logger;
-    private SocketChannel socketChannel;
+    private final RequestReader requestReader;
+    private final Logger logger;
+    private final SocketChannel socketChannel;
 
     public RequestListener(RequestReader requestReader, Logger logger, SocketChannel socketChannel) {
         this.requestReader = requestReader;

@@ -10,7 +10,7 @@ import network.CurrentUser;
  * Класс для команды count_greater_than_genre, считающей количество элементов, значение поля genre которых больше заданного
  */
 public class CountGreaterThanGenreCommand extends AbstractCommand{
-    private ArrayListManager listManager;
+    private final ArrayListManager listManager;
 
     /**
      * @param listManager Менеджер коллекции

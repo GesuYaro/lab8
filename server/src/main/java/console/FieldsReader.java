@@ -10,9 +10,9 @@ import musicband.*;
  * Для каждого поля запускает цикл, ожидающий корректного значения
  */
 public class FieldsReader implements Reader {
-    private MusicBandFieldsChecker checker;
-    private ConsoleWriter writer;
-    private boolean interactiveMode;
+    private final MusicBandFieldsChecker checker;
+    private final ConsoleWriter writer;
+    private final boolean interactiveMode;
 
     /**
      * Создает интерактивный считыватель полей

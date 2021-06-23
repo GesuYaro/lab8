@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 public class DatabaseInitializer implements CollectionInitializer {
 
-    private DatabaseChecker checker;
-    private Connection connection;
+    private final DatabaseChecker checker;
+    private final Connection connection;
 
     private static final String CREATE_MAIN_TABLE = "CREATE TABLE MUSICBANDS (" +
                         "id INTEGER NOT NULL," +
@@ -44,7 +44,6 @@ public class DatabaseInitializer implements CollectionInitializer {
                 if (preparedStatement.executeUpdate() <= 0) {
                     throw new DatabaseException("Problem with creating table musicbands");
                 }
-                ;
                 preparedStatement = connection.prepareStatement(CREATE_ID_SEQUENCE);
                 if (preparedStatement.executeUpdate() <= 0) {
                     throw new DatabaseException("Problem with creating sequence musicband_ids");

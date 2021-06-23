@@ -11,10 +11,10 @@ import java.util.Collection;
 
 public class RequestFabric {
 
-    private Collection<String> commandsWithExtendedRequest;
-    private FieldsReader fieldsReader;
-    private MusicBandFieldsChecker checker;
-    private UserManager userManager;
+    private final Collection<String> commandsWithExtendedRequest;
+    private final FieldsReader fieldsReader;
+    private final MusicBandFieldsChecker checker;
+    private final UserManager userManager;
 
     public RequestFabric(Collection<String> commandsWithExtendedRequest, FieldsReader fieldsReader, UserManager userManager, MusicBandFieldsChecker checker) {
         this.commandsWithExtendedRequest = commandsWithExtendedRequest;

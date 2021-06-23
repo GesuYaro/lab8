@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class ScrollableJPanel extends JPanel implements Scrollable {
 
-    private int maxUnitIncrement = 1;
+    private final int maxUnitIncrement = 1;
 
 
     public Dimension getPreferredScrollableViewportSize() {

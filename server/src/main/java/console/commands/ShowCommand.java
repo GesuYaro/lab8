@@ -11,7 +11,7 @@ import server.ServerWriter;
  */
 public class ShowCommand extends AbstractCommand {
 
-    private ArrayListManager listManager;
+    private final ArrayListManager listManager;
 
     /**
      * @param listManager Менеджер коллекции

@@ -7,8 +7,8 @@ import java.util.Objects;
  * Координаты
  */
 public class Coordinates implements Serializable {
-    private Long x; //Максимальное значение поля: 3, Поле не может быть null
-    private Double y; //Значение поля должно быть больше -859, Поле не может быть null
+    private final Long x; //Максимальное значение поля: 3, Поле не может быть null
+    private final Double y; //Значение поля должно быть больше -859, Поле не может быть null
 
     public Coordinates(Long x, Double y) {
         this.x = x;

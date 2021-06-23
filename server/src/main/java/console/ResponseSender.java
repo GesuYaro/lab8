@@ -9,9 +9,9 @@ import java.util.concurrent.RecursiveAction;
 
 public class ResponseSender extends RecursiveAction {
 
-    private Logger logger;
-    private ServerWriter writer;
-    private CommandResponse commandResponse;
+    private final Logger logger;
+    private final ServerWriter writer;
+    private final CommandResponse commandResponse;
 
     public ResponseSender(Logger logger, ServerWriter writer, CommandResponse commandResponse) {
         this.logger = logger;

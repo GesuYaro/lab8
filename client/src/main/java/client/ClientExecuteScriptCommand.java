@@ -17,12 +17,12 @@ import java.util.stream.Stream;
 public class ClientExecuteScriptCommand {
 
     private ConsoleWriter writer;
-    private HashSet<File> scripts;
-    private boolean isInnerScript;
-    private Collection<String> commandsWithExtendedRequest;
-    private int port;
-    private String hostAddress;
-    private UserManager userManager;
+    private final HashSet<File> scripts;
+    private final boolean isInnerScript;
+    private final Collection<String> commandsWithExtendedRequest;
+    private final int port;
+    private final String hostAddress;
+    private final UserManager userManager;
 
     public ClientExecuteScriptCommand(ConsoleWriter writer, Collection<String> commandsWithExtendedRequest, int port, String hostAddress, UserManager userManager) {
         this.writer = writer;

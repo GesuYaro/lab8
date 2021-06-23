@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 
 public class FieldDialog extends JDialog {
 
-    private MusicBandFieldsChecker checker;
+    private final MusicBandFieldsChecker checker;
 
     public FieldDialog(LocaleManager localeManager, JTextField nameTF, JTextField xTF, JTextField yTF, JTextField participantsTF, JTextField singlesTF, JComboBox<MusicGenre> genreCB, JTextField labelTF, Console console, String commandName, String arg) {
         super(StartGUI.getMainFrame(), true);

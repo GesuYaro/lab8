@@ -6,8 +6,8 @@ import java.nio.channels.SocketChannel;
 
 public class RequestListenerResponse {
 
-    private Request request;
-    private SocketChannel socketChannel;
+    private final Request request;
+    private final SocketChannel socketChannel;
 
     public RequestListenerResponse(Request request, SocketChannel socketChannel) {
         this.request = request;

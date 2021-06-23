@@ -8,8 +8,8 @@ import java.nio.channels.SocketChannel;
 
 public class Connector {
 
-    private int port;
-    private ServerSocketChannel serverSocketChannel;
+    private final int port;
+    private final ServerSocketChannel serverSocketChannel;
 
     public Connector(int port) throws IOException {
         this.port = port;

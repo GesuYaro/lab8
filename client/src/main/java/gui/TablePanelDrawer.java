@@ -7,8 +7,9 @@ import musicband.MusicBand;
 import musicband.MusicGenre;
 
 import javax.swing.*;
-import javax.swing.table.*;
-
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,40 +23,40 @@ import java.util.Vector;
 
 public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
 
-    private ActionListener frameManager;
-    private Console console;
-    private ListenerFactory listenerFactory;
-    private UserManager userManager;
-    private LocaleManager localeManager;
+    private final ActionListener frameManager;
+    private final Console console;
+    private final ListenerFactory listenerFactory;
+    private final UserManager userManager;
+    private final LocaleManager localeManager;
     private String panelName;
-    private String filterSign = "\u26DB";
+    private final String filterSign = "\u26DB";
     private volatile StreamAPITableRowSorter<MusicTableModel> sorter;
 
-    private JButton filterButton0 = new JButton(filterSign);
-    private JButton filterButton1 = new JButton(filterSign);
-    private JButton filterButton2 = new JButton(filterSign);
-    private JButton filterButton3 = new JButton(filterSign);
-    private JButton filterButton4 = new JButton(filterSign);
-    private JButton filterButton5 = new JButton(filterSign);
-    private JButton filterButton6 = new JButton(filterSign);
-    private JButton filterButton7 = new JButton(filterSign);
-    private JButton filterButton8 = new JButton(filterSign);
+    private final JButton filterButton0 = new JButton(filterSign);
+    private final JButton filterButton1 = new JButton(filterSign);
+    private final JButton filterButton2 = new JButton(filterSign);
+    private final JButton filterButton3 = new JButton(filterSign);
+    private final JButton filterButton4 = new JButton(filterSign);
+    private final JButton filterButton5 = new JButton(filterSign);
+    private final JButton filterButton6 = new JButton(filterSign);
+    private final JButton filterButton7 = new JButton(filterSign);
+    private final JButton filterButton8 = new JButton(filterSign);
 
     private JPanel panel;
     private ArrayList<MusicBand> musicbands = new ArrayList<>();
     private Vector<String> columnNames = new Vector<>();
 
-    private FilterKeyStore nameFilterStore = new FilterKeyStore();
-    private FilterKeyStore idFilterStore = new FilterKeyStore();
-    private FilterKeyStore xFilterStore = new FilterKeyStore();
-    private FilterKeyStore yFilterStore = new FilterKeyStore();
-    private FilterKeyStore dateFilterStore = new FilterKeyStore();
-    private FilterKeyStore participantsFilterStore = new FilterKeyStore();
-    private FilterKeyStore singlesFilterStore = new FilterKeyStore();
-    private FilterKeyStore genreFilterStore = new FilterKeyStore();
-    private FilterKeyStore labelFilterStore = new FilterKeyStore();
+    private final FilterKeyStore nameFilterStore = new FilterKeyStore();
+    private final FilterKeyStore idFilterStore = new FilterKeyStore();
+    private final FilterKeyStore xFilterStore = new FilterKeyStore();
+    private final FilterKeyStore yFilterStore = new FilterKeyStore();
+    private final FilterKeyStore dateFilterStore = new FilterKeyStore();
+    private final FilterKeyStore participantsFilterStore = new FilterKeyStore();
+    private final FilterKeyStore singlesFilterStore = new FilterKeyStore();
+    private final FilterKeyStore genreFilterStore = new FilterKeyStore();
+    private final FilterKeyStore labelFilterStore = new FilterKeyStore();
 
-    private volatile JTable table = new JTable();
+    private final JTable table = new JTable();
     private JScrollPane scrollPane;
 
     public TablePanelDrawer(ActionListener frameManager, Console console, ListenerFactory listenerFactory, UserManager userManager, LocaleManager localeManager) {
@@ -271,8 +272,8 @@ public class TablePanelDrawer implements PanelDrawer, LanguageChangeable {
 
     public class MusicTableModel extends AbstractTableModel {
 
-        private Vector<Vector<Object>> data;
-        private Vector<String> columnNames;
+        private final Vector<Vector<Object>> data;
+        private final Vector<String> columnNames;
 
         public MusicTableModel(Vector<Vector<Object>> data, Vector<String> columnNames) {
             super();

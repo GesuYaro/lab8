@@ -8,10 +8,10 @@ import java.net.UnknownHostException;
 
 public class Connector {
 
-    private int port;
-    private InetAddress inetAddress;
+    private final int port;
+    private final InetAddress inetAddress;
     public static final int DEFAULT_NUMBER_OF_ATTEMPTS = 5;
-    private int numberOfReconnectAttempts;
+    private final int numberOfReconnectAttempts;
 
     public Connector(InetAddress inetAddress, int port) {
         this.port = port;

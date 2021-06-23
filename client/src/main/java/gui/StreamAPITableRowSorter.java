@@ -120,10 +120,7 @@ public class StreamAPITableRowSorter<M extends TableModel> extends AbstractStrea
         if (columnClass == String.class) {
             return false;
         }
-        if (Comparable.class.isAssignableFrom(columnClass)) {
-            return false;
-        }
-        return true;
+        return !Comparable.class.isAssignableFrom(columnClass);
     }
 
     /**

@@ -18,11 +18,11 @@ import java.net.UnknownHostException;
 
 public class Console {
 
-    private BufferedReader bufferedReader;
-    private RequestFabric requestFabric;
-    private ClientExecuteScriptCommand clientExecuteScriptCommand;
-    private int port;
-    private String hostAddress;
+    private final BufferedReader bufferedReader;
+    private final RequestFabric requestFabric;
+    private final ClientExecuteScriptCommand clientExecuteScriptCommand;
+    private final int port;
+    private final String hostAddress;
 
     public Console(RequestFabric requestFabric, BufferedReader bufferedReader, ClientExecuteScriptCommand clientExecuteScriptCommand, int port, String hostAddress) {
         this.requestFabric = requestFabric;

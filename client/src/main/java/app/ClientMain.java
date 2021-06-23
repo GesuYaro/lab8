@@ -20,7 +20,7 @@ public class ClientMain {
     private static boolean consoleMode = false;
     private static Console console;
     private static volatile UserManager userManager;
-    private static LocaleManager localeManager = new LocaleManager();
+    private static final LocaleManager localeManager = new LocaleManager();
 
     public static void main(String[] args) {
         setArguments(args);

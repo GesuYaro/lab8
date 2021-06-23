@@ -9,7 +9,7 @@ import console.exсeptions.NoArgumentFoundException;
  * Класс команды filter_less_than_singles_count, выводящей элементы, поле singlesCount которых меньше, чем задано
  */
 public class FilterLessThanSinglesCountCommand extends AbstractCommand {
-    private ArrayListManager listManager;
+    private final ArrayListManager listManager;
 
     /**
      * @param listManager Менеджер коллекции

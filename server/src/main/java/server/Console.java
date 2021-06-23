@@ -27,12 +27,12 @@ import java.util.concurrent.RecursiveAction;
 
 public class Console {
 
-    private volatile ArrayListManager arrayListManager;
-    private Connector connector;
-    private Logger logger;
-    private volatile CollectionManager databaseManager;
+    private final ArrayListManager arrayListManager;
+    private final Connector connector;
+    private final Logger logger;
+    private final CollectionManager databaseManager;
     private volatile CommandHandler commandHandler;
-    private UserChecker userChecker;
+    private final UserChecker userChecker;
 
     public Console(ArrayListManager arrayListManager, Connector connector, Logger logger, CollectionManager databaseManager, UserChecker userChecker) {
         this.arrayListManager = arrayListManager;

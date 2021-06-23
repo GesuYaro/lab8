@@ -8,8 +8,8 @@ import java.awt.event.ActionListener;
 
 public class LanguageMenu extends JMenu {
 
-    private LocaleManager localeManager;
-    private ActionListener languageListener;
+    private final LocaleManager localeManager;
+    private final ActionListener languageListener;
 
     public LanguageMenu(String name, ActionListener languageListener, LocaleManager localeManager) {
         super(name);

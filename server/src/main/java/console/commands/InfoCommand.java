@@ -9,7 +9,7 @@ import network.CurrentUser;
  * Класс команды info, выводящей информацию о коллекции
  */
 public class InfoCommand extends AbstractCommand {
-    private ArrayListManager listManager;
+    private final ArrayListManager listManager;
 
     /**
      * @param listManager Менеджер коллекции

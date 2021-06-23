@@ -12,8 +12,8 @@ import java.sql.SQLException;
  * Класс команды clear, очищающей коллекцию
  */
 public class ClearCommand extends AbstractCommand {
-    private ArrayListManager listManager;
-    private CollectionManager databaseManager;
+    private final ArrayListManager listManager;
+    private final CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции

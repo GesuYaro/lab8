@@ -15,7 +15,7 @@ import java.util.Collections;
 
 public class ServerWriter implements Writer {
 
-    private SocketChannel socketChannel;
+    private final SocketChannel socketChannel;
     private Response response;
 
     public ServerWriter(SocketChannel socketChannel) {

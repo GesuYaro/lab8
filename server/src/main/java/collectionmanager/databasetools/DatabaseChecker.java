@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 public class DatabaseChecker {
 
-    private String userName;
-    private Connection connection;
+    private final String userName;
+    private final Connection connection;
     private static final String CHECK_MAIN_TABLE = "SELECT COUNT(*) AS row_count FROM pg_tables " +
             "WHERE schemaname != 'pg_catalog' " +
             "AND schemaname != 'information_schema' AND tableowner = ? AND tablename = ?";

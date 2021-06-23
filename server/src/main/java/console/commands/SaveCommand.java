@@ -14,10 +14,10 @@ import java.io.*;
  */
 public class SaveCommand extends AbstractCommand {
 
-    private ArrayListManager listManager;
+    private final ArrayListManager listManager;
     private Writer writer;
-    private Logger logger;
-    private File file;
+    private final Logger logger;
+    private final File file;
 
     /**
      * @param listManager Менеджер коллекции

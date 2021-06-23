@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class ArrayListManager {
     private ArrayList<MusicBand> arrayList;
-    private LocalDate initializationDate;
+    private final LocalDate initializationDate;
     private long maxId;
 
     /**

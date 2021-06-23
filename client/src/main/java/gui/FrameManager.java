@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class FrameManager implements ActionListener {
 
-    private Map<String, PanelDrawer> panelDrawers;
-    private MainFrame frame;
-    private LocaleManager localeManager;
+    private final Map<String, PanelDrawer> panelDrawers;
+    private final MainFrame frame;
+    private final LocaleManager localeManager;
 
     public FrameManager(Map<String, PanelDrawer> panelDrawers, MainFrame frame, LocaleManager localeManager) {
         this.panelDrawers = panelDrawers;

@@ -15,18 +15,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VisualizationPanelDrawer implements PanelDrawer, LanguageChangeable {
 
     private JPanel panel;
-    private ScrollableJPanel visualizationPanel;
+    private final ScrollableJPanel visualizationPanel;
     private ListenerFactory listenerFactory;
-    private ActionListener frameManager;
-    private UserManager userManager;
-    private LocaleManager localeManager;
+    private final ActionListener frameManager;
+    private final UserManager userManager;
+    private final LocaleManager localeManager;
     private String panelName;
 
     private ArrayList<MusicBand> musicBands = new ArrayList<>();
-    private volatile ConcurrentHashMap<MusicBand, MusicBandButton> buttonHashMap = new ConcurrentHashMap<>();
-    private Rule columnRule = new Rule(Rule.HORIZONTAL, true);
-    private Rule rowRule = new Rule(Rule.VERTICAL, true);
-    private Timer timer;
+    private final ConcurrentHashMap<MusicBand, MusicBandButton> buttonHashMap = new ConcurrentHashMap<>();
+    private final Rule columnRule = new Rule(Rule.HORIZONTAL, true);
+    private final Rule rowRule = new Rule(Rule.VERTICAL, true);
+    private final Timer timer;
     private int biggestX = 0;
     private int biggestY = 0;
 

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class DatabaseManager implements CollectionManager {
 
-    private Connection connection;
+    private final Connection connection;
 
     private static final String COLLECTION_SIZE = "SELECT COUNT(*) AS size FROM musicbands";
     private static final String INIT_DATE = "SELECT initialization_Date FROM MUSICBANDS_INITIALIZATION_DATE";

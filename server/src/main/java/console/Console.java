@@ -13,9 +13,9 @@ import java.io.IOException;
  */
 public class Console implements Runnable {
 
-    private CommandHandler commandHandler;
-    private BufferedReader reader;
-    private ConsoleWriter writer;
+    private final CommandHandler commandHandler;
+    private final BufferedReader reader;
+    private final ConsoleWriter writer;
 
 
     /**

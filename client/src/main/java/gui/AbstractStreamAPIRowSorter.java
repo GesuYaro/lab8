@@ -175,7 +175,7 @@ public abstract class AbstractStreamAPIRowSorter<M, I> extends RowSorter<M> {
      */
     public boolean isSortable(int column) {
         checkColumn(column);
-        return (isSortable == null) ? true : isSortable[column];
+        return isSortable == null || isSortable[column];
     }
 
     /**
@@ -1270,7 +1270,7 @@ public abstract class AbstractStreamAPIRowSorter<M, I> extends RowSorter<M> {
      */
     // NOTE: this class is static so that it can be placed in an array
     private static class Row implements Comparable<Row> {
-        private AbstractStreamAPIRowSorter sorter;
+        private final AbstractStreamAPIRowSorter sorter;
         int modelIndex;
 
         public Row(AbstractStreamAPIRowSorter sorter, int index) {

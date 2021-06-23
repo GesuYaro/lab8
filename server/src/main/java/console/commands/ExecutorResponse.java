@@ -4,8 +4,8 @@ import java.nio.channels.SocketChannel;
 
 public class ExecutorResponse {
 
-    private CommandResponse commandResponse;
-    private SocketChannel socketChannel;
+    private final CommandResponse commandResponse;
+    private final SocketChannel socketChannel;
 
     public ExecutorResponse(CommandResponse commandResponse, SocketChannel socketChannel) {
         this.commandResponse = commandResponse;

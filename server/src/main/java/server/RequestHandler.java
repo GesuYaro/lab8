@@ -18,10 +18,10 @@ import java.util.concurrent.Future;
 
 public class RequestHandler implements Runnable {
 
-    private CommandHandler commandHandler;
-    private RequestReader requestReader;
-    private ServerWriter writer;
-    private Logger logger;
+    private final CommandHandler commandHandler;
+    private final RequestReader requestReader;
+    private final ServerWriter writer;
+    private final Logger logger;
 
     public RequestHandler(CommandHandler commandHandler, RequestReader requestReader, ServerWriter writer, Logger logger) {
         this.commandHandler = commandHandler;

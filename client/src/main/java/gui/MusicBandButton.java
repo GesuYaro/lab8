@@ -17,7 +17,7 @@ public class MusicBandButton extends JComponent implements MouseListener {
     private volatile int x;
     private volatile int y;
     private volatile int w;
-    private volatile int h;
+    private final int h;
 
     private Ellipse2D leftCircle;
     private Ellipse2D rightCircle;
@@ -27,12 +27,12 @@ public class MusicBandButton extends JComponent implements MouseListener {
     private Line2D upperLine;
     private Line2D leftLine;
     private Line2D rightLine;
-    private LinkedList<ActionListener> listeners = new LinkedList<>();
+    private final LinkedList<ActionListener> listeners = new LinkedList<>();
 
-    private Timer timer;
-    private int r;
-    private int g;
-    private int b;
+    private final Timer timer;
+    private final int r;
+    private final int g;
+    private final int b;
     private int a;
     private volatile int newX;
     private volatile int newY;

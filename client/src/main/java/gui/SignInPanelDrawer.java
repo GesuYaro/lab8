@@ -9,11 +9,11 @@ import java.awt.*;
 
 public class SignInPanelDrawer implements PanelDrawer, LanguageChangeable {
 
-    private FrameManager frameManager;
-    private ListenerFactory listenerFactory;
-    private UserManager userManager;
-    private Authenticator authenticator;
-    private LocaleManager localeManager;
+    private final FrameManager frameManager;
+    private final ListenerFactory listenerFactory;
+    private final UserManager userManager;
+    private final Authenticator authenticator;
+    private final LocaleManager localeManager;
     private String panelName;
 
     private JPanel panel;

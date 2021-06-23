@@ -54,11 +54,11 @@ public class Authenticator {
         } catch (IOException e) {
             consoleWriter.write("Unexpected problem with reading password");
         }
-        return passwordCipher.hashPassword(password);
+        return PasswordCipher.hashPassword(password);
     }
 
     public byte[] password(String pswrd) {
-        return passwordCipher.hashPassword(pswrd);
+        return PasswordCipher.hashPassword(pswrd);
     }
 
 }

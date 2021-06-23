@@ -13,16 +13,15 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ListenerFactory {
 
-    private Console console;
-    private FrameManager frameManager;
-    private LocaleManager localeManager;
+    private final Console console;
+    private final FrameManager frameManager;
+    private final LocaleManager localeManager;
 
     public ListenerFactory(Console console, FrameManager frameManager, LocaleManager localeManager) {
         this.console = console;
@@ -267,32 +266,6 @@ public class ListenerFactory {
                         FieldDialog fieldDialog = new FieldDialog(localeManager, nameTF, xTF, yTF, participantsTF, singlesTF, genreCB, labelTF, console, commandName, arg);
                         fieldDialog.setVisible(true);
 
-//                        JLabel nameLabel = new JLabel(localeManager.getBundle().getString("name") + ":");
-//                        JLabel xLabel = new JLabel(localeManager.getBundle().getString("x") + ":");
-//                        JLabel yLabel = new JLabel(localeManager.getBundle().getString("y") + ":");
-//                        JLabel participantsLabel = new JLabel(localeManager.getBundle().getString("participants") + ":");
-//                        JLabel singlesLabel = new JLabel(localeManager.getBundle().getString("singles") + ":");
-//                        JLabel genreLabel = new JLabel(localeManager.getBundle().getString("genre") + ":");
-//                        JLabel labelLabel = new JLabel(localeManager.getBundle().getString("label") + ":");
-
-//                        fieldsPanel.add(nameLabel, getLabelCons(0));
-//                        fieldsPanel.add(xLabel, getLabelCons(1));
-//                        fieldsPanel.add(yLabel, getLabelCons(2));
-//                        fieldsPanel.add(participantsLabel, getLabelCons(3));
-//                        fieldsPanel.add(singlesLabel, getLabelCons(4));
-//                        fieldsPanel.add(genreLabel, getLabelCons(5));
-//                        fieldsPanel.add(labelLabel, getLabelCons(6));
-//
-//                        fieldsPanel.add(nameTF, getTextFieldCons(0));
-//                        fieldsPanel.add(xTF, getTextFieldCons(1));
-//                        fieldsPanel.add(yTF, getTextFieldCons(2));
-//                        fieldsPanel.add(participantsTF, getTextFieldCons(3));
-//                        fieldsPanel.add(singlesTF, getTextFieldCons(4));
-//                        fieldsPanel.add(genreCB, getTextFieldCons(5));
-//                        fieldsPanel.add(labelTF, getTextFieldCons(6));
-
-//                        int result = JOptionPane.showConfirmDialog(panel, fieldsPanel,
-//                                localeManager.getBundle().getString("enter fields"), JOptionPane.OK_CANCEL_OPTION);
                         return null;
                     }
                 };

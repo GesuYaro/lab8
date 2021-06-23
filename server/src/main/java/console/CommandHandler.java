@@ -23,10 +23,10 @@ import java.util.concurrent.Future;
  */
 public class CommandHandler {
 
-    private volatile HistoryStorage historyStorage;
+    private final HistoryStorage historyStorage;
     private HashMap<String,Command> commands;
-    private ExecutorService executorService;
-    private UserChecker userChecker;
+    private final ExecutorService executorService;
+    private final UserChecker userChecker;
 
     /**
      * @param commands Мапа с объектами команд, которые нужно будет исполнять, каждый объект должен реализовывать интерфейс Command
@@ -105,7 +105,7 @@ public class CommandHandler {
      * Класс, хранящий историю  команд, которые вызвал пользователь
      */
     public static class HistoryStorage {
-        private static String[] commandHistory = new String[7];
+        private static final String[] commandHistory = new String[7];
 
         /**
          * @return Историю команд

@@ -6,7 +6,7 @@ import network.CurrentUser;
 
 public class SignInCommand extends AbstractCommand {
 
-    private UserChecker userChecker;
+    private final UserChecker userChecker;
 
     public SignInCommand(UserChecker userChecker) {
         super("", "");

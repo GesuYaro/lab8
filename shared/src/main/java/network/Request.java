@@ -6,10 +6,10 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
 
-    private String command;
-    private String firstArg;
-    private MusicBand musicBand;
-    private CurrentUser currentUser;
+    private final String command;
+    private final String firstArg;
+    private final MusicBand musicBand;
+    private final CurrentUser currentUser;
 
     public Request(String command, String firstArg, MusicBand musicBand, CurrentUser currentUser) {
         this.command = command;

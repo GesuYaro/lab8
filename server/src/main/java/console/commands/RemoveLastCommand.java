@@ -13,8 +13,8 @@ import java.sql.SQLException;
  */
 public class RemoveLastCommand extends AbstractCommand {
 
-    private ArrayListManager listManager;
-    private CollectionManager databaseManager;
+    private final ArrayListManager listManager;
+    private final CollectionManager databaseManager;
 
     /**
      * @param listManager Менеджер коллекции

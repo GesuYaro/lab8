@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 
 public class ResponseReader {
 
-    private InputStream inputStream;
+    private final InputStream inputStream;
 
     public ResponseReader(InputStream inputStream) {
         this.inputStream = inputStream;

@@ -9,8 +9,8 @@ import java.nio.channels.SocketChannel;
 
 public class RequestReader {
 
-    private ByteBuffer inBuffer;
-    private SocketChannel socketChannel;
+    private final ByteBuffer inBuffer;
+    private final SocketChannel socketChannel;
 
     public RequestReader(SocketChannel socketChannel, ByteBuffer inBuffer) {
         this.socketChannel = socketChannel;

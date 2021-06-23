@@ -9,7 +9,7 @@ import java.util.ListIterator;
 
 public class LanguageChangeListener implements ActionListener {
 
-    private List<LanguageChangeable> languageChangeableList;
+    private final List<LanguageChangeable> languageChangeableList;
 
     public LanguageChangeListener(List<LanguageChangeable> languageChangeableList) {
         this.languageChangeableList = languageChangeableList;

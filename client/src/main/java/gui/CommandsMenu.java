@@ -6,21 +6,21 @@ import javax.swing.*;
 
 public class CommandsMenu extends JMenu implements LanguageChangeable {
 
-    private LocaleManager localeManager;
+    private final LocaleManager localeManager;
 
-    private JMenuItem add;
-    private JMenuItem clear;
-    private JMenuItem filter;
-    private JMenuItem help;
-    private JMenuItem history;
-    private JMenuItem info;
-    private JMenuItem insert;
-    private JMenuItem printField;
-    private JMenuItem remove;
-    private JMenuItem removeLast;
-    private JMenuItem show;
-    private JMenuItem update;
-    private JMenuItem execute;
+    private final JMenuItem add;
+    private final JMenuItem clear;
+    private final JMenuItem filter;
+    private final JMenuItem help;
+    private final JMenuItem history;
+    private final JMenuItem info;
+    private final JMenuItem insert;
+    private final JMenuItem printField;
+    private final JMenuItem remove;
+    private final JMenuItem removeLast;
+    private final JMenuItem show;
+    private final JMenuItem update;
+    private final JMenuItem execute;
 
     public CommandsMenu(String name, ListenerFactory listenerFactory, LocaleManager localeManager) {
         super(name);

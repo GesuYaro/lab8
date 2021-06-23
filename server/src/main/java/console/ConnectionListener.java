@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 
 public class ConnectionListener extends RecursiveTask<SocketChannel> {
 
-    private Connector connector;
-    private Logger logger;
+    private final Connector connector;
+    private final Logger logger;
 
     public ConnectionListener(Connector connector, Logger logger) {
         this.connector = connector;

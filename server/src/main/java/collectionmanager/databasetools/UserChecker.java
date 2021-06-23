@@ -16,7 +16,7 @@ public class UserChecker {
         this.connection = connection;
     }
 
-    private static String GET_USER_ROW = "SELECT login, password FROM musicband_users WHERE login = ?";
+    private static final String GET_USER_ROW = "SELECT login, password FROM musicband_users WHERE login = ?";
     public static String SIGN_UP_USER = "INSERT INTO musicband_users VALUES (?, ?)";
 
     private boolean checkPassword(CurrentUser currentUser) throws DatabaseException {

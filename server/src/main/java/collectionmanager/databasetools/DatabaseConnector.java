@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
-    private String hostName;
-    private String userName;
-    private String password;
-    private String databaseName;
-    private int port;
+    private final String hostName;
+    private final String userName;
+    private final String password;
+    private final String databaseName;
+    private final int port;
 
     public DatabaseConnector(String hostName, int port, String databaseName,String userName, String password) {
         this.hostName = hostName;

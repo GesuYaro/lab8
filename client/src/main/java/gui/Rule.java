@@ -29,7 +29,7 @@ public class Rule extends JComponent {
 
     private void setIncrementAndUnits() {
         if (isMetric) {
-            units = (int)((double)INCH / (double)2.54); // dots per centimeter
+            units = (int)((double)INCH / 2.54); // dots per centimeter
             increment = units;
         } else {
             units = INCH;

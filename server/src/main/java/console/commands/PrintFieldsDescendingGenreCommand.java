@@ -12,7 +12,7 @@ import java.util.Iterator;
  * Класс команды print_fields_descending_genre, выводящей поле genre всех объектов в убывающем порядке
  */
 public class PrintFieldsDescendingGenreCommand extends AbstractCommand {
-    private ArrayListManager listManager;
+    private final ArrayListManager listManager;
 
     /**
      * @param listManager Менеджер коллекции

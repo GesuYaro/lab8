@@ -10,7 +10,7 @@ import network.CurrentUser;
  * Класс команды history, выводящей историю команд
  */
 public class HistoryCommand extends AbstractCommand {
-    private CommandHandler.HistoryStorage historyStorage;
+    private final CommandHandler.HistoryStorage historyStorage;
 
     /**
      * @param historyStorage Объект класса, хранящего историю команд
